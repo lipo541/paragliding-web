@@ -1,15 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navItemsData } from '../navigation/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'ka';
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsOpen(false);
+    window.location.href = `/${locale}`;
+  };
 
   return (
     <>
@@ -89,6 +114,44 @@ export default function MobileMenu() {
                 )}
               </div>
             ))}
+
+            {/* Auth Buttons at Bottom */}
+            <div className="pt-4 mt-4 border-t border-foreground/10">
+              {user ? (
+                <div className="space-y-2">
+                  <Link
+                    href={`/${locale}/cms`}
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
+                  >
+                    CMS
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+                  >
+                    გასვლა
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Link
+                    href={`/${locale}/login`}
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all text-center"
+                  >
+                    შესვლა
+                  </Link>
+                  <Link
+                    href={`/${locale}/register`}
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
+                  >
+                    რეგისტრაცია
+                  </Link>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       )}

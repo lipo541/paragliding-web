@@ -1,12 +1,85 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { User } from '@supabase/supabase-js';
+
 export default function AuthButtons() {
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1] || 'ka';
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  useEffect(() => {
+    // Check current user
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+
+    getUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-1 md:gap-2">
+        <div className="h-8 w-16 md:h-9 md:w-20 bg-foreground/10 rounded-md animate-pulse" />
+        <div className="h-8 w-20 md:h-9 md:w-24 bg-foreground/10 rounded-md animate-pulse" />
+      </div>
+    );
+  }
+
+  // If user is logged in, show CMS button
+  if (user) {
+    const handleLogout = async () => {
+      await supabase.auth.signOut();
+      window.location.href = `/${locale}`;
+    };
+
+    return (
+      <div className="flex items-center gap-2">
+        <Link
+          href={`/${locale}/cms`}
+          className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
+        >
+          CMS
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+        >
+          გასვლა
+        </button>
+      </div>
+    );
+  }
+
+  // If user is not logged in, show Login and Register buttons
   return (
     <div className="flex items-center gap-2">
-      <button className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all">
-        Sign In
-      </button>
-      <button className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors">
-        Sign Up
-      </button>
+      <Link 
+        href={`/${locale}/login`}
+        className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+      >
+        შესვლა
+      </Link>
+      <Link
+        href={`/${locale}/register`}
+        className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
+      >
+        რეგისტრაცია
+      </Link>
     </div>
   );
 }

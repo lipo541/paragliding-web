@@ -31,7 +31,10 @@ export default function Header() {
             <Navigation activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
             {/* Right side actions */}
-            <div className="flex items-center gap-2">
+            <div 
+              className="flex items-center gap-2"
+              onMouseEnter={() => setActiveMenu(null)}
+            >
               <ThemeToggle />
               <LanguageSwitch />
               <Notifications />
@@ -46,7 +49,7 @@ export default function Header() {
         {/* Dropdown Mega Menu */}
         {activeMenu && (
           <div
-            className="absolute left-0 right-0 top-full bg-background border-t border-foreground/10 shadow-xl z-40 animate-in fade-in slide-in-from-top-2 duration-200"
+            className="absolute left-0 right-0 top-full bg-background border-t border-b border-foreground/10 shadow-xl z-40 animate-in fade-in slide-in-from-top-2 duration-200"
             onMouseEnter={() => setActiveMenu(activeMenu)}
           >
             <div className="mx-auto max-w-[1280px] px-4 py-8">

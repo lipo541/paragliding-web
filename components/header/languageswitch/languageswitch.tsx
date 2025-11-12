@@ -14,11 +14,11 @@ export default function LanguageSwitch() {
 
   const languages = [
     { code: 'ka', label: 'ქართული', short: 'ქარ', nativeName: 'Georgian' },
-    { code: 'en', label: 'English', short: 'ENG', nativeName: 'English' },
-    { code: 'ru', label: 'Русский', short: 'РУС', nativeName: 'Russian' },
-    { code: 'ar', label: 'العربية', short: 'عرب', nativeName: 'Arabic' },
-    { code: 'de', label: 'Deutsch', short: 'DEU', nativeName: 'German' },
-    { code: 'tr', label: 'Türkçe', short: 'TÜR', nativeName: 'Turkish' },
+    { code: 'en', label: 'English', short: 'EN', nativeName: 'English' },
+    { code: 'ru', label: 'Русский', short: 'РУ', nativeName: 'Russian' },
+    { code: 'ar', label: 'العربية', short: 'AR', nativeName: 'Arabic' },
+    { code: 'de', label: 'Deutsch', short: 'DE', nativeName: 'German' },
+    { code: 'tr', label: 'Türkçe', short: 'TR', nativeName: 'Turkish' },
   ];
 
   const currentLanguage = languages.find(lang => lang.code === currentLocale);
@@ -45,9 +45,9 @@ export default function LanguageSwitch() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-foreground bg-background border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-foreground/20 w-[70px] md:w-[100px]"
+        className="flex items-center gap-1 px-2 py-1.5 text-sm font-medium text-foreground bg-background border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-foreground/20 w-[50px] md:w-[100px]"
       >
-        <span className="flex-1 text-left truncate">
+        <span className="flex-1 text-left text-[10px] md:text-sm font-bold md:font-medium">
           <span className="md:hidden">{currentLanguage?.short}</span>
           <span className="hidden md:inline">{currentLanguage?.label}</span>
         </span>

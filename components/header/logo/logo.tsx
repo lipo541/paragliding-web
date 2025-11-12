@@ -9,9 +9,7 @@ export default function Logo() {
 
   return (
     <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-opacity">
-      <div className="px-2 py-1 md:px-3 md:py-1.5 border-2 border-foreground rounded-md">
-        <span className="text-xs md:text-base font-bold text-foreground tracking-tight">caucasus</span>
-      </div>
+      <span className="text-xl md:text-2xl font-bold text-foreground tracking-tight">caucasus</span>
     </Link>
   );
 }
