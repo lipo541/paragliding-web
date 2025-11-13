@@ -10,7 +10,7 @@ export default function LocaleLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }>) {
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();

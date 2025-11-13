@@ -37,34 +37,52 @@ export default function LoginForm() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+
+  // Extract current locale from pathname
+  const currentLocale = (pathname.split('/')[1] as Locale) || 'ka'
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Extract current locale from pathname
-  const currentLocale = (pathname.split('/')[1] as Locale) || 'ka'
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+          // User is already logged in, check their role and redirect
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single()
+          
+          if (profile?.role === 'SUPER_ADMIN') {
+            router.push(`/${currentLocale}/cms`)
+          } else {
+            router.push(`/${currentLocale}`)
+          }
+        } else {
+          // User is not logged in, show the login form
+          setCheckingAuth(false)
+        }
+      } catch (error) {
+        console.error('Auth check error:', error)
+        setCheckingAuth(false)
+      }
+    }
+
+    checkAuth()
+  }, [supabase, router, currentLocale])
 
   // Prevent hydration mismatch by not rendering theme-dependent content until mounted
-  if (!mounted) {
+  if (!mounted || checkingAuth) {
     return (
-      <div className="relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-4">
-          <div className="flex justify-center">
-            <Link href={`/${currentLocale}`} className="hover:opacity-80 transition-opacity">
-              <div className="px-4 py-2 border-2 border-foreground rounded-md">
-                <span className="text-xl font-bold text-foreground tracking-tight">caucasus</span>
-              </div>
-            </Link>
-          </div>
-          <div className="rounded-3xl border border-foreground/10 bg-background p-8 sm:p-10">
-            <div className="space-y-2 text-center">
-              <h1 className="text-[30px] font-semibold text-foreground">
-                შესვლა
-              </h1>
-            </div>
-          </div>
-        </div>
+      <div className="relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        {/* Completely blank while checking auth - no flash */}
       </div>
     )
   }
