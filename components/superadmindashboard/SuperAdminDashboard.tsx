@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import AddLocation from './addlocation/AddLocation';
+import AddLocationFly from './addlocation/AddLocationFly';
 import AddCountry from './addcountry/AddCountry';
+import LocationsList from './addlocation/LocationsList';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
+  const [showAddLocationForm, setShowAddLocationForm] = useState(false);
+  const [editLocationId, setEditLocationId] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,15 +131,25 @@ export default function SuperAdminDashboard() {
           {/* Header */}
           <header className="sticky top-0 z-10 bg-background border-b border-foreground/10 px-6 py-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-foreground">
-                {activeTab === 'overview' && 'მთავარი გვერდი'}
-                {activeTab === 'addcountry' && 'დაამატე ქვეყანა'}
-                {activeTab === 'addlocation' && 'ლოკაციის დამატება'}
-                {activeTab === 'users' && 'მომხმარებლები'}
-                {activeTab === 'pilots' && 'პილოტები'}
-                {activeTab === 'companies' && 'კომპანიები'}
-                {activeTab === 'settings' && 'პარამეტრები'}
-              </h2>
+              <div className="flex items-center gap-4">
+                <h2 className="text-xl font-semibold text-foreground">
+                  {activeTab === 'overview' && 'მთავარი გვერდი'}
+                  {activeTab === 'addcountry' && 'დაამატე ქვეყანა'}
+                  {activeTab === 'addlocation' && 'ლოკაციის დამატება'}
+                  {activeTab === 'users' && 'მომხმარებლები'}
+                  {activeTab === 'pilots' && 'პილოტები'}
+                  {activeTab === 'companies' && 'კომპანიები'}
+                  {activeTab === 'settings' && 'პარამეტრები'}
+                </h2>
+                {activeTab === 'addlocation' && !showAddLocationForm && (
+                  <button
+                    onClick={() => setShowAddLocationForm(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg text-sm font-medium"
+                  >
+                    დაამატე ლოკაცია
+                  </button>
+                )}
+              </div>
               <button
                 onClick={() => router.push('/ka')}
                 className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground border border-foreground/20 rounded-md hover:bg-foreground/5 transition-colors"
@@ -211,7 +224,22 @@ export default function SuperAdminDashboard() {
 
             {activeTab === 'addcountry' && <AddCountry />}
 
-            {activeTab === 'addlocation' && <AddLocation />}
+            {activeTab === 'addlocation' && showAddLocationForm && (
+              <AddLocationFly 
+                onBack={() => {
+                  setShowAddLocationForm(false);
+                  setEditLocationId(null);
+                }} 
+                editLocationId={editLocationId}
+              />
+            )}
+
+            {activeTab === 'addlocation' && !showAddLocationForm && (
+              <LocationsList onEdit={(locationId) => {
+                setEditLocationId(locationId);
+                setShowAddLocationForm(true);
+              }} />
+            )}
 
             {activeTab === 'users' && (
               <div className="bg-background rounded-lg border border-foreground/10 p-6">
