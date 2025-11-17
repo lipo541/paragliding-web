@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LanguageSwitch() {
   const router = useRouter();
@@ -23,8 +24,42 @@ export default function LanguageSwitch() {
 
   const currentLanguage = languages.find(lang => lang.code === currentLocale);
 
-  const handleLanguageChange = (newLocale: string) => {
-    // Remove current locale from pathname and add new one
+  const handleLanguageChange = async (newLocale: string) => {
+    // Check if we're on a country page
+    const pathParts = pathname.split('/');
+    const isCountryPage = pathParts.length >= 4 && pathParts[2] === 'locations';
+    
+    if (isCountryPage) {
+      const currentSlug = pathParts[3];
+      
+      // Fetch the country to get the correct slug for the new locale
+      const supabase = createClient();
+      const currentSlugField = `slug_${currentLocale}`;
+      
+      try {
+        const { data: country } = await supabase
+          .from('countries')
+          .select('*')
+          .eq(currentSlugField, currentSlug)
+          .eq('is_active', true)
+          .single();
+        
+        if (country) {
+          const newSlugField = `slug_${newLocale}`;
+          const newSlug = country[newSlugField as keyof typeof country];
+          
+          if (newSlug) {
+            router.push(`/${newLocale}/locations/${newSlug}`);
+            setIsOpen(false);
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching country slug:', error);
+      }
+    }
+    
+    // Fallback: just replace the locale in the path
     const pathWithoutLocale = pathname.replace(/^\/[^\/]+/, '');
     router.push(`/${newLocale}${pathWithoutLocale}`);
     setIsOpen(false);

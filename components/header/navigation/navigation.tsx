@@ -10,6 +10,16 @@ interface NavigationProps {
 
 export const navItemsData = [
   {
+    href: '/locations',
+    label: 'ლოკაციები',
+    submenu: [
+      { href: '/locations/all', label: 'ყველა ლოკაცია', description: 'პარაგლაიდინგის ლოკაციები საქართველოში' },
+      { href: '/locations/popular', label: 'პოპულარული', description: 'ყველაზე პოპულარული ადგილები' },
+      { href: '/locations/beginner', label: 'დამწყებთათვის', description: 'უსაფრთხო ადგილები სწავლისთვის' },
+      { href: '/locations/advanced', label: 'გამოცდილებისთვის', description: 'რთული და ექსტრემალური ადგილები' },
+    ],
+  },
+  {
     href: '/pilots',
     label: 'პილოტები',
     submenu: [
@@ -27,16 +37,6 @@ export const navItemsData = [
       { href: '/companies/schools', label: 'სასწავლო ცენტრები', description: 'სერტიფიცირებული სასწავლო ცენტრები' },
       { href: '/companies/tour-operators', label: 'ტურ-ოპერატორები', description: 'ორგანიზებული ტურები' },
       { href: '/companies/equipment', label: 'აღჭურვილობა', description: 'აღჭურვილობის გაყიდვა და გაქირავება' },
-    ],
-  },
-  {
-    href: '/locations',
-    label: 'ლოკაციები',
-    submenu: [
-      { href: '/locations/all', label: 'ყველა ლოკაცია', description: 'პარაგლაიდინგის ლოკაციები საქართველოში' },
-      { href: '/locations/popular', label: 'პოპულარული', description: 'ყველაზე პოპულარული ადგილები' },
-      { href: '/locations/beginner', label: 'დამწყებთათვის', description: 'უსაფრთხო ადგილები სწავლისთვის' },
-      { href: '/locations/advanced', label: 'გამოცდილებისთვის', description: 'რთული და ექსტრემალური ადგილები' },
     ],
   },
   {

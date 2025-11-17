@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddLocationFly from './addlocation/AddLocationFly';
 import AddCountry from './addcountry/AddCountry';
+import AddCountryPage from './addcountry/AddCountryPage';
 import LocationsList from './addlocation/LocationsList';
 
 export default function SuperAdminDashboard() {
@@ -50,6 +51,20 @@ export default function SuperAdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               დაამატე ქვეყანა
+            </button>
+
+            <button
+              onClick={() => setActiveTab('countrycontent')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'countrycontent'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              ქვეყნების კონტენტი
             </button>
 
             <button
@@ -135,6 +150,7 @@ export default function SuperAdminDashboard() {
                 <h2 className="text-xl font-semibold text-foreground">
                   {activeTab === 'overview' && 'მთავარი გვერდი'}
                   {activeTab === 'addcountry' && 'დაამატე ქვეყანა'}
+                  {activeTab === 'countrycontent' && 'ქვეყნების კონტენტი'}
                   {activeTab === 'addlocation' && 'ლოკაციის დამატება'}
                   {activeTab === 'users' && 'მომხმარებლები'}
                   {activeTab === 'pilots' && 'პილოტები'}
@@ -223,6 +239,8 @@ export default function SuperAdminDashboard() {
             )}
 
             {activeTab === 'addcountry' && <AddCountry />}
+
+            {activeTab === 'countrycontent' && <AddCountryPage />}
 
             {activeTab === 'addlocation' && showAddLocationForm && (
               <AddLocationFly 

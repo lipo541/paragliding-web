@@ -10,6 +10,7 @@ import LanguageSwitch from './languageswitch/languageswitch';
 import ThemeToggle from './themetoggle/themetoggle';
 import Notifications from './notifications/notifications';
 import MobileMenu from './mobilemenu/mobilemenu';
+import LocationsDropdown from './navigation/LocationsDropdown';
 
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export default function Header() {
 
   return (
     <header 
-      className="sticky top-0 z-50 w-full bg-background border-b border-foreground/10"
+      className="sticky top-0 z-50 w-full backdrop-blur-xl bg-background/60 border-b border-foreground/20 supports-[backdrop-filter]:bg-background/50 shadow-sm"
       onMouseLeave={() => setActiveMenu(null)}
     >
       <div className="relative">
@@ -53,27 +54,32 @@ export default function Header() {
             onMouseEnter={() => setActiveMenu(activeMenu)}
           >
             <div className="mx-auto max-w-[1280px] px-4 py-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {navItemsData
-                  .find((item) => item.label === activeMenu)
-                  ?.submenu.map((subItem, index) => (
-                    <Link
-                      key={subItem.href}
-                      href={`/${locale}${subItem.href}`}
-                      className="group block p-4 rounded-lg hover:bg-foreground/5 transition-all duration-200"
-                      style={{
-                        animationDelay: `${index * 50}ms`,
-                      }}
-                    >
-                      <h3 className="font-semibold text-foreground group-hover:text-foreground/80 mb-1 transition-colors">
-                        {subItem.label}
-                      </h3>
-                      <p className="text-sm text-foreground/60 group-hover:text-foreground/70 transition-colors">
-                        {subItem.description}
-                      </p>
-                    </Link>
-                  ))}
-              </div>
+              {/* Special Layout for Locations */}
+              {activeMenu === 'ლოკაციები' ? (
+                <LocationsDropdown locale={locale} />
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {navItemsData
+                    .find((item) => item.label === activeMenu)
+                    ?.submenu.map((subItem, index) => (
+                      <Link
+                        key={subItem.href}
+                        href={`/${locale}${subItem.href}`}
+                        className="group block p-4 rounded-lg hover:bg-foreground/5 transition-all duration-200"
+                        style={{
+                          animationDelay: `${index * 50}ms`,
+                        }}
+                      >
+                        <h3 className="font-semibold text-foreground group-hover:text-foreground/80 mb-1 transition-colors">
+                          {subItem.label}
+                        </h3>
+                        <p className="text-sm text-foreground/60 group-hover:text-foreground/70 transition-colors">
+                          {subItem.description}
+                        </p>
+                      </Link>
+                    ))}
+                </div>
+              )}
 
               {/* Mini Footer */}
               <div className="mt-6 pt-4 border-t border-foreground/10">
