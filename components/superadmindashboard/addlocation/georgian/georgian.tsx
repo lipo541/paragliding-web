@@ -11,6 +11,13 @@ interface PendingImages {
 }
 
 interface FlightType {
+  shared_id: string;
+  name: string;
+  description: string;
+  features: string[];
+}
+
+interface FlightTypeFormData {
   name: string;
   description: string;
   features: string[];
@@ -18,6 +25,19 @@ interface FlightType {
   priceUSD: string;
   priceEUR: string;
 }
+
+// Helper function to generate unique ID from name
+const generateFlightTypeId = (name: string): string => {
+  const timestamp = Date.now();
+  const randomStr = Math.random().toString(36).substring(2, 8);
+  const slug = name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special chars
+    .replace(/\s+/g, '-')      // Replace spaces with -
+    .replace(/-+/g, '-')       // Replace multiple - with single -
+    .trim();
+  return `${slug}-${timestamp}-${randomStr}`;
+};
 
 export default function GeorgianForm() {
   const { 
@@ -28,10 +48,15 @@ export default function GeorgianForm() {
     setPendingImages,
     imagePreviews,
     setImagePreviews,
+    sharedVideos,
+    setSharedVideos,
+    sharedFlightTypes,
+    setSharedFlightTypes,
     getSelectedLocation 
   } = useLocation();
 
   const kaContent = languageContent.ka;
+  const [newVideoUrl, setNewVideoUrl] = useState("");
   
   // Flight Types local state
   const [flightTypes, setFlightTypes] = useState<FlightType[]>([]);
@@ -186,6 +211,115 @@ export default function GeorgianForm() {
             />
           </label>
         )}
+      </div>
+
+      {/* YouTube Videos Section */}
+      <div>
+        <label className="block text-sm font-medium text-foreground mb-2">
+          <span className={`${sharedVideos.videoUrls.length > 0 ? 'text-green-600 dark:text-green-400' : 'text-foreground/40'}`}>○</span> YouTube ვიდეოები
+        </label>
+        
+        <div className="space-y-3">
+          {/* Existing Videos */}
+          {sharedVideos.videoUrls.map((url, index) => {
+            // Extract video ID for preview
+            const videoId = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^&?]+)/)?.[1] || '';
+            
+            return (
+              <div key={index} className="flex items-center gap-3 bg-foreground/5 p-3 rounded-lg border border-foreground/20">
+                {/* Video Thumbnail Preview */}
+                {videoId && (
+                  <div className="relative w-32 h-20 rounded overflow-hidden border border-foreground/20 flex-shrink-0">
+                    <img 
+                      src={`https://img.youtube.com/vi/${videoId}/mqdefault.jpg`}
+                      alt={`Video ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                
+                {/* URL Display */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-foreground/60 mb-1">ვიდეო #{index + 1}</p>
+                  <p className="text-sm text-foreground break-all">{url}</p>
+                </div>
+                
+                {/* Delete Button */}
+                <button
+                  onClick={() => {
+                    const updated = [...sharedVideos.videoUrls];
+                    updated.splice(index, 1);
+                    setSharedVideos({ videoUrls: updated });
+                  }}
+                  className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex-shrink-0"
+                  title="წაშლა"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            );
+          })}
+          
+          {/* Add New Video */}
+          <div className="border-2 border-dashed border-foreground/20 rounded-lg p-4 bg-foreground/5">
+            <div className="flex items-center gap-3">
+              <input
+                type="url"
+                value={newVideoUrl}
+                onChange={(e) => setNewVideoUrl(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && newVideoUrl.trim()) {
+                    e.preventDefault();
+                    if (newVideoUrl.includes('youtube.com') || newVideoUrl.includes('youtu.be')) {
+                      setSharedVideos({ 
+                        videoUrls: [...sharedVideos.videoUrls, newVideoUrl.trim()] 
+                      });
+                      setNewVideoUrl("");
+                    } else {
+                      alert('გთხოვთ ჩასვათ YouTube ვიდეოს ბმული');
+                    }
+                  }
+                }}
+                className="flex-1 px-3 py-2 text-sm border border-foreground/20 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-background text-foreground"
+                placeholder="https://www.youtube.com/watch?v=... ან https://youtu.be/..."
+              />
+              <button
+                onClick={() => {
+                  if (newVideoUrl.trim()) {
+                    if (newVideoUrl.includes('youtube.com') || newVideoUrl.includes('youtu.be')) {
+                      setSharedVideos({ 
+                        videoUrls: [...sharedVideos.videoUrls, newVideoUrl.trim()] 
+                      });
+                      setNewVideoUrl("");
+                    } else {
+                      alert('გთხოვთ ჩასვათ YouTube ვიდეოს ბმული');
+                    }
+                  }
+                }}
+                disabled={!newVideoUrl.trim()}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-foreground/20 disabled:cursor-not-allowed transition-colors text-sm font-medium flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                დამატება
+              </button>
+            </div>
+            <p className="text-xs text-foreground/60 mt-2 flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              ჩასვით YouTube ვიდეოს სრული ბმული და დააჭირეთ Enter-ს ან დამატების ღილაკს
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* H1 Tag */}
@@ -402,23 +536,30 @@ export default function GeorgianForm() {
       {/* Saved Flight Types */}
       {flightTypes.length > 0 && (
         <div className="space-y-3">
-          {flightTypes.map((type, index) => (
-            <div key={index} className="border border-foreground/20 rounded-lg p-4 bg-foreground/5">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h4 className="font-semibold text-foreground">{type.name}</h4>
-                  <p className="text-sm text-foreground/70 mt-1">{type.description}</p>
-                </div>
-                <div className="flex gap-1">
+          {flightTypes.map((type, index) => {
+            // Find corresponding shared flight type for prices
+            const sharedType = sharedFlightTypes.find(s => s.id === type.shared_id);
+            
+            return (
+              <div key={index} className="border border-foreground/20 rounded-lg p-4 bg-foreground/5">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h4 className="font-semibold text-foreground">{type.name}</h4>
+                    <p className="text-sm text-foreground/70 mt-1">{type.description}</p>
+                  </div>
+                  <div className="flex gap-1">
                   <button
                     onClick={() => {
                       setEditingFlightTypeIndex(index);
                       setFlightTypeName(type.name);
                       setFlightTypeDescription(type.description);
                       setFlightTypeFeatures(type.features);
-                      setFlightTypePriceGEL(type.priceGEL);
-                      setFlightTypePriceUSD(type.priceUSD);
-                      setFlightTypePriceEUR(type.priceEUR);
+                      // Load prices from shared flight type
+                      if (sharedType) {
+                        setFlightTypePriceGEL(sharedType.price_gel.toString());
+                        setFlightTypePriceUSD(sharedType.price_usd.toString());
+                        setFlightTypePriceEUR(sharedType.price_eur.toString());
+                      }
                       setShowFlightTypeForm(true);
                     }}
                     className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
@@ -429,7 +570,26 @@ export default function GeorgianForm() {
                   </button>
                   <button
                     onClick={() => {
+                      const sharedIdToDelete = type.shared_id;
+                      
+                      // Remove from Georgian flight types
                       setFlightTypes(flightTypes.filter((_, i) => i !== index));
+                      
+                      // Remove from shared flight types
+                      setSharedFlightTypes(sharedFlightTypes.filter(s => s.id !== sharedIdToDelete));
+                      
+                      // Remove translations from all other languages
+                      (['en', 'ru', 'ar', 'de', 'tr'] as const).forEach(lang => {
+                        const currentLangContent = languageContent[lang];
+                        if (currentLangContent?.flight_types) {
+                          updateLanguageContent(lang, {
+                            ...currentLangContent,
+                            flight_types: currentLangContent.flight_types.filter(
+                              (ft: any) => ft.shared_id !== sharedIdToDelete
+                            )
+                          });
+                        }
+                      });
                     }}
                     className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
                   >
@@ -451,19 +611,22 @@ export default function GeorgianForm() {
                 </ul>
               )}
 
-              <div className="flex gap-3 text-sm">
-                <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">
-                  {type.priceGEL} ₾
-                </span>
-                <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">
-                  ${type.priceUSD}
-                </span>
-                <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">
-                  €{type.priceEUR}
-                </span>
-              </div>
+              {sharedType && (
+                <div className="flex gap-3 text-sm">
+                  <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded">
+                    {sharedType.price_gel} ₾
+                  </span>
+                  <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded">
+                    ${sharedType.price_usd}
+                  </span>
+                  <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">
+                    €{sharedType.price_eur}
+                  </span>
+                </div>
+              )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -605,23 +768,60 @@ export default function GeorgianForm() {
             <button
               onClick={() => {
                 if (flightTypeName.trim() && flightTypeDescription.trim() && flightTypePriceGEL && flightTypePriceUSD && flightTypePriceEUR) {
-                  const newFlightType = {
-                    name: flightTypeName,
-                    description: flightTypeDescription,
-                    features: flightTypeFeatures.filter(f => f.trim()),
-                    priceGEL: flightTypePriceGEL,
-                    priceUSD: flightTypePriceUSD,
-                    priceEUR: flightTypePriceEUR,
-                  };
-
+                  
+                  let sharedId: string;
+                  
                   if (editingFlightTypeIndex !== null) {
-                    // Update existing
+                    // Editing existing - keep the same shared_id
+                    sharedId = flightTypes[editingFlightTypeIndex].shared_id;
+                    
+                    // Update shared flight type prices
+                    const updatedShared = sharedFlightTypes.map(s => 
+                      s.id === sharedId 
+                        ? {
+                            ...s,
+                            price_gel: parseFloat(flightTypePriceGEL),
+                            price_usd: parseFloat(flightTypePriceUSD),
+                            price_eur: parseFloat(flightTypePriceEUR)
+                          }
+                        : s
+                    );
+                    setSharedFlightTypes(updatedShared);
+                    
+                    // Update language-specific content
                     const updated = [...flightTypes];
-                    updated[editingFlightTypeIndex] = newFlightType;
+                    updated[editingFlightTypeIndex] = {
+                      shared_id: sharedId,
+                      name: flightTypeName,
+                      description: flightTypeDescription,
+                      features: flightTypeFeatures.filter(f => f.trim())
+                    };
                     setFlightTypes(updated);
                   } else {
-                    // Add new
-                    setFlightTypes([...flightTypes, newFlightType]);
+                    // Creating new - generate new ID
+                    sharedId = generateFlightTypeId(flightTypeName);
+                    
+                    // Add to shared flight types
+                    setSharedFlightTypes([
+                      ...sharedFlightTypes,
+                      {
+                        id: sharedId,
+                        price_gel: parseFloat(flightTypePriceGEL),
+                        price_usd: parseFloat(flightTypePriceUSD),
+                        price_eur: parseFloat(flightTypePriceEUR)
+                      }
+                    ]);
+                    
+                    // Add to language-specific flight types
+                    setFlightTypes([
+                      ...flightTypes,
+                      {
+                        shared_id: sharedId,
+                        name: flightTypeName,
+                        description: flightTypeDescription,
+                        features: flightTypeFeatures.filter(f => f.trim())
+                      }
+                    ]);
                   }
 
                   setShowFlightTypeForm(false);

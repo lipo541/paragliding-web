@@ -25,16 +25,56 @@ export default function LanguageSwitch() {
   const currentLanguage = languages.find(lang => lang.code === currentLocale);
 
   const handleLanguageChange = async (newLocale: string) => {
-    // Check if we're on a country page
     const pathParts = pathname.split('/');
-    const isCountryPage = pathParts.length >= 4 && pathParts[2] === 'locations';
+    const supabase = createClient();
+    const currentSlugField = `slug_${currentLocale}`;
+    
+    // Check if we're on a location page (e.g., /ka/locations/ka-sakarthvelo/ka-guduri)
+    const isLocationPage = pathParts.length >= 5 && pathParts[2] === 'locations';
+    
+    if (isLocationPage) {
+      const countrySlug = pathParts[3];
+      const locationSlug = pathParts[4];
+      
+      try {
+        // First, get the country with its new slug
+        const { data: country } = await supabase
+          .from('countries')
+          .select('*')
+          .eq(currentSlugField, countrySlug)
+          .eq('is_active', true)
+          .single();
+        
+        if (country) {
+          // Then, get the location with its new slug
+          const { data: location } = await supabase
+            .from('locations')
+            .select('*')
+            .eq(currentSlugField, locationSlug)
+            .eq('country_id', country.id)
+            .single();
+          
+          if (location) {
+            const newCountrySlug = country[`slug_${newLocale}` as keyof typeof country];
+            const newLocationSlug = location[`slug_${newLocale}` as keyof typeof location];
+            
+            if (newCountrySlug && newLocationSlug) {
+              router.push(`/${newLocale}/locations/${newCountrySlug}/${newLocationSlug}`);
+              setIsOpen(false);
+              return;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching location slugs:', error);
+      }
+    }
+    
+    // Check if we're on a country page
+    const isCountryPage = pathParts.length === 4 && pathParts[2] === 'locations';
     
     if (isCountryPage) {
       const currentSlug = pathParts[3];
-      
-      // Fetch the country to get the correct slug for the new locale
-      const supabase = createClient();
-      const currentSlugField = `slug_${currentLocale}`;
       
       try {
         const { data: country } = await supabase

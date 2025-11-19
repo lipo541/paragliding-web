@@ -41,6 +41,17 @@ interface SharedImages {
   gallery: SharedImage[];
 }
 
+interface SharedVideos {
+  videoUrls: string[];
+}
+
+interface SharedFlightType {
+  id: string;
+  price_gel: number;
+  price_usd: number;
+  price_eur: number;
+}
+
 interface LanguageContent {
   h1_tag: string;
   p_tag: string;
@@ -48,7 +59,12 @@ interface LanguageContent {
   history_text: string;
   gallery_description: string;
   h3_flight_types: string;
-  flight_types: any[];
+  flight_types: {
+    shared_id: string;
+    name: string;
+    description: string;
+    features: string[];
+  }[];
 }
 
 interface PendingImages {
@@ -95,6 +111,14 @@ interface LocationContextType {
   // Shared Images (across all languages)
   sharedImages: SharedImages;
   setSharedImages: (images: SharedImages) => void;
+
+  // Shared Videos (across all languages)
+  sharedVideos: SharedVideos;
+  setSharedVideos: (videos: SharedVideos) => void;
+
+  // Shared Flight Types (across all languages)
+  sharedFlightTypes: SharedFlightType[];
+  setSharedFlightTypes: (types: SharedFlightType[]) => void;
 
   // Pending images (before upload)
   pendingImages: PendingImages;
@@ -150,6 +174,12 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     gallery: []
   });
 
+  const [sharedVideos, setSharedVideos] = useState<SharedVideos>({
+    videoUrls: []
+  });
+
+  const [sharedFlightTypes, setSharedFlightTypes] = useState<SharedFlightType[]>([]);
+
   const [pendingImages, setPendingImages] = useState<PendingImages>({
     heroImage: null,
     galleryImages: []
@@ -182,6 +212,8 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         // Reset form when no location selected
         setIsEditMode(false);
         setSharedImages({ hero_image: null, gallery: [] });
+        setSharedVideos({ videoUrls: [] });
+        setSharedFlightTypes([]);
         setPendingImages({ heroImage: null, galleryImages: [] });
         setImagePreviews({ heroPreview: null, galleryPreviews: [] });
         setLanguageContent({
@@ -213,6 +245,8 @@ export function LocationProvider({ children }: { children: ReactNode }) {
           console.log("ახალი ლოკაცია");
           setIsEditMode(false);
           setSharedImages({ hero_image: null, gallery: [] });
+          setSharedVideos({ videoUrls: [] });
+          setSharedFlightTypes([]);
           setPendingImages({ heroImage: null, galleryImages: [] });
           setImagePreviews({ heroPreview: null, galleryPreviews: [] });
           setLanguageContent({
@@ -322,6 +356,16 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       // Load content from database
       const content = locationData.content || {};
       
+      // Load shared videos
+      if (content.shared_videos && Array.isArray(content.shared_videos)) {
+        setSharedVideos({ videoUrls: content.shared_videos });
+      }
+
+      // Load shared flight types
+      if (content.shared_flight_types && Array.isArray(content.shared_flight_types)) {
+        setSharedFlightTypes(content.shared_flight_types);
+      }
+      
       // Load shared images
       if (content.shared_images) {
         setSharedImages(content.shared_images);
@@ -367,12 +411,14 @@ export function LocationProvider({ children }: { children: ReactNode }) {
             h3_flight_types: content[lang].h3_flight_types || "",
             flight_types: content[lang].flight_types || []
           };
+          console.log(`✅ Loaded ${lang} flight_types:`, content[lang].flight_types);
         }
       });
 
       setLanguageContent(newLanguageContent);
       
-      console.log("Location loaded successfully for editing");
+      console.log("✅ Location loaded successfully for editing");
+      console.log("✅ Russian flight_types:", newLanguageContent.ru.flight_types);
     } catch (error) {
       console.error("Error in loadLocationForEdit:", error);
     }
@@ -495,6 +541,8 @@ export function LocationProvider({ children }: { children: ReactNode }) {
 
       // Build content object
       const content: any = {
+        shared_videos: sharedVideos.videoUrls,
+        shared_flight_types: sharedFlightTypes,
         shared_images: finalSharedImages
       };
 
@@ -502,9 +550,10 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       const languages: Language[] = ['ka', 'en', 'ru', 'ar', 'de', 'tr'];
       languages.forEach(lang => {
         const langContent = languageContent[lang];
-        // Only add if at least h1_tag is filled
-        if (langContent.h1_tag.trim()) {
+        // Add if h1_tag is filled OR flight_types exist
+        if (langContent.h1_tag.trim() || (langContent.flight_types && langContent.flight_types.length > 0)) {
           content[lang] = langContent;
+          console.log(`✅ Saving ${lang} with flight_types:`, langContent.flight_types);
         }
       });
 
@@ -552,6 +601,10 @@ export function LocationProvider({ children }: { children: ReactNode }) {
     isEditMode,
     sharedImages,
     setSharedImages,
+    sharedVideos,
+    setSharedVideos,
+    sharedFlightTypes,
+    setSharedFlightTypes,
     pendingImages,
     setPendingImages,
     imagePreviews,

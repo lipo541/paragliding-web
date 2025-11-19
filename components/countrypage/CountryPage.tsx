@@ -218,7 +218,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
           }
         `}</style>
         
-        <div className="absolute inset-0 flex items-start pt-32 lg:pt-40">
+        <div className="absolute inset-0 flex items-start pt-48 lg:pt-64">
           <div className="w-full max-w-[1280px] mx-auto px-4">
             <h1 className="text-xl lg:text-3xl font-bold text-white mb-2 drop-shadow-2xl max-w-3xl">{h1Tag || countryName}</h1>
             {pTag && <p className="text-xs lg:text-sm text-white/90 max-w-2xl leading-relaxed drop-shadow-lg mb-6">{pTag}</p>}
@@ -662,35 +662,51 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               );
             })()}
 
-            {/* Contact via Messaging Apps - Compact & Minimalist */}
-            <div className="overflow-hidden rounded-lg border border-foreground/20 bg-gradient-to-br from-foreground/[0.03] to-foreground/[0.01]">
-              <div className="px-3 py-2.5 border-b border-foreground/10 bg-foreground/[0.02]">
-                <h3 className="text-xs font-semibold text-foreground/90">
-                  {locale === 'en' ? 'Contact & Information' : locale === 'ru' ? 'Контакт и информация' : 'კონტაქტი და ინფორმაცია'}
-                </h3>
+            {/* Contact via Messaging Apps */}
+            <div className="overflow-hidden rounded-xl border border-foreground/10 bg-foreground/[0.02] shadow-sm">
+              {/* Header with Icon */}
+              <div className="px-4 py-3 border-b border-foreground/10 bg-gradient-to-r from-foreground/[0.03] to-transparent">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-foreground/10">
+                    <svg className="w-4 h-4 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-bold text-foreground">
+                    {locale === 'en' ? 'Contact & Information' : locale === 'ru' ? 'Контакт и информация' : 'კონტაქტი და ინფორმაცია'}
+                  </h3>
+                </div>
               </div>
               
-              <div className="p-3 space-y-3">
+              <div className="p-4 space-y-4">
                 {/* Info Text */}
-                <div className="text-[11px] text-foreground/70 leading-relaxed space-y-1.5">
-                  <p>
-                    {locale === 'en' 
-                      ? 'Each location on our platform has unique flight prices, packages, and conditions.' 
-                      : locale === 'ru' 
-                      ? 'Каждая локация на нашей платформе имеет уникальные цены, пакеты и условия полетов.' 
-                      : 'ჩვენს პლატფორმაზე განთავსებულ ყველა ლოკაციას აქვს განსხვავებული ფრენის ღირებულება, პაკეტები და პირობები.'}
+                <div className="text-xs text-foreground/70 leading-relaxed space-y-2">
+                  <p className="flex items-start gap-2">
+                    <svg className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <span>
+                      {locale === 'en' 
+                        ? 'Each location on our platform has unique flight prices, packages, and conditions.' 
+                        : locale === 'ru' 
+                        ? 'Каждая локация на нашей платформе имеет уникальные цены, пакеты и условия полетов.' 
+                        : 'ჩვენს პლატფორმაზე განთავსებულ ყველა ლოკაციას აქვს განსხვავებული ფრენის ღირებულება, პაკეტები და პირობები.'}
+                    </span>
                   </p>
-                  <p>
+                  <p className="pl-5">
                     {locale === 'en' 
-                      ? 'Visit our ' 
+                      ? 'Visit ' 
                       : locale === 'ru' 
-                      ? 'Посетите нашу ' 
-                      : 'ეწვიეთ ჩვენს '}
+                      ? 'Посетите ' 
+                      : 'ეწვიეთ '}
                     <Link 
                       href={`/${locale}/locations`}
-                      className="font-semibold text-foreground/90 hover:text-foreground underline decoration-foreground/30 hover:decoration-foreground/60 transition-colors"
+                      className="font-semibold text-foreground hover:text-foreground/80 underline decoration-foreground/30 hover:decoration-foreground/60 transition-colors inline-flex items-center gap-1"
                     >
                       {locale === 'en' ? 'Locations page' : locale === 'ru' ? 'страницу локаций' : 'ლოკაციების გვერდს'}
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
                     </Link>
                     {locale === 'en' 
                       ? ' for detailed information, or contact us directly:' 
@@ -700,8 +716,17 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   </p>
                 </div>
 
+                {/* Divider */}
+                <div className="flex items-center gap-2">
+                  <div className="h-px flex-1 bg-foreground/10"></div>
+                  <span className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider">
+                    {locale === 'en' ? 'Messengers' : locale === 'ru' ? 'Мессенджеры' : 'მესენჯერები'}
+                  </span>
+                  <div className="h-px flex-1 bg-foreground/10"></div>
+                </div>
+
                 {/* Messaging Apps */}
-                <div className="flex items-center justify-center gap-2 pt-1">
+                <div className="flex items-center justify-center gap-3">
                   {/* WhatsApp */}
                   <a
                     href="https://wa.me/your-number"
