@@ -103,7 +103,7 @@ export default function CommentItem({
           .select('reaction_type')
           .eq('comment_id', comment.id)
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle(); // Use maybeSingle() instead of single() to avoid 406 error when no reaction exists
 
         if (data) {
           setUserReaction(data.reaction_type);
