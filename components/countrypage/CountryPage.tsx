@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import RatingDisplay from '@/components/rating/RatingDisplay';
+import RatingInput from '@/components/rating/RatingInput';
+import RatingModal from '@/components/rating/RatingModal';
+import CommentsList from '@/components/comments/CommentsList';
 
 interface Country {
   id: string;
@@ -17,6 +21,8 @@ interface Country {
   content?: any;
   created_at?: string;
   updated_at?: string;
+  cached_rating?: number;
+  cached_rating_count?: number;
 }
 
 interface Location {
@@ -43,6 +49,9 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [userRating, setUserRating] = useState<number | null>(null);
+  const [showRatingInput, setShowRatingInput] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
   
   const imagesPerPage = 9; // Desktop: 9 (3x3), Mobile: 8 (2x4)
 
@@ -76,6 +85,22 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
         if (locationsError) throw locationsError;
         setLocations(locationsData || []);
+
+        // Fetch user's existing rating
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && countryData) {
+          const { data: ratingData } = await supabase
+            .from('ratings')
+            .select('rating')
+            .eq('ratable_type', 'country')
+            .eq('ratable_id', String(countryData.id))
+            .eq('user_id', user.id)
+            .single();
+          
+          if (ratingData) {
+            setUserRating(ratingData.rating);
+          }
+        }
       } catch (error) {
         console.error('Error fetching country data:', error);
       } finally {
@@ -85,6 +110,27 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
     fetchCountryData();
   }, [slug, locale]);
+
+  const handleRatingChange = async (newRating: number | null) => {
+    setUserRating(newRating);
+    
+    // Refresh country data to get updated cached rating
+    const supabase = createClient();
+    const slugField = `slug_${locale}`;
+    const { data: countryData } = await supabase
+      .from('countries')
+      .select('cached_rating, cached_rating_count')
+      .eq(slugField, slug)
+      .single();
+    
+    if (countryData && country) {
+      setCountry({
+        ...country,
+        cached_rating: countryData.cached_rating,
+        cached_rating_count: countryData.cached_rating_count,
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -222,6 +268,51 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
           <div className="w-full max-w-[1280px] mx-auto px-4">
             <h1 className="text-xl lg:text-3xl font-bold text-white mb-2 drop-shadow-2xl max-w-3xl">{h1Tag || countryName}</h1>
             {pTag && <p className="text-xs lg:text-sm text-white/90 max-w-2xl leading-relaxed drop-shadow-lg mb-6">{pTag}</p>}
+            
+            {/* Compact Premium Rating Section */}
+            <div className="mb-5 inline-flex flex-col gap-2 animate-fade-in-up">
+              {/* Compact Rating Display Card */}
+              <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+                {/* Animated Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-orange-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Shine Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                </div>
+
+                <div className="relative px-4 py-2.5 flex items-center gap-3">
+                  <RatingDisplay 
+                    averageRating={country.cached_rating || 0}
+                    ratingsCount={country.cached_rating_count || 0}
+                    size="md"
+                  />
+                  
+                  {/* Compact Decorative Icon */}
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400/20 to-orange-500/20 flex items-center justify-center backdrop-blur-sm border border-white/10">
+                    <svg className="w-4 h-4 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rate Button - Opens Modal */}
+              <button
+                onClick={() => setShowRatingModal(true)}
+                className="group relative overflow-hidden rounded-lg px-5 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                <div className="relative flex items-center justify-center gap-2 text-sm font-semibold text-white">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span>{userRating ? (locale === 'ka' ? 'შეცვალეთ' : locale === 'ru' ? 'Изменить' : 'Change') : (locale === 'ka' ? 'შეაფასეთ' : locale === 'ru' ? 'Оценить' : 'Rate')}</span>
+                </div>
+                
+                {/* Hover shine */}
+                <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              </button>
+            </div>
             
             {/* CTA Buttons */}
             <div className="flex items-center gap-3 mt-4">
@@ -967,6 +1058,28 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
           </aside>
         </div>
       </div>
+
+      {/* Comments Section */}
+      <div className="max-w-[1280px] mx-auto px-4 py-16">
+        <div className="backdrop-blur-xl bg-background/80 border border-foreground/10 rounded-2xl p-8 shadow-2xl">
+          <CommentsList
+            commentableType="country"
+            commentableId={String(country.id)}
+          />
+        </div>
+      </div>
+
+      {/* Rating Modal */}
+      <RatingModal
+        isOpen={showRatingModal}
+        onClose={() => setShowRatingModal(false)}
+        ratableType="country"
+        ratableId={String(country.id)}
+        existingRating={userRating || undefined}
+        onRatingChange={(newRating) => handleRatingChange(newRating)}
+        title={locale === 'ka' ? 'შეაფასეთ ქვეყანა' : locale === 'ru' ? 'Оцените страну' : 'Rate Country'}
+        subtitle={locale === 'ka' ? 'თქვენი აზრი ძალიან მნიშვნელოვანია' : locale === 'ru' ? 'Ваше мнение очень важно' : 'Your opinion matters'}
+      />
     </div>
   );
 }

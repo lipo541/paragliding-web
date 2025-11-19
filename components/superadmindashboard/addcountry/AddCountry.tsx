@@ -109,6 +109,10 @@ export default function AddCountry() {
               country_id: location.country_id,
               og_image_url: location.og_image_url,
               map_iframe_url: location.map_iframe_url,
+              altitude: location.altitude,
+              best_season_start: location.best_season_start,
+              best_season_end: location.best_season_end,
+              difficulty_level: location.difficulty_level,
               translations: {
                 georgian: {
                   name: location.name_ka || '',

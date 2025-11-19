@@ -17,6 +17,10 @@ interface Location {
   country_id: string;
   og_image_url?: string;
   map_iframe_url?: string;
+  altitude?: number;
+  best_season_start?: number;
+  best_season_end?: number;
+  difficulty_level?: string;
   translations: {
     georgian: LocationTranslations;
     english: LocationTranslations;
@@ -39,6 +43,10 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
   const [ogImage, setOgImage] = useState<File | null>(null);
   const [ogImagePreview, setOgImagePreview] = useState<string | null>(null);
   const [mapIframeUrl, setMapIframeUrl] = useState<string>("");
+  const [altitude, setAltitude] = useState<string>("");
+  const [bestSeasonStart, setBestSeasonStart] = useState<string>("");
+  const [bestSeasonEnd, setBestSeasonEnd] = useState<string>("");
+  const [difficultyLevel, setDifficultyLevel] = useState<string>("");
   const [locationForm, setLocationForm] = useState({
     georgian: { name: "", slug: "", seoTitle: "", seoDescription: "", ogTitle: "", ogDescription: "" },
     english: { name: "", slug: "", seoTitle: "", seoDescription: "", ogTitle: "", ogDescription: "" },
@@ -66,6 +74,18 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
     }
     if (location.map_iframe_url) {
       setMapIframeUrl(location.map_iframe_url);
+    }
+    if (location.altitude) {
+      setAltitude(location.altitude.toString());
+    }
+    if (location.best_season_start) {
+      setBestSeasonStart(location.best_season_start.toString());
+    }
+    if (location.best_season_end) {
+      setBestSeasonEnd(location.best_season_end.toString());
+    }
+    if (location.difficulty_level) {
+      setDifficultyLevel(location.difficulty_level);
     }
   }, [location]);
 
@@ -237,6 +257,10 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
         .update({
           og_image_url: ogImageUrl,
           map_iframe_url: mapIframeUrl || null,
+          altitude: altitude ? parseInt(altitude) : null,
+          best_season_start: bestSeasonStart ? parseInt(bestSeasonStart) : null,
+          best_season_end: bestSeasonEnd ? parseInt(bestSeasonEnd) : null,
+          difficulty_level: difficultyLevel || null,
           name_ka: locationForm.georgian.name,
           slug_ka: locationForm.georgian.slug,
           seo_title_ka: locationForm.georgian.seoTitle,
@@ -399,6 +423,87 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
               />
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Location Details */}
+      <div className="mb-6 p-4 bg-foreground/5 rounded-lg border border-foreground/10">
+        <h4 className="text-sm font-semibold text-foreground mb-4">📍 ლოკაციის დეტალები</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Altitude */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სიმაღლე (მეტრი)</label>
+            <input
+              type="number"
+              value={altitude}
+              onChange={(e) => setAltitude(e.target.value)}
+              placeholder="მაგ: 2200"
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Best Season Start */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სეზონის დაწყება</label>
+            <select
+              value={bestSeasonStart}
+              onChange={(e) => setBestSeasonStart(e.target.value)}
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">არჩევა</option>
+              <option value="1">იანვარი</option>
+              <option value="2">თებერვალი</option>
+              <option value="3">მარტი</option>
+              <option value="4">აპრილი</option>
+              <option value="5">მაისი</option>
+              <option value="6">ივნისი</option>
+              <option value="7">ივლისი</option>
+              <option value="8">აგვისტო</option>
+              <option value="9">სექტემბერი</option>
+              <option value="10">ოქტომბერი</option>
+              <option value="11">ნოემბერი</option>
+              <option value="12">დეკემბერი</option>
+            </select>
+          </div>
+
+          {/* Best Season End */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სეზონის დასრულება</label>
+            <select
+              value={bestSeasonEnd}
+              onChange={(e) => setBestSeasonEnd(e.target.value)}
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">არჩევა</option>
+              <option value="1">იანვარი</option>
+              <option value="2">თებერვალი</option>
+              <option value="3">მარტი</option>
+              <option value="4">აპრილი</option>
+              <option value="5">მაისი</option>
+              <option value="6">ივნისი</option>
+              <option value="7">ივლისი</option>
+              <option value="8">აგვისტო</option>
+              <option value="9">სექტემბერი</option>
+              <option value="10">ოქტომბერი</option>
+              <option value="11">ნოემბერი</option>
+              <option value="12">დეკემბერი</option>
+            </select>
+          </div>
+
+          {/* Difficulty Level */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სირთულის დონე</label>
+            <select
+              value={difficultyLevel}
+              onChange={(e) => setDifficultyLevel(e.target.value)}
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">არჩევა</option>
+              <option value="beginner">დამწყები</option>
+              <option value="intermediate">საშუალო</option>
+              <option value="advanced">პროფესიონალი</option>
+            </select>
+          </div>
         </div>
       </div>
 

@@ -15,6 +15,8 @@ interface Country {
   slug_en: string;
   slug_ru: string;
   og_image_url?: string;
+  cached_rating?: number;
+  cached_rating_count?: number;
 }
 
 interface Location {
@@ -28,6 +30,12 @@ interface Location {
   slug_ru: string;
   og_image_url?: string;
   hero_image_url?: string;
+  cached_rating?: number;
+  cached_rating_count?: number;
+  altitude?: number;
+  best_season_start?: number;
+  best_season_end?: number;
+  difficulty_level?: string;
 }
 
 interface GlobalLocationsProps {
@@ -64,40 +72,48 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Fetch countries
+        // Fetch countries with ratings
         const { data: countriesData, error: countriesError } = await supabase
           .from('countries')
-          .select('*')
+          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, og_image_url, cached_rating, cached_rating_count')
           .eq('is_active', true)
           .order('name_ka', { ascending: true });
 
         if (countriesError) throw countriesError;
         setCountries(countriesData || []);
 
-        // Fetch locations with hero images
+        // Fetch locations with ratings and details
         const { data: locationsData, error: locationsError } = await supabase
           .from('locations')
-          .select(`
-            *,
-            location_pages(
-              content,
-              is_active
-            )
-          `)
+          .select('id, country_id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
           .order('name_ka', { ascending: true });
 
-        if (locationsError) throw locationsError;
+        if (locationsError) {
+          console.error('Locations error:', locationsError);
+          throw locationsError;
+        }
         
-        // Extract hero image from location_pages content
+        console.log('Fetched locations:', locationsData?.length);
+        
+        // Fetch location_pages for hero images
+        const { data: locationPagesData } = await supabase
+          .from('location_pages')
+          .select('location_id, content');
+        
+        // Merge hero images with locations
         const locationsWithHero = (locationsData || []).map((loc: any) => {
+          const locationPage = locationPagesData?.find((lp: any) => lp.location_id === loc.id);
+          const heroImageUrl = locationPage?.content?.shared_images?.hero_image?.url;
+          
           return {
             ...loc,
-            hero_image_url: loc.location_pages?.content?.shared_images?.hero_image?.url || loc.og_image_url || null
+            hero_image_url: heroImageUrl || loc.og_image_url || null
           };
         });
         setLocations(locationsWithHero);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching data:', error);
+        console.error('Error details:', error?.message, error?.code, error?.hint);
       } finally {
         setIsLoading(false);
       }
@@ -255,9 +271,37 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                 {/* Country Header */}
                 <div className="flex items-center gap-3 mb-6">
                   <div className="flex-1 h-px bg-foreground/10"></div>
-                  <h2 className="text-lg font-bold text-foreground">
-                    {getLocalizedName(country, 'name')}
-                  </h2>
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-lg font-bold text-foreground">
+                      {getLocalizedName(country, 'name')}
+                    </h2>
+                    {country.cached_rating && country.cached_rating > 0 && (
+                      <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg
+                            key={star}
+                            className={`w-3 h-3 ${
+                              star <= Math.round(country.cached_rating!)
+                                ? 'text-yellow-500 fill-current'
+                                : 'text-foreground/20 fill-current'
+                            }`}
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                        <span className="text-xs font-semibold text-foreground/70 ml-1">
+                          {country.cached_rating.toFixed(1)}
+                        </span>
+                        <span className="text-[10px] text-foreground/40">
+                          ({country.cached_rating_count})
+                        </span>
+                      </div>
+                    )}
+                    <span className="text-sm text-foreground/50">
+                      • {locations.length} ლოკაცია
+                    </span>
+                  </div>
                   <div className="flex-1 h-px bg-foreground/10"></div>
                 </div>
 
@@ -293,13 +337,66 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
 
                           {/* Content */}
                           <div className="p-4">
-                            <h3 className="text-base font-bold text-foreground group-hover:text-foreground/80 transition-colors">
+                            <h3 className="text-base font-bold text-foreground group-hover:text-foreground/80 transition-colors mb-2">
                               {getLocalizedName(location, 'name')}
                             </h3>
-                            <p className="text-xs text-foreground/60 mt-1 flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              {getLocalizedName(country, 'name')}
-                            </p>
+                            
+                            {/* Rating */}
+                            {location.cached_rating && location.cached_rating > 0 && (
+                              <div className="flex items-center gap-1 mb-2">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <svg
+                                    key={star}
+                                    className={`w-3.5 h-3.5 ${
+                                      star <= Math.round(location.cached_rating!)
+                                        ? 'text-yellow-500 fill-current'
+                                        : 'text-foreground/20 fill-current'
+                                    }`}
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                ))}
+                                <span className="text-xs font-semibold text-foreground/70 ml-1">
+                                  {location.cached_rating.toFixed(1)}
+                                </span>
+                                <span className="text-[10px] text-foreground/40">
+                                  ({location.cached_rating_count})
+                                </span>
+                              </div>
+                            )}
+                            
+                            {/* Location Info */}
+                            <div className="space-y-1">
+                              <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                {getLocalizedName(country, 'name')}
+                              </p>
+                              {location.altitude && (
+                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                  </svg>
+                                  {location.altitude}მ
+                                </p>
+                              )}
+                              {location.best_season_start && location.best_season_end && (
+                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                  {['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'][location.best_season_start - 1]} - {['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'][location.best_season_end - 1]}
+                                </p>
+                              )}
+                              {location.difficulty_level && (
+                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                  </svg>
+                                  {location.difficulty_level === 'beginner' ? 'დამწყები' : location.difficulty_level === 'intermediate' ? 'საშუალო' : 'პროფესიონალი'}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </Link>
                       );
@@ -336,13 +433,74 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
 
                           {/* Info */}
                           <div className="flex-1">
-                            <h3 className="text-base font-bold text-foreground group-hover:text-foreground/80 transition-colors">
-                              {getLocalizedName(location, 'name')}
-                            </h3>
-                            <p className="text-xs text-foreground/60 mt-1 flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              {getLocalizedName(country, 'name')}
-                            </p>
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <h3 className="text-base font-bold text-foreground group-hover:text-foreground/80 transition-colors mb-1">
+                                  {getLocalizedName(location, 'name')}
+                                </h3>
+                                
+                                {/* Rating */}
+                                {location.cached_rating && location.cached_rating > 0 && (
+                                  <div className="flex items-center gap-1 mb-2">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                      <svg
+                                        key={star}
+                                        className={`w-3 h-3 ${
+                                          star <= Math.round(location.cached_rating!)
+                                            ? 'text-yellow-500 fill-current'
+                                            : 'text-foreground/20 fill-current'
+                                        }`}
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                      </svg>
+                                    ))}
+                                    <span className="text-xs font-semibold text-foreground/70 ml-1">
+                                      {location.cached_rating.toFixed(1)}
+                                    </span>
+                                    <span className="text-[10px] text-foreground/40">
+                                      ({location.cached_rating_count})
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* Quick Stats */}
+                              <div className="flex flex-col gap-1 text-right">
+                                {location.altitude && (
+                                  <span className="text-xs font-semibold text-foreground/70">
+                                    {location.altitude}მ
+                                  </span>
+                                )}
+                                {location.difficulty_level && (
+                                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                    location.difficulty_level === 'beginner' 
+                                      ? 'bg-green-500/10 text-green-600 dark:text-green-400' 
+                                      : location.difficulty_level === 'intermediate'
+                                      ? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
+                                      : 'bg-red-500/10 text-red-600 dark:text-red-400'
+                                  }`}>
+                                    {location.difficulty_level === 'beginner' ? 'დამწყები' : location.difficulty_level === 'intermediate' ? 'საშუალო' : 'პროფი'}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            
+                            {/* Location Details */}
+                            <div className="flex items-center gap-3 mt-2 flex-wrap">
+                              <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                {getLocalizedName(country, 'name')}
+                              </p>
+                              {location.best_season_start && location.best_season_end && (
+                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                  {['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'][location.best_season_start - 1]} - {['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'][location.best_season_end - 1]}
+                                </p>
+                              )}
+                            </div>
                           </div>
 
                           {/* Arrow */}

@@ -25,6 +25,10 @@ export default function AddLocation({ countryId, countryName, onClose, onSuccess
   const [ogImagePreview, setOgImagePreview] = useState<string | null>(null);
   const [locationForm, setLocationForm] = useState({
     mapIframeUrl: "",
+    altitude: "",
+    bestSeasonStart: "",
+    bestSeasonEnd: "",
+    difficultyLevel: "",
     georgian: { name: "", slug: "", seoTitle: "", seoDescription: "", ogTitle: "", ogDescription: "" },
     english: { name: "", slug: "", seoTitle: "", seoDescription: "", ogTitle: "", ogDescription: "" },
     russian: { name: "", slug: "", seoTitle: "", seoDescription: "", ogTitle: "", ogDescription: "" },
@@ -88,7 +92,7 @@ export default function AddLocation({ countryId, countryName, onClose, onSuccess
   };
 
   const handleInputChange = (
-    language: Exclude<keyof typeof locationForm, 'mapIframeUrl'>,
+    language: Exclude<keyof typeof locationForm, 'mapIframeUrl' | 'altitude' | 'bestSeasonStart' | 'bestSeasonEnd' | 'difficultyLevel'>,
     field: keyof LocationTranslations,
     value: string
   ) => {
@@ -102,7 +106,7 @@ export default function AddLocation({ countryId, countryName, onClose, onSuccess
     }));
   };
 
-  const handleAutoGenerateSlug = (language: Exclude<keyof typeof locationForm, 'mapIframeUrl'>) => {
+  const handleAutoGenerateSlug = (language: Exclude<keyof typeof locationForm, 'mapIframeUrl' | 'altitude' | 'bestSeasonStart' | 'bestSeasonEnd' | 'difficultyLevel'>) => {
     const name = locationForm[language].name;
     if (name) {
       setLocationForm((prev) => ({
@@ -212,6 +216,10 @@ export default function AddLocation({ countryId, countryName, onClose, onSuccess
           country_id: countryId,
           og_image_url: ogImageUrl,
           map_iframe_url: locationForm.mapIframeUrl || null,
+          altitude: locationForm.altitude ? parseInt(locationForm.altitude) : null,
+          best_season_start: locationForm.bestSeasonStart ? parseInt(locationForm.bestSeasonStart) : null,
+          best_season_end: locationForm.bestSeasonEnd ? parseInt(locationForm.bestSeasonEnd) : null,
+          difficulty_level: locationForm.difficultyLevel || null,
           name_ka: locationForm.georgian.name,
           slug_ka: locationForm.georgian.slug,
           seo_title_ka: locationForm.georgian.seoTitle,
@@ -369,6 +377,87 @@ export default function AddLocation({ countryId, countryName, onClose, onSuccess
               />
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Location Details */}
+      <div className="mb-6 p-4 bg-foreground/5 rounded-lg border border-foreground/10">
+        <h4 className="text-sm font-semibold text-foreground mb-4">📍 ლოკაციის დეტალები</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Altitude */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სიმაღლე (მეტრი)</label>
+            <input
+              type="number"
+              value={locationForm.altitude}
+              onChange={(e) => setLocationForm(prev => ({ ...prev, altitude: e.target.value }))}
+              placeholder="მაგ: 2200"
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          {/* Best Season Start */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სეზონის დაწყება</label>
+            <select
+              value={locationForm.bestSeasonStart}
+              onChange={(e) => setLocationForm(prev => ({ ...prev, bestSeasonStart: e.target.value }))}
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">არჩევა</option>
+              <option value="1">იანვარი</option>
+              <option value="2">თებერვალი</option>
+              <option value="3">მარტი</option>
+              <option value="4">აპრილი</option>
+              <option value="5">მაისი</option>
+              <option value="6">ივნისი</option>
+              <option value="7">ივლისი</option>
+              <option value="8">აგვისტო</option>
+              <option value="9">სექტემბერი</option>
+              <option value="10">ოქტომბერი</option>
+              <option value="11">ნოემბერი</option>
+              <option value="12">დეკემბერი</option>
+            </select>
+          </div>
+
+          {/* Best Season End */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სეზონის დასრულება</label>
+            <select
+              value={locationForm.bestSeasonEnd}
+              onChange={(e) => setLocationForm(prev => ({ ...prev, bestSeasonEnd: e.target.value }))}
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">არჩევა</option>
+              <option value="1">იანვარი</option>
+              <option value="2">თებერვალი</option>
+              <option value="3">მარტი</option>
+              <option value="4">აპრილი</option>
+              <option value="5">მაისი</option>
+              <option value="6">ივნისი</option>
+              <option value="7">ივლისი</option>
+              <option value="8">აგვისტო</option>
+              <option value="9">სექტემბერი</option>
+              <option value="10">ოქტომბერი</option>
+              <option value="11">ნოემბერი</option>
+              <option value="12">დეკემბერი</option>
+            </select>
+          </div>
+
+          {/* Difficulty Level */}
+          <div>
+            <label className="block text-xs text-foreground/60 mb-2">სირთულის დონე</label>
+            <select
+              value={locationForm.difficultyLevel}
+              onChange={(e) => setLocationForm(prev => ({ ...prev, difficultyLevel: e.target.value }))}
+              className="w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">არჩევა</option>
+              <option value="beginner">დამწყები</option>
+              <option value="intermediate">საშუალო</option>
+              <option value="advanced">პროფესიონალი</option>
+            </select>
+          </div>
         </div>
       </div>
 

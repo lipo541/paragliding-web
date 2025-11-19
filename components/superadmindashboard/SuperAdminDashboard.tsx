@@ -6,6 +6,7 @@ import AddLocationFly from './addlocation/AddLocationFly';
 import AddCountry from './addcountry/AddCountry';
 import AddCountryPage from './addcountry/AddCountryPage';
 import LocationsList from './addlocation/LocationsList';
+import Comments from './comments/Comments';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
@@ -125,6 +126,20 @@ export default function SuperAdminDashboard() {
             </button>
 
             <button
+              onClick={() => setActiveTab('comments')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'comments'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              კომენტარები
+            </button>
+
+            <button
               onClick={() => setActiveTab('settings')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 activeTab === 'settings'
@@ -155,6 +170,7 @@ export default function SuperAdminDashboard() {
                   {activeTab === 'users' && 'მომხმარებლები'}
                   {activeTab === 'pilots' && 'პილოტები'}
                   {activeTab === 'companies' && 'კომპანიები'}
+                  {activeTab === 'comments' && 'კომენტარები'}
                   {activeTab === 'settings' && 'პარამეტრები'}
                 </h2>
                 {activeTab === 'addlocation' && !showAddLocationForm && (
@@ -276,6 +292,8 @@ export default function SuperAdminDashboard() {
                 <p className="text-foreground/60">კომპანიების მართვა - განვითარების პროცესშია</p>
               </div>
             )}
+
+            {activeTab === 'comments' && <Comments />}
 
             {activeTab === 'settings' && (
               <div className="bg-background rounded-lg border border-foreground/10 p-6">

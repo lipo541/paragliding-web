@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import RatingDisplay from '@/components/rating/RatingDisplay';
+import RatingInput from '@/components/rating/RatingInput';
+import RatingModal from '@/components/rating/RatingModal';
+import CommentsList from '@/components/comments/CommentsList';
 import { 
   MapPin, 
   Calendar, 
@@ -46,6 +50,9 @@ interface Location {
   // SEO & OG
   og_image_url?: string;
   map_iframe_url?: string;
+  // Ratings
+  cached_rating?: number;
+  cached_rating_count?: number;
 }
 
 interface LocationPageData {
@@ -65,6 +72,8 @@ interface FlightType {
   price_gel?: number;
   price_usd?: number;
   price_eur?: number;
+  cached_rating?: number;
+  cached_rating_count?: number;
 }
 
 interface SharedFlightType {
@@ -102,11 +111,58 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [userRating, setUserRating] = useState<number | undefined>(undefined);
+  const [showRatingInput, setShowRatingInput] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [flightTypeRatings, setFlightTypeRatings] = useState<{ [key: string]: { userRating: number | null; showInput: boolean; avgRating: number; count: number } }>({});
 
   // Helper to get localized string
   const getLocalizedField = (obj: any, field: string, loc: string) => {
     const suffix = loc || 'en';
     return obj?.[`${field}_${suffix}`] || obj?.[`${field}_en`] || '';
+  };
+
+  const handleRatingChange = async (newRating: number | null) => {
+    setUserRating(newRating || undefined);
+    
+    // Refetch location to get updated cached rating
+    if (location) {
+      const supabase = createClient();
+      const { data: updatedLocation } = await supabase
+        .from('locations')
+        .select('cached_rating, cached_rating_count')
+        .eq('id', location.id)
+        .single();
+      
+      if (updatedLocation) {
+        setLocation({ ...location, ...updatedLocation });
+      }
+    }
+  };
+
+  const handleFlightTypeRatingChange = async (sharedId: string, newRating: number | null) => {
+    const supabase = createClient();
+    
+    // Fetch updated aggregated ratings for this flight type
+    const { data: flightRatings } = await supabase
+      .from('ratings')
+      .select('rating')
+      .eq('ratable_type', 'flight_type')
+      .eq('ratable_id', sharedId);
+
+    const avgRating = flightRatings && flightRatings.length > 0
+      ? flightRatings.reduce((sum, r) => sum + r.rating, 0) / flightRatings.length
+      : 0;
+
+    setFlightTypeRatings(prev => ({
+      ...prev,
+      [sharedId]: {
+        ...prev[sharedId],
+        userRating: newRating,
+        avgRating: Number(avgRating.toFixed(1)),
+        count: flightRatings?.length || 0
+      }
+    }));
   };
 
   useEffect(() => {
@@ -134,6 +190,56 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
         if (pageError && pageError.code !== 'PGRST116') throw pageError;
         setLocationPage(pageData);
+
+        // Fetch user's rating if authenticated
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && locationData) {
+          const { data: ratingData } = await supabase
+            .from('ratings')
+            .select('rating')
+            .eq('ratable_type', 'location')
+            .eq('ratable_id', String(locationData.id))
+            .eq('user_id', user.id)
+            .single();
+          
+          if (ratingData) {
+            setUserRating(ratingData.rating);
+          }
+
+          // Fetch flight type ratings
+          if (pageData?.content?.[locale]?.flight_types) {
+            const flightTypesData: FlightType[] = pageData.content[locale].flight_types;
+            const sharedIds = flightTypesData.map((ft: FlightType) => ft.shared_id).filter(Boolean) as string[];
+            
+            if (sharedIds.length > 0) {
+              // Fetch all ratings for these flight types
+              const { data: flightRatings } = await supabase
+                .from('ratings')
+                .select('ratable_id, rating, user_id')
+                .eq('ratable_type', 'flight_type')
+                .in('ratable_id', sharedIds);
+
+              const ratingsMap: { [key: string]: { userRating: number | null; showInput: boolean; avgRating: number; count: number } } = {};
+              
+              sharedIds.forEach((id: string) => {
+                const typeRatings = flightRatings?.filter((r: any) => r.ratable_id === id) || [];
+                const userRatingData = typeRatings.find((r: any) => r.user_id === user.id);
+                const avgRating = typeRatings.length > 0 
+                  ? typeRatings.reduce((sum: number, r: any) => sum + r.rating, 0) / typeRatings.length 
+                  : 0;
+                
+                ratingsMap[id] = {
+                  userRating: userRatingData?.rating || null,
+                  showInput: false,
+                  avgRating: Number(avgRating.toFixed(1)),
+                  count: typeRatings.length
+                };
+              });
+              
+              setFlightTypeRatings(ratingsMap);
+            }
+          }
+        }
       } catch (error) {
         console.error('Error fetching location data:', error);
       } finally {
@@ -305,6 +411,51 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             <h1 className="text-xl lg:text-3xl font-bold text-white mb-2 drop-shadow-2xl max-w-3xl">{h1Tag || locationName}</h1>
             {pTag && <p className="text-xs lg:text-sm text-white/90 max-w-2xl leading-relaxed drop-shadow-lg mb-6">{pTag}</p>}
             
+            {/* Compact Premium Rating Section */}
+            <div className="mb-5 inline-flex flex-col gap-2 animate-fade-in-up">
+              {/* Compact Rating Display Card */}
+              <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+                {/* Animated Background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-orange-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Shine Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                </div>
+
+                <div className="relative px-4 py-2.5 flex items-center gap-3">
+                  <RatingDisplay 
+                    averageRating={location.cached_rating || 0}
+                    ratingsCount={location.cached_rating_count || 0}
+                    size="md"
+                  />
+                  
+                  {/* Compact Decorative Icon */}
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400/20 to-orange-500/20 flex items-center justify-center backdrop-blur-sm border border-white/10">
+                    <svg className="w-4 h-4 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rate Button - Opens Modal */}
+              <button
+                onClick={() => setShowRatingModal(true)}
+                className="group relative overflow-hidden rounded-lg px-5 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                <div className="relative flex items-center justify-center gap-2 text-sm font-semibold text-white">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span>{userRating ? (locale === 'ka' ? 'შეცვალეთ' : locale === 'ru' ? 'Изменить' : 'Change') : (locale === 'ka' ? 'შეაფასეთ' : locale === 'ru' ? 'Оценить' : 'Rate')}</span>
+                </div>
+                
+                {/* Hover shine */}
+                <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              </button>
+            </div>
+            
             {/* CTA Buttons */}
             <div className="flex items-center gap-3 mt-4">
               <Link
@@ -430,30 +581,136 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     return (
                       <div 
                         key={idx} 
-                        className="flex flex-col p-5 rounded-xl border border-foreground/10 bg-foreground/[0.02] hover:border-foreground/30 hover:bg-foreground/[0.04] hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
+                        className="flex flex-col p-4 md:p-5 rounded-xl border border-foreground/10 bg-foreground/[0.02] hover:border-foreground/30 hover:bg-foreground/[0.04] hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
                       >
                         {/* Header */}
-                        <div className="mb-4">
-                          <h3 className="text-lg font-bold text-foreground">{pkg.name}</h3>
-                          <p className="text-xs text-foreground/60 mt-1 min-h-[32px] line-clamp-2">
+                        <div className="mb-3">
+                          <h3 className="text-base md:text-lg font-bold text-foreground mb-2">{pkg.name}</h3>
+                          <p className="text-xs text-foreground/60 min-h-[32px] line-clamp-2">
                             {pkg.description}
                           </p>
                         </div>
 
+                        {/* Super Compact 5-Star Rating System - Above Price */}
+                        {pkg.shared_id && flightTypeRatings[pkg.shared_id] && (
+                          <div className="mb-3 pb-3 border-b border-foreground/10">
+                            <div className="flex items-center justify-between gap-2">
+                              {/* 5 Stars Display */}
+                              <div className="flex items-center gap-1">
+                                {[1, 2, 3, 4, 5].map((star) => {
+                                  const rating = flightTypeRatings[pkg.shared_id!].avgRating;
+                                  const isFilled = star <= Math.floor(rating);
+                                  const isHalf = !isFilled && star <= Math.ceil(rating) && rating % 1 >= 0.3;
+                                  
+                                  return (
+                                    <div key={star} className="relative w-3.5 h-3.5 md:w-4 md:h-4">
+                                      {isHalf ? (
+                                        <svg className="w-full h-full" viewBox="0 0 20 20">
+                                          <defs>
+                                            <linearGradient id={`half-${idx}-${star}`}>
+                                              <stop offset="50%" stopColor="rgb(234, 179, 8)" />
+                                              <stop offset="50%" stopColor="rgb(209, 213, 219)" />
+                                            </linearGradient>
+                                          </defs>
+                                          <path 
+                                            fill={`url(#half-${idx}-${star})`}
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                          />
+                                        </svg>
+                                      ) : (
+                                        <svg className="w-full h-full" viewBox="0 0 20 20">
+                                          <path 
+                                            fill={isFilled ? 'rgb(234, 179, 8)' : 'rgb(209, 213, 219)'}
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                          />
+                                        </svg>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Rating Number & Count */}
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-xs md:text-sm font-bold text-foreground">
+                                  {flightTypeRatings[pkg.shared_id].avgRating > 0 
+                                    ? flightTypeRatings[pkg.shared_id].avgRating.toFixed(1) 
+                                    : '0.0'}
+                                </span>
+                                <span className="text-[10px] text-foreground/50">
+                                  ({flightTypeRatings[pkg.shared_id].count})
+                                </span>
+                              </div>
+
+                              {/* Rate Button */}
+                              <button
+                                onClick={() => setFlightTypeRatings(prev => ({
+                                  ...prev,
+                                  [pkg.shared_id!]: {
+                                    ...prev[pkg.shared_id!],
+                                    showInput: !prev[pkg.shared_id!].showInput
+                                  }
+                                }))}
+                                className="ml-auto px-2 py-1 text-[10px] font-medium bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-600 dark:text-yellow-500 rounded border border-yellow-500/20 hover:border-yellow-500/40 transition-all"
+                              >
+                                {flightTypeRatings[pkg.shared_id].userRating ? 'შეცვლა' : 'შეფასება'}
+                              </button>
+                            </div>
+
+                            {/* Rating Input Dropdown */}
+                            {flightTypeRatings[pkg.shared_id].showInput && (
+                              <>
+                                {/* Backdrop overlay - closes on click */}
+                                <div 
+                                  className="fixed inset-0 z-40"
+                                  onClick={() => setFlightTypeRatings(prev => ({
+                                    ...prev,
+                                    [pkg.shared_id!]: {
+                                      ...prev[pkg.shared_id!],
+                                      showInput: false
+                                    }
+                                  }))}
+                                />
+                                {/* Rating input - positioned relative to parent */}
+                                <div className="relative z-50 mt-2 p-2 rounded-lg bg-white/90 dark:bg-black/70 backdrop-blur-md border border-foreground/20 shadow-lg animate-fadeIn">
+                                  <RatingInput
+                                    ratableType="flight_type"
+                                    ratableId={pkg.shared_id}
+                                    existingRating={flightTypeRatings[pkg.shared_id].userRating || undefined}
+                                    onRatingChange={(newRating) => {
+                                      handleFlightTypeRatingChange(pkg.shared_id!, newRating);
+                                      // Auto-close after rating
+                                      setTimeout(() => {
+                                        setFlightTypeRatings(prev => ({
+                                          ...prev,
+                                          [pkg.shared_id!]: {
+                                            ...prev[pkg.shared_id!],
+                                            showInput: false
+                                          }
+                                        }));
+                                      }, 1500);
+                                    }}
+                                  />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+
                         {/* Price */}
-                        <div className="mb-5 pb-5 border-b border-foreground/10">
-                          <div className="flex items-baseline gap-2 mb-2">
-                            <span className="text-3xl font-bold text-foreground">
+                        <div className="mb-4 pb-4 border-b border-foreground/10">
+                          <div className="flex items-baseline gap-1.5 mb-1.5">
+                            <span className="text-2xl md:text-3xl font-bold text-foreground">
                               {priceGel}
                             </span>
-                            <span className="text-xl font-bold text-foreground/70">₾</span>
-                            <span className="text-xs text-foreground/50 ml-1">/ person</span>
+                            <span className="text-lg md:text-xl font-bold text-foreground/70">₾</span>
+                            <span className="text-[10px] md:text-xs text-foreground/50">/ person</span>
                           </div>
-                          <div className="flex gap-2">
-                            <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[10px] font-semibold">
+                          <div className="flex gap-1.5">
+                            <span className="px-1.5 py-0.5 md:px-2 md:py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[9px] md:text-[10px] font-semibold">
                               ${priceUsd}
                             </span>
-                            <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded text-[10px] font-semibold">
+                            <span className="px-1.5 py-0.5 md:px-2 md:py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded text-[9px] md:text-[10px] font-semibold">
                               €{priceEur}
                             </span>
                           </div>
@@ -948,6 +1205,30 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
           </button>
         </div>
       )}
+
+      {/* Comments Section */}
+      <div className="max-w-[1280px] mx-auto px-4 py-16">
+        <div className="backdrop-blur-xl bg-background/80 border border-foreground/10 rounded-2xl p-8 shadow-2xl">
+          <CommentsList
+            commentableType="location"
+            commentableId={String(location.id)}
+          />
+        </div>
+      </div>
+
+      {/* Rating Modal */}
+      <RatingModal
+        isOpen={showRatingModal}
+        onClose={() => setShowRatingModal(false)}
+        ratableType="location"
+        ratableId={String(location.id)}
+        existingRating={userRating}
+        onRatingChange={(newRating) => {
+          handleRatingChange(newRating);
+        }}
+        title={locale === 'ka' ? 'შეაფასეთ ლოკაცია' : locale === 'ru' ? 'Оцените локацию' : 'Rate Location'}
+        subtitle={locale === 'ka' ? 'თქვენი აზრი ძალიან მნიშვნელოვანია' : locale === 'ru' ? 'Ваше мнение очень важно' : 'Your opinion matters'}
+      />
 
     </div>
   );
