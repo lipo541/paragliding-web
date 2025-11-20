@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import UserBottomNav from "@/components/userbottomnav/UserBottomNav";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -50,7 +52,11 @@ export default function LocaleLayout({
       disableTransitionOnChange
     >
       <Header />
-      {children}
+      <div className="pb-20">
+        {children}
+      </div>
+      <Footer />
+      <UserBottomNav />
     </ThemeProvider>
   );
 }

@@ -162,7 +162,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
             <div className="lg:col-span-2">
               <Link
                 href={`/${locale}/locations/${getLocalizedSlug(country, locale)}`}
-                className="group block h-full p-6 rounded-2xl border border-foreground/10 hover:border-foreground/20 hover:shadow-2xl shadow-lg backdrop-blur-xl bg-background/70 hover:bg-background/80 transition-all duration-500 hover:scale-[1.02]"
+                className="group block h-full p-6 rounded-2xl border border-foreground/10 hover:border-foreground/20 hover:shadow-2xl shadow-lg bg-gradient-to-br from-foreground/[0.03] via-foreground/[0.02] to-transparent transition-all duration-500 hover:scale-[1.02]"
                 style={{
                   animationDelay: `${index * 50}ms`,
                 }}
@@ -255,7 +255,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                     <Link
                       key={location.id}
                       href={`/${locale}/locations/${getLocalizedSlug(country, locale)}/${getLocalizedSlug(location, locale)}`}
-                      className="group/location block p-3 rounded-xl border border-foreground/10 hover:border-foreground/25 backdrop-blur-lg bg-background/60 hover:bg-background/70 hover:shadow-md transition-all duration-300 hover:scale-[1.02]"
+                      className="group/location block p-3 rounded-xl border border-foreground/10 hover:border-foreground/25 hover:bg-foreground/[0.03] hover:shadow-md transition-all duration-300 hover:scale-[1.02]"
                     >
                       <div className="flex items-center gap-2.5">
                         {/* Location Image */}

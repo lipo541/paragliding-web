@@ -10,6 +10,7 @@ export default function AuthButtons() {
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'ka';
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<{ full_name: string | null; role: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -18,14 +19,39 @@ export default function AuthButtons() {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      // Fetch user profile if user exists
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, role')
+          .eq('id', user.id)
+          .single();
+        
+        setUserProfile(profile);
+      }
+      
       setLoading(false);
     };
 
     getUser();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
+      
+      // Fetch profile when user logs in
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, role')
+          .eq('id', session.user.id)
+          .single();
+        
+        setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -40,21 +66,38 @@ export default function AuthButtons() {
     );
   }
 
-  // If user is logged in, show CMS button
+  // If user is logged in, show appropriate buttons based on role
   if (user) {
     const handleLogout = async () => {
       await supabase.auth.signOut();
       window.location.href = `/${locale}`;
     };
+    
+    const isSuperAdmin = userProfile?.role === 'SUPER_ADMIN';
 
+    // SUPER_ADMIN gets CMS button (traditional style)
+    if (isSuperAdmin) {
+      return (
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/${locale}/cms`}
+            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
+          >
+            CMS
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+          >
+            გასვლა
+          </button>
+        </div>
+      );
+    }
+    
+    // Regular USER - Hide profile (they have it in bottom nav)
     return (
       <div className="flex items-center gap-2">
-        <Link
-          href={`/${locale}/cms`}
-          className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
-        >
-          CMS
-        </Link>
         <button
           onClick={handleLogout}
           className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"

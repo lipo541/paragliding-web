@@ -61,7 +61,7 @@ export default function Header() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {navItemsData
                     .find((item) => item.label === activeMenu)
-                    ?.submenu.map((subItem, index) => (
+                    ?.submenu?.map((subItem, index) => (
                       <Link
                         key={subItem.href}
                         href={`/${locale}${subItem.href}`}

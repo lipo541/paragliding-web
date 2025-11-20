@@ -7,6 +7,9 @@ import AddCountry from './addcountry/AddCountry';
 import AddCountryPage from './addcountry/AddCountryPage';
 import LocationsList from './addlocation/LocationsList';
 import Comments from './comments/Comments';
+import PromoCodeManager from './promocode/PromoCodeManager';
+import Bookings from './bookings/Bookings';
+import Promotions from './promotions/Promotions';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
@@ -126,6 +129,20 @@ export default function SuperAdminDashboard() {
             </button>
 
             <button
+              onClick={() => setActiveTab('bookings')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'bookings'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              ჯავშნები
+            </button>
+
+            <button
               onClick={() => setActiveTab('comments')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 activeTab === 'comments'
@@ -137,6 +154,34 @@ export default function SuperAdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               კომენტარები
+            </button>
+
+            <button
+              onClick={() => setActiveTab('promocodes')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'promocodes'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+              პრომო კოდები
+            </button>
+
+            <button
+              onClick={() => setActiveTab('promotions')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'promotions'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+              </svg>
+              პრომო-აქციები
             </button>
 
             <button
@@ -170,7 +215,10 @@ export default function SuperAdminDashboard() {
                   {activeTab === 'users' && 'მომხმარებლები'}
                   {activeTab === 'pilots' && 'პილოტები'}
                   {activeTab === 'companies' && 'კომპანიები'}
+                  {activeTab === 'bookings' && 'ჯავშნები'}
                   {activeTab === 'comments' && 'კომენტარები'}
+                  {activeTab === 'promocodes' && 'პრომო კოდები'}
+                  {activeTab === 'promotions' && 'პრომო-აქციები'}
                   {activeTab === 'settings' && 'პარამეტრები'}
                 </h2>
                 {activeTab === 'addlocation' && !showAddLocationForm && (
@@ -293,7 +341,13 @@ export default function SuperAdminDashboard() {
               </div>
             )}
 
+            {activeTab === 'bookings' && <Bookings />}
+
             {activeTab === 'comments' && <Comments />}
+
+            {activeTab === 'promocodes' && <PromoCodeManager />}
+
+            {activeTab === 'promotions' && <Promotions />}
 
             {activeTab === 'settings' && (
               <div className="bg-background rounded-lg border border-foreground/10 p-6">

@@ -37,6 +37,7 @@ export default function MobileMenu() {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [openCountry, setOpenCountry] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [countriesWithLocations, setCountriesWithLocations] = useState<CountryWithLocations[]>([]);
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'ka';
@@ -46,12 +47,27 @@ export default function MobileMenu() {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      // Fetch user role
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .maybeSingle();
+        setUserRole(profile?.role || null);
+      }
     };
 
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        getUser();
+      } else {
+        setUserRole(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -139,27 +155,41 @@ export default function MobileMenu() {
           <nav className="flex flex-col p-4">
             {navItemsData.map((item) => (
               <div key={item.href} className="border-b border-foreground/10 last:border-0">
-                <button
-                  onClick={() => setOpenSubmenu(openSubmenu === item.label ? null : item.label)}
-                  className="w-full flex items-center justify-between px-3 py-3 text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
-                >
-                  <span>{item.label}</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      openSubmenu === item.label ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <div className="flex items-center">
+                  {/* Left side - Link to page */}
+                  <Link
+                    href={item.label === 'ლოკაციები' ? `/${locale}/locations` : `/${locale}${item.href}`}
+                    onClick={() => setIsOpen(false)}
+                    className="flex-1 px-3 py-3 text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
+                    {item.label}
+                  </Link>
+                  
+                  {/* Right side - Toggle submenu (only if has submenu) */}
+                  {item.submenu?.length && item.submenu.length > 0 && (
+                    <button
+                      onClick={() => setOpenSubmenu(openSubmenu === item.label ? null : item.label)}
+                      className="px-3 py-3 hover:bg-foreground/5 transition-colors"
+                      aria-label={`Toggle ${item.label} submenu`}
+                    >
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          openSubmenu === item.label ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
 
                 {openSubmenu === item.label && (
                   <div className="pl-4 pb-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -168,51 +198,46 @@ export default function MobileMenu() {
                       <>
                         {countriesWithLocations.map((country) => (
                           <div key={country.id} className="border-b border-foreground/5 last:border-0">
-                            <button
-                              onClick={() => setOpenCountry(openCountry === country.id ? null : country.id)}
-                              className="w-full flex items-center justify-between px-3 py-2 text-sm text-foreground/90 hover:text-foreground hover:bg-foreground/5 rounded-md transition-colors"
-                            >
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-center">
+                              {/* Left side - Link to country page */}
+                              <Link
+                                href={`/${locale}/locations/${getLocalizedSlug(country)}`}
+                                onClick={() => setIsOpen(false)}
+                                className="flex-1 flex items-center gap-2 px-3 py-2 text-sm text-foreground/90 hover:text-foreground hover:bg-foreground/5 rounded-md transition-colors"
+                              >
                                 <svg className="w-4 h-4 text-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span className="font-medium">{getLocalizedName(country)}</span>
                                 <span className="text-xs text-foreground/40">({country.locations.length})</span>
-                              </div>
-                              <svg
-                                className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                                  openCountry === country.id ? 'rotate-180' : ''
-                                }`}
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                              </Link>
+                              
+                              {/* Right side - Toggle locations submenu */}
+                              <button
+                                onClick={() => setOpenCountry(openCountry === country.id ? null : country.id)}
+                                className="px-3 py-2 hover:bg-foreground/5 rounded-md transition-colors"
+                                aria-label={`Toggle ${getLocalizedName(country)} locations`}
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                            </button>
+                                <svg
+                                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                                    openCountry === country.id ? 'rotate-180' : ''
+                                  }`}
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
 
                             {openCountry === country.id && (
                               <div className="pl-6 pb-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
-                                {/* Country main link */}
-                                <Link
-                                  href={`/${locale}/locations/${getLocalizedSlug(country)}`}
-                                  onClick={() => {
-                                    setIsOpen(false);
-                                    setOpenSubmenu(null);
-                                    setOpenCountry(null);
-                                  }}
-                                  className="block px-3 py-2 text-sm text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-md transition-colors border-l-2 border-foreground/20"
-                                >
-                                  <div className="font-medium">
-                                    {locale === 'en' ? 'All locations' : locale === 'ru' ? 'Все локации' : 'ყველა ლოკაცია'}
-                                  </div>
-                                </Link>
-                                
                                 {/* Individual locations */}
                                 {country.locations.map((location) => (
                                   <Link
@@ -242,7 +267,7 @@ export default function MobileMenu() {
                     ) : (
                       // Regular submenu for other items
                       <>
-                        {item.submenu.map((subItem) => (
+                        {item.submenu?.map((subItem) => (
                           <Link
                             key={subItem.href}
                             href={`/${locale}${subItem.href}`}
@@ -267,13 +292,16 @@ export default function MobileMenu() {
             <div className="pt-4 mt-4 border-t border-foreground/10">
               {user ? (
                 <div className="space-y-2">
-                  <Link
-                    href={`/${locale}/cms`}
-                    onClick={() => setIsOpen(false)}
-                    className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
-                  >
-                    CMS
-                  </Link>
+                  {/* Show CMS only for SUPER_ADMIN */}
+                  {userRole === 'SUPER_ADMIN' && (
+                    <Link
+                      href={`/${locale}/cms`}
+                      onClick={() => setIsOpen(false)}
+                      className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
+                    >
+                      CMS
+                    </Link>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"

@@ -739,7 +739,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
                         {/* Action */}
                         <Link
-                          href={`/${locale}/contact?package=${encodeURIComponent(pkg.name)}`}
+                          href={`/${locale}/bookings?locationId=${location.id}&flightTypeId=${pkg.shared_id}`}
                           className="w-full py-3 px-4 bg-foreground text-background rounded-lg font-semibold text-sm text-center hover:opacity-90 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 shadow-md"
                         >
                           {labels.bookNow}

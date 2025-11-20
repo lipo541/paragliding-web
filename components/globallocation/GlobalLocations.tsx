@@ -137,40 +137,40 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="w-8 h-8 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="w-full bg-background border-b border-foreground/10">
+      <div className="w-full bg-background border-b border-gray-200 dark:border-zinc-800">
         <div className="max-w-[1280px] mx-auto px-4 py-8">
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2">
             ყველა ლოკაცია
           </h1>
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             აღმოაჩინე პარაპლანერიზმის საუკეთესო ლოკაციები საქართველოში და მის ფარგლებს გარეთ
           </p>
         </div>
       </div>
 
       {/* Filters & Controls */}
-      <div className="w-full bg-background border-b border-foreground/10 sticky top-16 z-40">
+      <div className="w-full bg-background border-b border-gray-200 dark:border-zinc-800 sticky top-16 z-40">
         <div className="max-w-[1280px] mx-auto px-4 py-4">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             
             {/* Search */}
             <div className="relative flex-1 w-full lg:max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ძებნა ლოკაციის მიხედვით..."
-                className="w-full pl-10 pr-4 py-2 text-sm border border-foreground/20 rounded-lg focus:ring-2 focus:ring-foreground/20 focus:border-foreground/40 outline-none transition-all bg-background text-foreground"
+                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all bg-white dark:bg-zinc-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
 
@@ -181,7 +181,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
               <div className="relative flex-1 lg:flex-initial">
                 <button
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className="w-full lg:w-auto flex items-center justify-between gap-2 px-4 py-2 text-sm border border-foreground/20 rounded-lg hover:bg-foreground/5 transition-all bg-background"
+                  className="w-full lg:w-auto flex items-center justify-between gap-2 px-4 py-2 text-sm border border-gray-300 dark:border-zinc-700 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all bg-white dark:bg-zinc-900 text-gray-900 dark:text-white"
                 >
                   <Filter className="w-4 h-4" />
                   <span className="flex-1 text-left lg:flex-initial">
@@ -193,14 +193,14 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                 </button>
 
                 {isFilterOpen && (
-                  <div className="absolute top-full left-0 right-0 lg:right-auto lg:w-64 mt-2 bg-background border border-foreground/20 rounded-lg shadow-lg overflow-hidden z-50">
+                  <div className="absolute top-full left-0 right-0 lg:right-auto lg:w-64 mt-2 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden z-50">
                     <button
                       onClick={() => {
                         setSelectedCountry('all');
                         setIsFilterOpen(false);
                       }}
-                      className={`w-full px-4 py-2 text-sm text-left hover:bg-foreground/5 transition-colors ${
-                        selectedCountry === 'all' ? 'bg-foreground/10 font-semibold' : ''
+                      className={`w-full px-4 py-2 text-sm text-left text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors ${
+                        selectedCountry === 'all' ? 'bg-blue-50 dark:bg-blue-950 font-semibold' : ''
                       }`}
                     >
                       ყველა ქვეყანა
@@ -212,8 +212,8 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                           setSelectedCountry(country.id);
                           setIsFilterOpen(false);
                         }}
-                        className={`w-full px-4 py-2 text-sm text-left hover:bg-foreground/5 transition-colors ${
-                          selectedCountry === country.id ? 'bg-foreground/10 font-semibold' : ''
+                        className={`w-full px-4 py-2 text-sm text-left text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors ${
+                          selectedCountry === country.id ? 'bg-blue-50 dark:bg-blue-950 font-semibold' : ''
                         }`}
                       >
                         {getLocalizedName(country, 'name')}
@@ -224,13 +224,13 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
               </div>
 
               {/* View Mode Toggle */}
-              <div className="flex items-center gap-1 bg-foreground/5 rounded-lg p-1">
+              <div className="flex items-center gap-1 bg-gray-100 dark:bg-zinc-800 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded transition-all ${
                     viewMode === 'grid' 
-                      ? 'bg-foreground text-background' 
-                      : 'text-foreground/60 hover:text-foreground'
+                      ? 'bg-white dark:bg-zinc-900 text-gray-900 dark:text-white shadow-sm' 
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                   title="Grid View"
                 >
@@ -240,8 +240,8 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded transition-all ${
                     viewMode === 'list' 
-                      ? 'bg-foreground text-background' 
-                      : 'text-foreground/60 hover:text-foreground'
+                      ? 'bg-white dark:bg-zinc-900 text-gray-900 dark:text-white shadow-sm' 
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                   title="List View"
                 >
@@ -252,7 +252,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
           </div>
 
           {/* Results Count */}
-          <div className="mt-3 text-xs text-foreground/60">
+          <div className="mt-3 text-xs text-gray-600 dark:text-gray-400">
             ნაპოვნია {filteredLocations.length} ლოკაცია
           </div>
         </div>
@@ -262,7 +262,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
       <div className="max-w-[1280px] mx-auto px-4 py-8">
         {groupedLocations.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-foreground/60">ლოკაცია ვერ მოიძებნა</p>
+            <p className="text-gray-600 dark:text-gray-400">ლოკაცია ვერ მოიძებნა</p>
           </div>
         ) : (
           <div className="space-y-12">
@@ -270,9 +270,9 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
               <div key={country.id}>
                 {/* Country Header */}
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="flex-1 h-px bg-foreground/10"></div>
+                  <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-800"></div>
                   <div className="flex items-center gap-3">
-                    <h2 className="text-lg font-bold text-foreground">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">
                       {getLocalizedName(country, 'name')}
                     </h2>
                     {country.cached_rating && country.cached_rating > 0 && (
@@ -283,26 +283,26 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                             className={`w-3 h-3 ${
                               star <= Math.round(country.cached_rating!)
                                 ? 'text-yellow-500 fill-current'
-                                : 'text-foreground/20 fill-current'
+                                : 'text-gray-300 dark:text-zinc-600 fill-current'
                             }`}
                             viewBox="0 0 20 20"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                         ))}
-                        <span className="text-xs font-semibold text-foreground/70 ml-1">
+                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">
                           {country.cached_rating.toFixed(1)}
                         </span>
-                        <span className="text-[10px] text-foreground/40">
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400">
                           ({country.cached_rating_count})
                         </span>
                       </div>
                     )}
-                    <span className="text-sm text-foreground/50">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       • {locations.length} ლოკაცია
                     </span>
                   </div>
-                  <div className="flex-1 h-px bg-foreground/10"></div>
+                  <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-800"></div>
                 </div>
 
                 {/* Locations Grid/List */}
@@ -316,10 +316,10 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                         <Link
                           key={location.id}
                           href={`/${locale}/locations/${countrySlug}/${locationSlug}`}
-                          className="group rounded-xl border border-foreground/10 bg-foreground/[0.02] overflow-hidden hover:border-foreground/30 hover:shadow-lg transition-all duration-300"
+                          className="group rounded-xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-lg transition-all duration-300"
                         >
                           {/* Image */}
-                          <div className="relative aspect-video overflow-hidden bg-foreground/5">
+                          <div className="relative aspect-video overflow-hidden bg-gray-100 dark:bg-zinc-800">
                             {location.hero_image_url ? (
                               <Image
                                 src={location.hero_image_url}
@@ -330,14 +330,14 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                               />
                             ) : (
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <MapPin className="w-12 h-12 text-foreground/20" />
+                                <MapPin className="w-12 h-12 text-gray-300 dark:text-zinc-600" />
                               </div>
                             )}
                           </div>
 
                           {/* Content */}
                           <div className="p-4">
-                            <h3 className="text-base font-bold text-foreground group-hover:text-foreground/80 transition-colors mb-2">
+                            <h3 className="text-base font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
                               {getLocalizedName(location, 'name')}
                             </h3>
                             
@@ -350,17 +350,17 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                     className={`w-3.5 h-3.5 ${
                                       star <= Math.round(location.cached_rating!)
                                         ? 'text-yellow-500 fill-current'
-                                        : 'text-foreground/20 fill-current'
+                                        : 'text-gray-300 dark:text-zinc-600 fill-current'
                                     }`}
                                     viewBox="0 0 20 20"
                                   >
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                   </svg>
                                 ))}
-                                <span className="text-xs font-semibold text-foreground/70 ml-1">
+                                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">
                                   {location.cached_rating.toFixed(1)}
                                 </span>
-                                <span className="text-[10px] text-foreground/40">
+                                <span className="text-[10px] text-gray-500 dark:text-gray-400">
                                   ({location.cached_rating_count})
                                 </span>
                               </div>
@@ -368,12 +368,12 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                             
                             {/* Location Info */}
                             <div className="space-y-1">
-                              <p className="text-xs text-foreground/60 flex items-center gap-1">
+                              <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                 <MapPin className="w-3 h-3" />
                                 {getLocalizedName(country, 'name')}
                               </p>
                               {location.altitude && (
-                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
                                   </svg>
@@ -381,7 +381,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                 </p>
                               )}
                               {location.best_season_start && location.best_season_end && (
-                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                   </svg>
@@ -389,7 +389,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                 </p>
                               )}
                               {location.difficulty_level && (
-                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
@@ -412,10 +412,10 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                         <Link
                           key={location.id}
                           href={`/${locale}/locations/${countrySlug}/${locationSlug}`}
-                          className="group flex items-center gap-4 p-4 rounded-lg border border-foreground/10 bg-foreground/[0.02] hover:border-foreground/30 hover:bg-foreground/[0.04] transition-all duration-300"
+                          className="group flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all duration-300"
                         >
                           {/* Thumbnail */}
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-foreground/5 flex-shrink-0">
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-zinc-800 flex-shrink-0">
                             {location.hero_image_url ? (
                               <Image
                                 src={location.hero_image_url}
@@ -426,7 +426,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                               />
                             ) : (
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <MapPin className="w-8 h-8 text-foreground/20" />
+                                <MapPin className="w-8 h-8 text-gray-300 dark:text-zinc-600" />
                               </div>
                             )}
                           </div>
@@ -435,7 +435,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                           <div className="flex-1">
                             <div className="flex items-start justify-between gap-4">
                               <div className="flex-1">
-                                <h3 className="text-base font-bold text-foreground group-hover:text-foreground/80 transition-colors mb-1">
+                                <h3 className="text-base font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1">
                                   {getLocalizedName(location, 'name')}
                                 </h3>
                                 
@@ -448,17 +448,17 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                         className={`w-3 h-3 ${
                                           star <= Math.round(location.cached_rating!)
                                             ? 'text-yellow-500 fill-current'
-                                            : 'text-foreground/20 fill-current'
+                                            : 'text-gray-300 dark:text-zinc-600 fill-current'
                                         }`}
                                         viewBox="0 0 20 20"
                                       >
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                       </svg>
                                     ))}
-                                    <span className="text-xs font-semibold text-foreground/70 ml-1">
+                                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">
                                       {location.cached_rating.toFixed(1)}
                                     </span>
-                                    <span className="text-[10px] text-foreground/40">
+                                    <span className="text-[10px] text-gray-500 dark:text-gray-400">
                                       ({location.cached_rating_count})
                                     </span>
                                   </div>
@@ -468,7 +468,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                               {/* Quick Stats */}
                               <div className="flex flex-col gap-1 text-right">
                                 {location.altitude && (
-                                  <span className="text-xs font-semibold text-foreground/70">
+                                  <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                                     {location.altitude}მ
                                   </span>
                                 )}
@@ -488,12 +488,12 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                             
                             {/* Location Details */}
                             <div className="flex items-center gap-3 mt-2 flex-wrap">
-                              <p className="text-xs text-foreground/60 flex items-center gap-1">
+                              <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                 <MapPin className="w-3 h-3" />
                                 {getLocalizedName(country, 'name')}
                               </p>
                               {location.best_season_start && location.best_season_end && (
-                                <p className="text-xs text-foreground/60 flex items-center gap-1">
+                                <p className="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
                                   <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                   </svg>
@@ -504,7 +504,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                           </div>
 
                           {/* Arrow */}
-                          <div className="text-foreground/40 group-hover:text-foreground group-hover:translate-x-1 transition-all">
+                          <div className="text-gray-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-1 transition-all">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
