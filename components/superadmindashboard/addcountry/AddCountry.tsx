@@ -524,7 +524,7 @@ export default function AddCountry() {
                   .list(`locations/${location.id}`);
                 
                 if (files && files.length > 0) {
-                  const filePaths = files.map(file => `locations/${location.id}/${file.name}`);
+                  const filePaths = files.map((file: any) => `locations/${location.id}/${file.name}`);
                   await supabase.storage
                     .from('countries-og-images')
                     .remove(filePaths);
@@ -547,7 +547,7 @@ export default function AddCountry() {
                 .list(`countries/${countryId}`);
               
               if (files && files.length > 0) {
-                const filePaths = files.map(file => `countries/${countryId}/${file.name}`);
+                const filePaths = files.map((file: any) => `countries/${countryId}/${file.name}`);
                 await supabase.storage
                   .from('countries-og-images')
                   .remove(filePaths);
@@ -606,7 +606,7 @@ export default function AddCountry() {
                 .list(`locations/${location.id}`);
               
               if (files && files.length > 0) {
-                const filePaths = files.map(file => `locations/${location.id}/${file.name}`);
+                const filePaths = files.map((file: any) => `locations/${location.id}/${file.name}`);
                 await supabase.storage
                   .from('countries-og-images')
                   .remove(filePaths);

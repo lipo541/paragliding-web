@@ -1,37 +1,30 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useSupabase } from '@/lib/supabase/SupabaseProvider';
 
 export default function Notifications() {
   const [notificationCount] = useState(3);
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
-  const supabase = createClient();
+  const { client, session } = useSupabase();
 
   useEffect(() => {
-    const checkUserRole = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .maybeSingle();
-        setUserRole(profile?.role || null);
+    const user = session?.user;
+    const loadRole = async () => {
+      if (!user) {
+        setUserRole(null);
+        return;
       }
+      const { data: profile } = await client
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle();
+      setUserRole(profile?.role || null);
     };
-
-    checkUserRole();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      checkUserRole();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [supabase]);
+    loadRole();
+  }, [client, session]);
 
   // Don't show notifications bell for regular users (they have it in bottom nav)
   if (userRole === 'USER') return null;

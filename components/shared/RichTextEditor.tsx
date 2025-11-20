@@ -12,6 +12,79 @@ import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
+import { Extension } from '@tiptap/core';
+
+// Custom FontSize Extension
+const FontSize = Extension.create({
+  name: 'fontSize',
+  addOptions() {
+    return {
+      types: ['textStyle'],
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: (element) => element.style.fontSize.replace(/['"]+/g, ''),
+            renderHTML: (attributes) => {
+              if (!attributes.fontSize) {
+                return {};
+              }
+              return {
+                style: `font-size: ${attributes.fontSize}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setFontSize: (fontSize: string) => ({ chain }) => {
+        return chain().setMark('textStyle', { fontSize }).run();
+      },
+      unsetFontSize: () => ({ chain }) => {
+        return chain().setMark('textStyle', { fontSize: null }).removeEmptyTextStyle().run();
+      },
+    };
+  },
+});
+
+// Custom FontFamily Extension
+const CustomFontFamily = Extension.create({
+  name: 'customFontFamily',
+  addOptions() {
+    return {
+      types: ['textStyle'],
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          fontFamily: {
+            default: null,
+            parseHTML: (element) => element.style.fontFamily?.replace(/['"]+/g, ''),
+            renderHTML: (attributes) => {
+              if (!attributes.fontFamily) {
+                return {};
+              }
+              return {
+                style: `font-family: ${attributes.fontFamily}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+});
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import Youtube from '@tiptap/extension-youtube';
 import { common, createLowlight } from 'lowlight';
@@ -45,6 +118,9 @@ export default function RichTextEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false, // Disable default code block
+        bulletList: true,
+        orderedList: true,
+        listItem: true,
       }),
       Placeholder.configure({
         placeholder,
@@ -66,6 +142,8 @@ export default function RichTextEditor({
       }),
       TextStyle,
       Color,
+      CustomFontFamily,
+      FontSize,
       Highlight.configure({
         multicolor: true,
       }),
@@ -90,7 +168,7 @@ export default function RichTextEditor({
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none focus:outline-none p-4 text-foreground bg-background',
+        class: 'prose prose-sm max-w-none focus:outline-none p-4 text-foreground bg-background prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6 prose-li:my-1',
       },
     },
   });
@@ -182,6 +260,33 @@ export default function RichTextEditor({
 
           <div className="w-px h-6 bg-foreground/20 mx-1"></div>
 
+          {/* Font Size */}
+          <select
+            onChange={(e) => {
+              const size = e.target.value;
+              if (size === 'default') {
+                editor.chain().focus().setMark('textStyle', { fontSize: null }).run();
+              } else {
+                editor.chain().focus().setMark('textStyle', { fontSize: size }).run();
+              }
+            }}
+            value={editor.getAttributes('textStyle').fontSize || 'default'}
+            className="px-2 py-1 rounded text-sm bg-foreground/10 text-foreground hover:bg-foreground/20 border-none cursor-pointer"
+            title="Font Size"
+          >
+            <option value="default">Size</option>
+            <option value="12px">12px</option>
+            <option value="14px">14px</option>
+            <option value="16px">16px</option>
+            <option value="18px">18px</option>
+            <option value="20px">20px</option>
+            <option value="24px">24px</option>
+            <option value="32px">32px</option>
+            <option value="48px">48px</option>
+          </select>
+
+          <div className="w-px h-6 bg-foreground/20 mx-1"></div>
+
           {/* Text Color */}
           <input
             type="color"
@@ -207,7 +312,10 @@ export default function RichTextEditor({
 
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            onClick={() => {
+              console.log('Bullet List clicked');
+              editor.chain().focus().toggleBulletList().run();
+            }}
             className={`px-2 py-1 rounded text-base transition-colors ${
               editor.isActive('bulletList')
                 ? 'bg-blue-500 text-white'
@@ -215,11 +323,14 @@ export default function RichTextEditor({
             }`}
             title="Bullet List"
           >
-            ≡
+            • List
           </button>
           <button
             type="button"
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            onClick={() => {
+              console.log('Ordered List clicked');
+              editor.chain().focus().toggleOrderedList().run();
+            }}
             className={`px-2 py-1 rounded text-base transition-colors ${
               editor.isActive('orderedList')
                 ? 'bg-blue-500 text-white'
@@ -227,7 +338,7 @@ export default function RichTextEditor({
             }`}
             title="Numbered List"
           >
-            ≣
+            1. List
           </button>
 
           <div className="w-px h-6 bg-foreground/20 mx-1"></div>
@@ -286,26 +397,51 @@ export default function RichTextEditor({
 
           <div className="w-px h-6 bg-foreground/20 mx-1"></div>
 
+          {/* Font Family */}
+          <select
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === 'default') {
+                editor.chain().focus().setMark('textStyle', { fontFamily: null }).run();
+              } else {
+                editor.chain().focus().setMark('textStyle', { fontFamily: value }).run();
+              }
+            }}
+            value={editor.getAttributes('textStyle').fontFamily || 'default'}
+            className="px-2 py-1 rounded text-sm bg-foreground/10 text-foreground hover:bg-foreground/20 border-none cursor-pointer"
+            title="Font Family"
+          >
+            <option value="default">Default</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="'Courier New', monospace">Courier New</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Tahoma, sans-serif">Tahoma</option>
+          </select>
+
+          <div className="w-px h-6 bg-foreground/20 mx-1"></div>
+
           <select
             onChange={(e) => {
               const value = e.target.value;
               if (value === 'p') editor.chain().focus().setParagraph().run();
-              else if (value === 'h1') editor.chain().focus().toggleHeading({ level: 1 }).run();
-              else if (value === 'h2') editor.chain().focus().toggleHeading({ level: 2 }).run();
-              else if (value === 'h3') editor.chain().focus().toggleHeading({ level: 3 }).run();
+              else if (value === 'h4') editor.chain().focus().toggleHeading({ level: 4 }).run();
+              else if (value === 'h5') editor.chain().focus().toggleHeading({ level: 5 }).run();
+              else if (value === 'h6') editor.chain().focus().toggleHeading({ level: 6 }).run();
             }}
             value={
-              editor.isActive('heading', { level: 1 }) ? 'h1' :
-              editor.isActive('heading', { level: 2 }) ? 'h2' :
-              editor.isActive('heading', { level: 3 }) ? 'h3' : 'p'
+              editor.isActive('heading', { level: 4 }) ? 'h4' :
+              editor.isActive('heading', { level: 5 }) ? 'h5' :
+              editor.isActive('heading', { level: 6 }) ? 'h6' : 'p'
             }
             className="px-2 py-1 rounded text-sm bg-foreground/10 text-foreground hover:bg-foreground/20 border-none cursor-pointer"
             title="Text Style"
           >
             <option value="p">Paragraph</option>
-            <option value="h1">Heading 1</option>
-            <option value="h2">Heading 2</option>
-            <option value="h3">Heading 3</option>
+            <option value="h4">Heading 4</option>
+            <option value="h5">Heading 5</option>
+            <option value="h6">Heading 6</option>
           </select>
 
           <div className="w-px h-6 bg-foreground/20 mx-1"></div>

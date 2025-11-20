@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import { useSupabase } from '@/lib/supabase/SupabaseProvider';
 
 interface Location {
   id: string;
@@ -63,7 +63,7 @@ interface LocationsDropdownProps {
 export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
   const [countriesWithLocations, setCountriesWithLocations] = useState<CountryWithLocations[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
+  const { client: supabase, session } = useSupabase();
 
   useEffect(() => {
     async function fetchData() {
@@ -122,8 +122,9 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
       }
     }
 
+    // Re-fetch when session changes (covers tab visibility auth refresh scenarios)
     fetchData();
-  }, []);
+  }, [supabase, session]);
 
   const getLocalizedName = (item: Country | Location, lang: string) => {
     if (lang === 'en') return item.name_en;

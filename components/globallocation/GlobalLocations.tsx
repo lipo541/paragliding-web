@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useSupabase } from '@/lib/supabase/SupabaseProvider';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Grid, List, MapPin, Filter, ChevronDown } from 'lucide-react';
@@ -53,7 +53,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const supabase = createClient();
+  const { client: supabase, session } = useSupabase();
 
   // Helper to get localized field - always use Georgian for display
   const getLocalizedName = (obj: any, field: string) => {
@@ -119,8 +119,9 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
       }
     };
 
+    // Re-fetch when auth session changes to avoid stale data after tab switches
     fetchData();
-  }, []);
+  }, [supabase, session]);
 
   // Filter locations
   const filteredLocations = locations.filter((location) => {
