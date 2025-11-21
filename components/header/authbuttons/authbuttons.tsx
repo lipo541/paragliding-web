@@ -73,17 +73,8 @@ export default function AuthButtons() {
       );
     }
     
-    // Regular USER - Hide profile (they have it in bottom nav)
-    return (
-      <div className="flex items-center gap-2">
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
-        >
-          გასვლა
-        </button>
-      </div>
-    );
+    // Regular USER - No buttons (they have logout in sidebar)
+    return null;
   }
 
   // If user is not logged in, show Login and Register buttons

@@ -49,47 +49,80 @@ serve(async (req) => {
 
     // 2. Validate promo code if provided
     let validPromoDiscount = 0
+    let promoCodeId = null
     if (bookingData.promo_code) {
-      const { data: promoData, error: promoError } = await supabaseClient
-        .from('promo_codes')
-        .select('*')
-        .eq('code', bookingData.promo_code.toUpperCase())
-        .eq('is_active', true)
-        .single()
+      try {
+        const { data: promoValidation, error: promoError } = await supabaseClient.rpc(
+          'validate_promo_code',
+          {
+            promo_code_text: bookingData.promo_code.toUpperCase(),
+            people_count: bookingData.number_of_people,
+            location_id_param: bookingData.location_id
+          }
+        )
 
-      if (promoData && !promoError) {
-        const now = new Date()
-        const validFrom = promoData.valid_from ? new Date(promoData.valid_from) : null
-        const validUntil = promoData.valid_until ? new Date(promoData.valid_until) : null
-        
-        const isDateValid = (!validFrom || validFrom <= now) && (!validUntil || validUntil >= now)
-        const isUsageValid = !promoData.usage_limit || promoData.usage_count < promoData.usage_limit
-        
-        if (isDateValid && isUsageValid) {
-          validPromoDiscount = promoData.discount_percentage
+        console.log('Promo validation result:', { promoValidation, promoError })
+
+        if (promoError) {
+          console.error('Promo validation RPC error:', promoError)
+          // If validate_promo_code function doesn't exist, fallback to old method
+          if (promoError.message?.includes('function') || promoError.code === '42883') {
+            console.log('Using fallback promo validation')
+            const { data: promoData } = await supabaseClient
+              .from('promo_codes')
+              .select('*')
+              .eq('code', bookingData.promo_code.toUpperCase())
+              .eq('is_active', true)
+              .single()
+
+            if (promoData) {
+              const now = new Date()
+              const validFrom = promoData.valid_from ? new Date(promoData.valid_from) : null
+              const validUntil = promoData.valid_until ? new Date(promoData.valid_until) : null
+              const isDateValid = (!validFrom || validFrom <= now) && (!validUntil || validUntil >= now)
+              const isUsageValid = !promoData.usage_limit || 
+                (promoData.usage_count + bookingData.number_of_people) <= promoData.usage_limit
+              
+              if (isDateValid && isUsageValid) {
+                validPromoDiscount = promoData.discount_percentage
+                promoCodeId = promoData.id
+              }
+            }
+          }
+        } else if (promoValidation && promoValidation[0]) {
+          const result = promoValidation[0]
+          if (result.is_valid) {
+            validPromoDiscount = result.discount_percentage
+            promoCodeId = result.promo_code_id
+          } else {
+            throw new Error(result.error_message || 'Invalid promo code')
+          }
         }
+      } catch (err) {
+        console.error('Promo code validation error:', err)
+        // Continue without promo code if validation fails
       }
     }
 
     // 3. Calculate real prices on backend
-    let basePrice = 0
+    let pricePerPerson = 0
     switch (bookingData.currency) {
       case 'GEL':
-        basePrice = flightTypeData.price_gel
+        pricePerPerson = flightTypeData.price_gel
         break
       case 'USD':
-        basePrice = flightTypeData.price_usd
+        pricePerPerson = flightTypeData.price_usd
         break
       case 'EUR':
-        basePrice = flightTypeData.price_eur
+        pricePerPerson = flightTypeData.price_eur
         break
       default:
         throw new Error('Invalid currency')
     }
 
-    const subtotal = basePrice * bookingData.number_of_people
-    const discountAmount = (subtotal * validPromoDiscount) / 100
-    const totalPrice = subtotal - discountAmount
+    const basePrice = pricePerPerson * bookingData.number_of_people
+    const discountAmount = (basePrice * validPromoDiscount) / 100
+    const totalPrice = basePrice - discountAmount
 
     // 4. Verify prices match (with 1 cent tolerance for rounding)
     console.log('Price verification:', {
@@ -127,11 +160,40 @@ serve(async (req) => {
       throw error
     }
 
-    // 6. Increment promo code usage
-    if (bookingData.promo_code && validPromoDiscount > 0) {
-      await supabaseClient.rpc('increment_promo_usage', { 
-        promo_code_text: bookingData.promo_code.toUpperCase()
-      })
+    // 6. Increment promo code usage and log it
+    if (bookingData.promo_code && validPromoDiscount > 0 && promoCodeId) {
+      try {
+        // Try new increment function with people_count
+        const { error: incrementError } = await supabaseClient.rpc('increment_promo_usage', { 
+          promo_code_text: bookingData.promo_code.toUpperCase(),
+          people_count: bookingData.number_of_people
+        })
+
+        // If new function doesn't exist, try old function
+        if (incrementError && (incrementError.message?.includes('function') || incrementError.code === '42883')) {
+          console.log('Using old increment_promo_usage function')
+          // Old function only increments by 1
+          for (let i = 0; i < bookingData.number_of_people; i++) {
+            await supabaseClient.rpc('increment_promo_usage', { 
+              promo_code_text: bookingData.promo_code.toUpperCase()
+            })
+          }
+        }
+
+        // Try to log promo code usage (table might not exist yet)
+        await supabaseClient.from('promo_code_usage').insert({
+          user_id: bookingData.user_id || null,
+          booking_id: data.id,
+          promo_code_id: promoCodeId,
+          people_count: bookingData.number_of_people,
+          discount_amount: discountAmount
+        }).then(({ error }: any) => {
+          if (error) console.log('promo_code_usage table not available yet:', error.message)
+        })
+      } catch (err) {
+        console.error('Error updating promo usage:', err)
+        // Don't fail the booking if promo tracking fails
+      }
     }
 
     return new Response(

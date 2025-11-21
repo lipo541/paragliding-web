@@ -292,22 +292,25 @@ export default function MobileMenu() {
             <div className="pt-4 mt-4 border-t border-foreground/10">
               {user ? (
                 <div className="space-y-2">
-                  {/* Show CMS only for SUPER_ADMIN */}
+                  {/* Show CMS and logout only for SUPER_ADMIN */}
                   {userRole === 'SUPER_ADMIN' && (
-                    <Link
-                      href={`/${locale}/cms`}
-                      onClick={() => setIsOpen(false)}
-                      className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
-                    >
-                      CMS
-                    </Link>
+                    <>
+                      <Link
+                        href={`/${locale}/cms`}
+                        onClick={() => setIsOpen(false)}
+                        className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
+                      >
+                        CMS
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+                      >
+                        გასვლა
+                      </button>
+                    </>
                   )}
-                  <button
-                    onClick={handleLogout}
-                    className="w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
-                  >
-                    გასვლა
-                  </button>
+                  {/* Regular USER - no buttons (logout in bottom nav) */}
                 </div>
               ) : (
                 <div className="space-y-2">

@@ -342,6 +342,10 @@ export default function BookingsPage() {
       const { data: { user } } = await supabase.auth.getUser();
 
       // Prepare booking data
+      const pricePerPerson = getPrice() || 0;
+      const basePrice = pricePerPerson * numberOfPeople;
+      const totalPrice = parseFloat(getTotalPrice());
+      
       const bookingData = {
         user_id: user?.id || null, // null if guest
         full_name: fullName,
@@ -358,20 +362,32 @@ export default function BookingsPage() {
         promo_code: promoCode || null,
         promo_discount: promoDiscount,
         special_requests: specialRequests || null,
-        base_price: getPrice() || 0,
-        total_price: parseFloat(getTotalPrice()),
+        base_price: basePrice,
+        total_price: totalPrice,
         currency: selectedCurrency,
         status: 'pending'
       };
 
       // Call Edge Function to create booking (bypasses RLS for guests)
       console.log('Sending booking data:', bookingData);
+      console.log('Price calculation:', {
+        pricePerPerson,
+        numberOfPeople,
+        basePrice,
+        promoDiscount,
+        totalPrice,
+        getTotalPriceResult: getTotalPrice()
+      });
       
       const { data, error } = await supabase.functions.invoke('create-booking', {
         body: bookingData
       });
 
       console.log('Edge Function response:', { data, error });
+      
+      if (data && !data.success) {
+        console.log('Full error response:', JSON.stringify(data, null, 2));
+      }
 
       if (error) {
         console.error('Edge Function error:', error);
@@ -449,6 +465,20 @@ export default function BookingsPage() {
 
     try {
       const supabase = createClient();
+      
+      // Check if user is authenticated
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        setPromoError('პრომო კოდის გამოსაყენებლად საჭიროა ავტორიზაცია');
+        setPromoDiscount(0);
+        
+        // Show login/register prompt
+        if (confirm('პრომო კოდის გამოსაყენებლად გთხოვთ შეხვიდეთ ან დარეგისტრირდეთ. გსურთ გადასვლა ავტორიზაციის გვერდზე?')) {
+          window.location.href = '/ka/login?redirect=/ka/bookings';
+        }
+        return;
+      }
       
       // Fetch promo code from database
       const { data: promoData, error } = await supabase
@@ -775,7 +805,12 @@ export default function BookingsPage() {
                 {/* Promo Code */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">პრომო კოდი</label>
+                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
+                    პრომო კოდი
+                    <span className="ml-2 text-[10px] text-gray-500 dark:text-gray-600 font-normal">
+                      (მხოლოდ ავტორიზებული მომხმარებლებისთვის)
+                    </span>
+                  </label>
                   <div className="flex gap-2">
                     <input
                       type="text"

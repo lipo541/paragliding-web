@@ -13,7 +13,6 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import PasswordStrength from '@/components/ui/PasswordStrength';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 interface ProfileData {
   full_name: string | null;
@@ -27,7 +26,6 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [showPasswordChange, setShowPasswordChange] = useState(false);
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const supabase = createClient();
@@ -258,7 +256,7 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black pb-24 pt-6 px-4 selection:bg-blue-500/30">
+    <div className="min-h-screen bg-zinc-50 dark:bg-black pb-24 pt-6 px-4 md:pr-20 selection:bg-blue-500/30">
       <div className="max-w-2xl mx-auto space-y-3">
         
         {/* Compact Header */}
@@ -314,14 +312,15 @@ export default function UserProfile() {
 
             {/* Upload Area - Minimal Glass */}
             <div
-              className={`flex-1 border border-dashed rounded-lg p-4 text-center transition-all ${
+              className={`flex-1 border border-dashed rounded-lg p-4 text-center transition-all cursor-pointer ${
                 isDragging
                   ? 'border-foreground bg-foreground/5'
-                  : 'border-foreground/20 hover:border-foreground/40'
+                  : 'border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5'
               }`}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
+              onClick={() => fileInputRef.current?.click()}
             >
               <input
                 ref={fileInputRef}
@@ -331,19 +330,12 @@ export default function UserProfile() {
                 onChange={(e) => e.target.files?.[0] && handleAvatarUpload(e.target.files[0])}
               />
               
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 pointer-events-none">
                 <svg className="w-6 h-6 mx-auto text-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
                 <p className="text-xs text-foreground/60">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-foreground font-medium hover:opacity-70 transition-opacity"
-                  >
-                    აირჩიეთ ფაილი
-                  </button>
-                  {' '}ან გადმოიტანეთ
+                  <span className="text-foreground font-medium">აირჩიეთ ფაილი</span> ან გადმოიტანეთ
                 </p>
                 <p className="text-[10px] text-foreground/40">მაქს. 2MB</p>
               </div>
@@ -480,40 +472,7 @@ export default function UserProfile() {
             </form>
           )}
         </div>
-
-        {/* Logout Button */}
-        <Button
-          variant="danger"
-          fullWidth
-          onClick={() => {
-            if (isProfileDirty) {
-              setShowLogoutDialog(true);
-            } else {
-              handleLogout();
-            }
-          }}
-        >
-          გასვლა
-        </Button>
-
-        {/* Logout Confirmation Dialog */}
-        <ConfirmDialog
-          isOpen={showLogoutDialog}
-          onClose={() => setShowLogoutDialog(false)}
-          onConfirm={handleLogout}
-          title="შეუნახავი ცვლილებები"
-          message="გაქვთ შეუნახავი ცვლილებები. დარწმუნებული ხართ რომ გსურთ გასვლა?"
-          confirmText="გასვლა"
-          cancelText="გაუქმება"
-          variant="danger"
-        />
       </div>
     </div>
   );
-}
-
-async function handleLogout() {
-  const supabase = createClient();
-  await supabase.auth.signOut();
-  window.location.href = '/';
 }
