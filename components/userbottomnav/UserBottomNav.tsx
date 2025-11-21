@@ -24,10 +24,10 @@ export default function UserBottomNav() {
 
   // Get active tab
   const activeTab = useMemo(() => {
-    if (pathname.includes('/profile')) return 'profile';
-    if (pathname.includes('/notifications')) return 'notifications';
-    if (pathname.includes('/bookings')) return 'bookings';
-    if (pathname.includes('/promotions')) return 'promotions';
+    if (pathname.includes('/user/profile')) return 'profile';
+    if (pathname.includes('/user/notifications')) return 'notifications';
+    if (pathname.includes('/user/bookings')) return 'bookings';
+    if (pathname.includes('/user/promotions')) return 'promotions';
     return '';
   }, [pathname]);
 
@@ -44,13 +44,44 @@ export default function UserBottomNav() {
         
         if (profile?.role === 'USER') {
           setIsVisible(true);
-          // TODO: Implement real notification count when notification system is ready
-          setNotificationCount(0);
+          // Fetch unread message count
+          fetchUnreadCount(user.id);
         }
       }
     };
 
+    const fetchUnreadCount = async (userId: string) => {
+      const { data, error } = await supabase
+        .from('message_recipients')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('is_read', false);
+
+      if (!error && data !== null) {
+        setNotificationCount(data.length || 0);
+      }
+    };
+
     checkUser();
+
+    // Real-time subscription for new messages
+    const channel = supabase
+      .channel('user-messages-badge')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'message_recipients',
+        },
+        async () => {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            fetchUnreadCount(user.id);
+          }
+        }
+      )
+      .subscribe();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       if (session?.user) {
@@ -60,6 +91,7 @@ export default function UserBottomNav() {
 
     return () => {
       subscription.unsubscribe();
+      supabase.removeChannel(channel);
     };
   }, [supabase]);
 
@@ -67,7 +99,7 @@ export default function UserBottomNav() {
     {
       id: 'profile',
       label: 'პროფილი',
-      path: `/${locale}/profile`,
+      path: `/${locale}/user/profile`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -77,7 +109,7 @@ export default function UserBottomNav() {
     {
       id: 'notifications',
       label: 'შეტყობინებები',
-      path: `/${locale}/notifications`,
+      path: `/${locale}/user/notifications`,
       badge: notificationCount,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,7 +120,7 @@ export default function UserBottomNav() {
     {
       id: 'bookings',
       label: 'ჯავშნები',
-      path: `/${locale}/bookings`,
+      path: `/${locale}/user/bookings`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -98,7 +130,7 @@ export default function UserBottomNav() {
     {
       id: 'promotions',
       label: 'აქციები',
-      path: `/${locale}/promotions`,
+      path: `/${locale}/user/promotions`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />

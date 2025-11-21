@@ -10,12 +10,15 @@ import Comments from './comments/Comments';
 import PromoCodeManager from './promocode/PromoCodeManager';
 import Bookings from './bookings/Bookings';
 import Promotions from './promotions/Promotions';
+import Message from './messages/Message';
+import MessagesList from './messages/MessagesList';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
   const [showAddLocationForm, setShowAddLocationForm] = useState(false);
   const [editLocationId, setEditLocationId] = useState<string | null>(null);
+  const [showMessageForm, setShowMessageForm] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,6 +146,23 @@ export default function SuperAdminDashboard() {
             </button>
 
             <button
+              onClick={() => {
+                setActiveTab('messages');
+                setShowMessageForm(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'messages'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+              </svg>
+              შეტყობინებები
+            </button>
+
+            <button
               onClick={() => setActiveTab('comments')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 activeTab === 'comments'
@@ -216,6 +236,7 @@ export default function SuperAdminDashboard() {
                   {activeTab === 'pilots' && 'პილოტები'}
                   {activeTab === 'companies' && 'კომპანიები'}
                   {activeTab === 'bookings' && 'ჯავშნები'}
+                  {activeTab === 'messages' && 'შეტყობინებები'}
                   {activeTab === 'comments' && 'კომენტარები'}
                   {activeTab === 'promocodes' && 'პრომო კოდები'}
                   {activeTab === 'promotions' && 'პრომო-აქციები'}
@@ -227,6 +248,22 @@ export default function SuperAdminDashboard() {
                     className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg text-sm font-medium"
                   >
                     დაამატე ლოკაცია
+                  </button>
+                )}
+                {activeTab === 'messages' && !showMessageForm && (
+                  <button
+                    onClick={() => setShowMessageForm(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg text-sm font-medium"
+                  >
+                    შეთყობინების შექმნა
+                  </button>
+                )}
+                {activeTab === 'messages' && showMessageForm && (
+                  <button
+                    onClick={() => setShowMessageForm(false)}
+                    className="px-4 py-2 bg-foreground/10 text-foreground rounded-lg hover:bg-foreground/20 transition-all text-sm font-medium"
+                  >
+                    სიის ნახვა
                   </button>
                 )}
               </div>
@@ -342,6 +379,10 @@ export default function SuperAdminDashboard() {
             )}
 
             {activeTab === 'bookings' && <Bookings />}
+
+            {activeTab === 'messages' && !showMessageForm && <MessagesList />}
+
+            {activeTab === 'messages' && showMessageForm && <Message />}
 
             {activeTab === 'comments' && <Comments />}
 
