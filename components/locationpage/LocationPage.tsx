@@ -151,7 +151,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
       .eq('ratable_id', sharedId);
 
     const avgRating = flightRatings && flightRatings.length > 0
-      ? flightRatings.reduce((sum, r) => sum + r.rating, 0) / flightRatings.length
+      ? flightRatings.reduce((sum: number, r: any) => sum + r.rating, 0) / flightRatings.length
       : 0;
 
     setFlightTypeRatings(prev => ({

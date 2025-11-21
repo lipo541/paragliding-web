@@ -52,11 +52,9 @@ export default function UserBottomNav() {
 
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       if (session?.user) {
         checkUser();
-      } else {
-        setIsVisible(false);
       }
     });
 

@@ -206,7 +206,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                     >
                       ყველა ქვეყანა
                     </button>
-                    {countries.map(country => (
+                    {countries.map((country: any) => (
                       <button
                         key={country.id}
                         onClick={() => {

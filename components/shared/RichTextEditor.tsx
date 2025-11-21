@@ -118,9 +118,6 @@ export default function RichTextEditor({
     extensions: [
       StarterKit.configure({
         codeBlock: false, // Disable default code block
-        bulletList: true,
-        orderedList: true,
-        listItem: true,
       }),
       Placeholder.configure({
         placeholder,

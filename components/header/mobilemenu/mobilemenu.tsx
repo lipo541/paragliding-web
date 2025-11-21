@@ -61,7 +61,7 @@ export default function MobileMenu() {
 
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         getUser();
@@ -87,9 +87,9 @@ export default function MobileMenu() {
           .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, country_id')
           .order('name_ka');
 
-        const grouped: CountryWithLocations[] = (countries || []).map(country => ({
+        const grouped: CountryWithLocations[] = (countries || []).map((country: any) => ({
           ...country,
-          locations: (locations || []).filter(loc => loc.country_id === country.id)
+          locations: (locations || []).filter((loc: any) => loc.country_id === country.id)
         }));
 
         setCountriesWithLocations(grouped);

@@ -182,7 +182,7 @@ export default function BookingsPage() {
       setLocations(data || []);
       
       // Reset location and flight type if country changed
-      if (selectedLocationId && data?.find(loc => loc.id === selectedLocationId)?.country_id !== selectedCountryId) {
+      if (selectedLocationId && data?.find((loc: any) => loc.id === selectedLocationId)?.country_id !== selectedCountryId) {
         setSelectedLocationId('');
         setSelectedFlightTypeId('');
         setFlightTypes([]);

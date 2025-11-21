@@ -108,9 +108,9 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
         console.log('Sample location with pages:', locations?.[0]);
 
         // Group locations by country
-        const grouped: CountryWithLocations[] = (countries || []).map(country => ({
+        const grouped: CountryWithLocations[] = (countries || []).map((country: any) => ({
           ...country,
-          locations: (locations || []).filter(loc => loc.country_id === country.id) as Location[]
+          locations: (locations || []).filter((loc: any) => loc.country_id === country.id) as Location[]
         }));
 
         setCountriesWithLocations(grouped);

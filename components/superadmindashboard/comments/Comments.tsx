@@ -198,9 +198,9 @@ export default function Comments() {
         // Parent comment info
         let parentInfo = null;
         if (comment.parent_comment_id) {
-          const parentComment = commentsMap.get(comment.parent_comment_id);
+          const parentComment: any = commentsMap.get(comment.parent_comment_id);
           if (parentComment) {
-            const parentProfile = profilesMap.get(parentComment.user_id);
+            const parentProfile: any = profilesMap.get(parentComment.user_id);
             parentInfo = {
               content: parentComment.content.substring(0, 100),
               author: parentProfile?.full_name || 'მომხმარებელი',
