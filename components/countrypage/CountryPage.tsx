@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -52,6 +52,14 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   const [userRating, setUserRating] = useState<number | null>(null);
   const [showRatingInput, setShowRatingInput] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  
+  // Scroll tracking for smooth transitions
+  const [scrollY, setScrollY] = useState(0);
+  const [heroVisible, setHeroVisible] = useState(true);
+  const heroRef = useRef<HTMLDivElement>(null);
+  
+  // Background rotation for first 3 gallery images
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
   
   const imagesPerPage = 9; // Desktop: 9 (3x3), Mobile: 8 (2x4)
 
@@ -111,6 +119,41 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
     fetchCountryData();
   }, [slug, locale]);
 
+  // Background rotation - Modern interval (8-10s) with smooth crossfade
+  useEffect(() => {
+    if (!country?.content?.shared_images?.gallery || country.content.shared_images.gallery.length < 2) {
+      return; // Skip rotation if less than 2 images
+    }
+    
+    const maxImages = Math.min(3, country.content.shared_images.gallery.length);
+    const interval = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % maxImages);
+    }, 9000); // 9 seconds - Modern timing (Apple/Stripe standard)
+
+    return () => clearInterval(interval);
+  }, [country]);
+
+  // Scroll tracking with hysteresis - complete transition once started
+  useEffect(() => {
+    const THRESHOLD = 300; // When to start hiding hero
+    
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      setScrollY(currentScroll);
+      
+      // Once scroll passes threshold, commit to hiding hero
+      if (currentScroll > THRESHOLD && heroVisible) {
+        setHeroVisible(false);
+      } else if (currentScroll <= 50 && !heroVisible) {
+        // Only show hero again when scrolled back to top
+        setHeroVisible(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [heroVisible]);
+
   const handleRatingChange = async (newRating: number | null) => {
     setUserRating(newRating);
     
@@ -143,7 +186,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   if (!country) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-        <h1 className="text-xl font-bold text-foreground/70">
+        <h1 className="text-xl font-bold text-foreground">
           {locale === 'en' ? 'Country not found' : locale === 'ru' ? 'Страна не найдена' : 'ქვეყანა ვერ მოიძებნა'}
         </h1>
         <Link href={`/${locale}`} className="px-5 py-2 text-sm rounded-lg bg-foreground/10 hover:bg-foreground/20 transition-colors">
@@ -165,18 +208,59 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   const galleryDescription = contentData.gallery_description || '';
   const gallery = country.content?.shared_images?.gallery || [];
   const videos = country.content?.shared_videos || [];
+  
+  // Get first 3 gallery images for background rotation
+  const backgroundImages = gallery.slice(0, 3);
+  const currentBackgroundUrl = backgroundImages.length > 0 
+    ? backgroundImages[currentBgIndex]?.url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070'
+    : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070';
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Full Screen Hero - Behind Header with Parallax & Ken Burns Effect */}
-      <div className="relative h-screen w-full overflow-hidden -mt-16 lg:-mt-20">
-        {/* Animated Background Image */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            animation: 'kenBurns 25s ease-in-out infinite'
-          }}
-        >
+    <div className="min-h-screen relative selection:bg-blue-500/30">
+      {/* Enhanced Background System - Triple Layer with Rotation - Always Visible */}
+      <div className="fixed inset-0 -z-10">
+        {/* Layer 1: Rotating Background Images (First 3 from Gallery) */}
+        {backgroundImages.length > 0 && backgroundImages.map((image: any, index: number) => (
+          <div
+            key={index}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out"
+            style={{
+              backgroundImage: `url(${image.url})`,
+              opacity: currentBgIndex === index ? 1 : 0,
+              zIndex: currentBgIndex === index ? 1 : 0,
+            }}
+          />
+        ))}
+        
+        {/* Fallback if no gallery images */}
+        {backgroundImages.length === 0 && (
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070)`,
+            }}
+          />
+        )}
+        
+        {/* Layer 2: Smart Overlay - Adaptive darkness for any image brightness */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75 dark:from-black/80 dark:via-black/70 dark:to-black/85" style={{ zIndex: 2 }} />
+        
+        {/* Layer 3: Depth Gradient - Bottom to top for content hierarchy */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" style={{ zIndex: 3 }} />
+      </div>
+      
+      {/* Full Screen Hero - Behind Header with Hysteresis Fade */}
+      <div 
+        ref={heroRef}
+        className="relative h-[calc(100vh+4rem)] lg:h-[calc(100vh+5rem)] w-full overflow-hidden -mt-16 lg:-mt-20 transition-all duration-500 ease-out"
+        style={{
+          opacity: heroVisible ? 1 : 0,
+          transform: heroVisible ? 'translateY(0)' : `translateY(-50px)`,
+          pointerEvents: heroVisible ? 'auto' : 'none',
+        }}
+      >
+        {/* Static Background Image */}
+        <div className="absolute inset-0">
           <Image 
             src={heroImageUrl} 
             alt={heroImageAlt} 
@@ -184,85 +268,12 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
             priority 
             unoptimized 
             className="object-cover"
-            style={{ transform: 'scale(1.1)' }}
             sizes="100vw" 
           />
         </div>
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-background"></div>
-        
-        {/* Floating Particles Effect */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div 
-            className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full blur-sm"
-            style={{ animation: 'floatSlow 15s ease-in-out infinite' }}
-          ></div>
-          <div 
-            className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-white/20 rounded-full blur-sm"
-            style={{ animation: 'floatMedium 12s ease-in-out infinite' }}
-          ></div>
-          <div 
-            className="absolute top-2/3 left-1/2 w-1 h-1 bg-white/40 rounded-full blur-sm"
-            style={{ animation: 'floatFast 9s ease-in-out infinite' }}
-          ></div>
-          <div 
-            className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-white/25 rounded-full blur-sm"
-            style={{ animation: 'floatSlow 15s ease-in-out infinite 5s' }}
-          ></div>
-          <div 
-            className="absolute top-1/2 left-1/3 w-1.5 h-1.5 bg-white/30 rounded-full blur-sm"
-            style={{ animation: 'floatMedium 12s ease-in-out infinite 3s' }}
-          ></div>
-        </div>
-        
-        {/* Add keyframes */}
-        <style jsx>{`
-          @keyframes kenBurns {
-            0% {
-              transform: scale(1) translate(0, 0);
-            }
-            50% {
-              transform: scale(1.15) translate(-2%, -1%);
-            }
-            100% {
-              transform: scale(1) translate(0, 0);
-            }
-          }
-
-          @keyframes floatSlow {
-            0%, 100% {
-              transform: translateY(0) translateX(0);
-              opacity: 0.3;
-            }
-            50% {
-              transform: translateY(-100px) translateX(50px);
-              opacity: 0.6;
-            }
-          }
-
-          @keyframes floatMedium {
-            0%, 100% {
-              transform: translateY(0) translateX(0);
-              opacity: 0.2;
-            }
-            50% {
-              transform: translateY(-150px) translateX(-30px);
-              opacity: 0.5;
-            }
-          }
-
-          @keyframes floatFast {
-            0%, 100% {
-              transform: translateY(0) translateX(0);
-              opacity: 0.4;
-            }
-            50% {
-              transform: translateY(-80px) translateX(40px);
-              opacity: 0.7;
-            }
-          }
-        `}</style>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-transparent"></div>
         
         <div className="absolute inset-0 flex items-start pt-48 lg:pt-64">
           <div className="w-full max-w-[1280px] mx-auto px-4">
@@ -349,7 +360,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
             
             {/* History - Full Width, Rich HTML Support with Read More */}
             {h2History && historyText && (
-              <article className="rounded-lg border border-foreground/10 bg-foreground/[0.02] overflow-hidden">
+              <article className="rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl overflow-hidden">
                 {/* Header with Mobile Accordion and Desktop Read More */}
                 <div className="w-full p-4 lg:p-5 flex items-start justify-between gap-3">
                   <button
@@ -357,7 +368,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     className="flex items-start gap-2 flex-1 lg:pointer-events-none text-left"
                   >
                     <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0 mt-0.5">
-                      <svg className="w-4 h-4 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                       </svg>
                     </div>
@@ -370,7 +381,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     className="lg:hidden p-1"
                   >
                     <svg 
-                      className={`w-5 h-5 text-foreground/60 transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
+                      className={`w-5 h-5 text-foreground transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -382,7 +393,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   {/* Desktop: Read More Button */}
                   <button
                     onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 hover:border-foreground/30 transition-all text-[11px] font-medium text-foreground/70 hover:text-foreground whitespace-nowrap"
+                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 hover:border-foreground/30 transition-all text-[11px] font-medium text-foreground hover:text-foreground/80 whitespace-nowrap"
                   >
                     <span>
                       {isHistoryExpanded 
@@ -405,7 +416,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                 <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isHistoryExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 lg:max-h-[280px] lg:opacity-100'}`}>
                   <div className="px-4 pb-4 lg:px-5 lg:pb-5">
                     <div 
-                      className={`prose prose-sm max-w-none text-foreground/80 transition-all duration-500 ease-in-out break-words
+                      className={`prose prose-sm max-w-none text-foreground transition-all duration-500 ease-in-out break-words
                         [&>h2]:text-base [&>h2]:lg:text-lg [&>h2]:font-bold [&>h2]:text-foreground [&>h2]:mt-4 [&>h2]:mb-2 [&>h2]:break-words
                         [&>h3]:text-sm [&>h3]:lg:text-base [&>h3]:font-semibold [&>h3]:text-foreground [&>h3]:mt-3 [&>h3]:mb-2 [&>h3]:break-words
                         [&>p]:mb-2 [&>p]:text-xs [&>p]:lg:text-sm [&>p]:leading-relaxed [&>p]:break-words
@@ -443,14 +454,14 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               
               return (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between px-1">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                      <svg className="w-4 h-4 text-foreground/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center justify-between px-4 py-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
+                    <h3 className="text-sm font-semibold text-foreground/95 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-foreground/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       {locale === 'en' ? 'Photos' : locale === 'ru' ? 'Фото' : 'ფოტოები'}
                     </h3>
-                    <span className="text-xs text-foreground/50 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
+                    <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
                   </div>
                   
                   <div className="columns-2 lg:columns-3 gap-2">
@@ -490,13 +501,13 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     })}
                   </div>
 
-                  {/* Pagination */}
+                  {/* Pagination - Enhanced Glass Morphism */}
                   {totalPages > 1 && (
                     <div className="flex items-center justify-center gap-2 pt-2">
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
-                        className="px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-foreground"
+                        className="px-3 py-1.5 rounded-md backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-foreground shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -507,10 +518,10 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className={`px-3 py-1.5 rounded-md border transition-all text-xs font-medium ${
+                          className={`px-3 py-1.5 rounded-md border transition-all text-xs font-medium shadow-lg ${
                             currentPage === page
                               ? 'bg-foreground text-background border-foreground'
-                              : 'border-foreground/20 bg-foreground/5 hover:bg-foreground/10 text-foreground'
+                              : 'backdrop-blur-lg bg-white/70 dark:bg-black/40 border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 text-foreground'
                           }`}
                         >
                           {page}
@@ -520,7 +531,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <button
                         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={currentPage === totalPages}
-                        className="px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-foreground"
+                        className="px-3 py-1.5 rounded-md backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-foreground shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -618,15 +629,15 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               return (
                 <div className="space-y-4">
                   {/* Header */}
-                  <div className="flex items-center justify-between px-1">
-                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                      <svg className="w-4 h-4 text-foreground/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center justify-between px-4 py-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
+                    <h3 className="text-sm font-semibold text-foreground/95 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-foreground/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       {locale === 'en' ? 'Videos' : locale === 'ru' ? 'Видео' : 'ვიდეოები'}
                     </h3>
-                    <span className="text-xs text-foreground/50 px-2 py-0.5 rounded bg-foreground/5">{videos.length}</span>
+                    <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{videos.length}</span>
                   </div>
 
                   {/* YouTube Style Layout */}
@@ -634,7 +645,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     
                     {/* Main Video Player - Left/Top */}
                     <div className="lg:col-span-2 space-y-2">
-                      <div id="main-video-player" className="relative rounded-lg overflow-hidden border border-foreground/10 bg-black shadow-lg">
+                      <div id="main-video-player" className="relative rounded-lg overflow-hidden border border-white/30 dark:border-white/20 bg-black shadow-lg">
                         <div className="relative aspect-video">
                           <iframe
                             key={activeVideoIndex}
@@ -655,7 +666,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                             {locale === 'en' ? 'Now Playing' : locale === 'ru' ? 'Играет' : 'მიმდინარე'}
                           </span>
                         </div>
-                        <span className="text-xs text-foreground/60">
+                        <span className="text-xs text-foreground/90">
                           {activeVideoIndex + 1} / {videos.length}
                         </span>
                       </div>
@@ -663,10 +674,10 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
                     {/* Playlist - Right/Bottom - Height matches main video */}
                     <div className="lg:col-span-1 lg:self-start">
-                      <div className="rounded-lg border border-foreground/10 bg-foreground/[0.02] overflow-hidden max-h-[400px] lg:max-h-[360px] flex flex-col">
+                      <div className="rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 overflow-hidden max-h-[400px] lg:max-h-[360px] flex flex-col shadow-lg">
                         {/* Playlist Header */}
                         <div className="px-3 py-2 bg-foreground/5 border-b border-foreground/10 flex-shrink-0">
-                          <h4 className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wide">
+                          <h4 className="text-[11px] font-semibold text-foreground uppercase tracking-wide">
                             {locale === 'en' ? 'Playlist' : locale === 'ru' ? 'Плейлист' : 'პლეილისტი'}
                           </h4>
                         </div>
@@ -729,7 +740,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                                   <p className={`text-[11px] leading-tight line-clamp-2 transition-colors ${
                                     isActive 
                                       ? 'text-foreground font-semibold' 
-                                      : 'text-foreground/70 hover:text-foreground'
+                                      : 'text-foreground/90 hover:text-foreground'
                                   }`}>
                                     {locale === 'en' ? 'Video' : locale === 'ru' ? 'Видео' : 'ვიდეო'} {index + 1}
                                   </p>
@@ -754,12 +765,12 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
             })()}
 
             {/* Contact via Messaging Apps */}
-            <div className="overflow-hidden rounded-xl border border-foreground/10 bg-foreground/[0.02] shadow-sm">
+            <div className="overflow-hidden rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
               {/* Header with Icon */}
               <div className="px-4 py-3 border-b border-foreground/10 bg-gradient-to-r from-foreground/[0.03] to-transparent">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 rounded-lg bg-foreground/10">
-                    <svg className="w-4 h-4 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
@@ -771,7 +782,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               
               <div className="p-4 space-y-4">
                 {/* Info Text */}
-                <div className="text-xs text-foreground/70 leading-relaxed space-y-2">
+                <div className="text-xs text-foreground/90 leading-relaxed space-y-2">
                   <p className="flex items-start gap-2">
                     <svg className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -866,13 +877,13 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               if (typeof value !== 'string' || value.length === 0) return null;
               
               return (
-                <div key={key} className="p-4 rounded-lg border border-foreground/10 bg-foreground/[0.02]">
+                <div key={key} className="p-4 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
                   <h3 className="text-sm font-semibold text-foreground mb-2 capitalize flex items-center gap-1.5">
                     <span className="w-0.5 h-4 bg-foreground/30 rounded-full"></span>
                     {key.replace(/_/g, ' ')}
                   </h3>
                   <div 
-                    className="prose prose-sm max-w-none text-foreground/80
+                    className="prose prose-sm max-w-none text-foreground
                       [&>p]:mb-1.5 [&>p]:text-xs [&>p]:leading-relaxed
                       [&_strong]:font-semibold [&_strong]:text-foreground"
                     dangerouslySetInnerHTML={{ __html: value }}
@@ -889,15 +900,15 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
                 {locations.length > 0 && (
-                  <div className="p-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20 transition-colors">
+                  <div className="p-3 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 hover:border-white/60 dark:hover:border-white/30 transition-all shadow-xl">
                     <div className="flex items-center gap-2">
                       <div className="p-1.5 rounded bg-foreground/10">
-                        <svg className="w-3.5 h-3.5 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-[10px] text-foreground/60 font-medium">
+                        <p className="text-[10px] text-foreground/90 font-medium">
                           {locale === 'en' ? 'Locations' : locale === 'ru' ? 'Локации' : 'ლოკაციები'}
                         </p>
                         <p className="text-sm font-bold text-foreground">{locations.length}</p>
@@ -906,15 +917,15 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   </div>
                 )}
                 {gallery.length > 0 && (
-                  <div className="p-3 rounded-lg border border-foreground/10 bg-foreground/[0.02] hover:border-foreground/20 transition-colors">
+                  <div className="p-3 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 hover:border-white/60 dark:hover:border-white/30 transition-all shadow-xl">
                     <div className="flex items-center gap-2">
                       <div className="p-1.5 rounded bg-foreground/10">
-                        <svg className="w-3.5 h-3.5 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-[10px] text-foreground/60 font-medium">
+                        <p className="text-[10px] text-foreground/90 font-medium">
                           {locale === 'en' ? 'Photos' : locale === 'ru' ? 'Фото' : 'ფოტოები'}
                         </p>
                         <p className="text-sm font-bold text-foreground">{gallery.length}</p>
@@ -926,8 +937,8 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
               {/* Locations List */}
               {locations.length > 0 && (
-                <div className="p-4 rounded-lg border border-foreground/10 bg-foreground/[0.02]">
-                  <h3 className="text-xs font-semibold text-foreground/60 mb-3 flex items-center gap-1.5">
+                <div className="p-4 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+                  <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
@@ -938,14 +949,14 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <Link
                         key={location.id}
                         href={`/${locale}/locations/${slug}/${getLocalizedField(location, 'slug', locale)}`}
-                        className="group block p-2 rounded-md border border-foreground/5 hover:border-foreground/20 hover:bg-foreground/[0.03] transition-all"
+                        className="group block p-2 rounded-md backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/30 dark:hover:bg-black/30 hover:border-white/40 dark:hover:border-white/30 transition-all shadow-md"
                       >
                         <div className="flex items-center justify-between gap-1.5">
                           <div className="flex items-center gap-2 flex-1 min-w-0">
                             <svg className="w-3 h-3 text-foreground/40 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            <span className="text-xs font-medium text-foreground group-hover:text-foreground/70 transition-colors truncate">
+                            <span className="text-xs font-medium text-foreground group-hover:text-foreground/80 transition-colors truncate">
                               {getLocalizedField(location, 'name', locale)}
                             </span>
                           </div>
@@ -960,7 +971,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               )}
 
               {/* Booking CTA */}
-              <div className="rounded-xl border-2 border-foreground/10 bg-foreground/[0.02] overflow-hidden shadow-lg">
+              <div className="rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border-2 border-white/50 dark:border-white/20 overflow-hidden shadow-xl">
                 {/* Header */}
                 <div className="bg-foreground text-background px-4 py-3">
                   <div className="flex items-center gap-2">
@@ -995,7 +1006,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                           ? 'Готовы к приключению?' 
                           : 'მზად ხართ თავგადასავლისთვის?'}
                       </h4>
-                      <p className="text-[11px] text-foreground/70 leading-relaxed">
+                      <p className="text-[11px] text-foreground/90 leading-relaxed">
                         {locale === 'en' 
                           ? `Book your tandem paragliding flight at any of our ${locations.length} locations` 
                           : locale === 'ru' 
@@ -1011,7 +1022,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[10px] text-foreground/70">
+                      <span className="text-[10px] text-foreground/90">
                         {locale === 'en' ? 'Professional pilots' : locale === 'ru' ? 'Профессиональные пилоты' : 'პროფესიონალი პილოტები'}
                       </span>
                     </div>
@@ -1019,7 +1030,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[10px] text-foreground/70">
+                      <span className="text-[10px] text-foreground/90">
                         {locale === 'en' ? 'Safety certified equipment' : locale === 'ru' ? 'Сертифицированное оборудование' : 'სერტიფიცირებული აღჭურვილობა'}
                       </span>
                     </div>
@@ -1027,7 +1038,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[10px] text-foreground/70">
+                      <span className="text-[10px] text-foreground/90">
                         {locale === 'en' ? 'Photo & video included' : locale === 'ru' ? 'Фото и видео включены' : 'ფოტო და ვიდეო შედის'}
                       </span>
                     </div>
@@ -1061,7 +1072,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
       {/* Comments Section */}
       <div className="max-w-[1280px] mx-auto px-4 py-16">
-        <div className="backdrop-blur-xl bg-background/80 border border-foreground/10 rounded-2xl p-8 shadow-2xl">
+        <div className="backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 rounded-2xl p-8 shadow-xl">
           <CommentsList
             commentableType="country"
             commentableId={String(country.id)}

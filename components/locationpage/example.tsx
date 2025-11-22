@@ -107,7 +107,7 @@ const GlassCard = ({ children, className = "" }: { children: React.ReactNode; cl
 );
 
 const SectionTitle = ({ icon: Icon, title }: { icon: any; title: string }) => (
-  <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+  <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
     <Icon className="w-5 h-5 text-foreground" />
     <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
   </div>
@@ -127,11 +127,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   
   // Scroll-based animation states
   const [scrollY, setScrollY] = useState(0);
-  const [heroVisible, setHeroVisible] = useState(true);
   const heroRef = useRef<HTMLDivElement>(null);
-  
-  // Background rotation for first 3 gallery images
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
 
   // Helper to get localized string
   const getLocalizedField = (obj: any, field: string, loc: string) => {
@@ -267,55 +263,15 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
     fetchLocationData();
   }, [countrySlug, locationSlug, locale]);
 
-  // Background rotation - Modern interval (9s) with smooth crossfade
+  // Scroll tracking for parallax and fade effects
   useEffect(() => {
-    if (!locationPage?.content?.shared_images?.gallery || locationPage.content.shared_images.gallery.length < 2) {
-      return; // Skip rotation if less than 2 images
-    }
-    
-    const maxImages = Math.min(3, locationPage.content.shared_images.gallery.length);
-    const interval = setInterval(() => {
-      setCurrentBgIndex((prev) => (prev + 1) % maxImages);
-    }, 9000); // 9 seconds - Modern timing (Apple/Stripe standard)
-
-    return () => clearInterval(interval);
-  }, [locationPage]);
-
-  // Handle hash navigation for auto-scroll
-  useEffect(() => {
-    // Check if there's a hash in the URL and location data is loaded
-    if (window.location.hash && location && locationPage) {
-      // Delay to ensure the page is fully rendered and all content is loaded
-      setTimeout(() => {
-        const id = window.location.hash.substring(1);
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 500);
-    }
-  }, [location, locationPage]);
-
-  // Scroll tracking with hysteresis - complete transition once started
-  useEffect(() => {
-    const THRESHOLD = 300; // When to start hiding hero
-    
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      setScrollY(currentScroll);
-      
-      // Once scroll passes threshold, commit to hiding hero
-      if (currentScroll > THRESHOLD && heroVisible) {
-        setHeroVisible(false);
-      } else if (currentScroll <= 50 && !heroVisible) {
-        // Only show hero again when scrolled back to top
-        setHeroVisible(true);
-      }
+      setScrollY(window.scrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [heroVisible]);
+  }, []);
 
   if (isLoading) {
     return (
@@ -328,10 +284,10 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   if (!location || !locationPage) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-zinc-50 dark:bg-black">
-        <h1 className="text-xl font-medium text-foreground/80">ლოკაცია ვერ მოიძებნა</h1>
+        <h1 className="text-xl font-medium text-foreground/60">ლოკაცია ვერ მოიძებნა</h1>
         <Link 
           href={`/${locale}/locations/${countrySlug}`}
-          className="px-4 py-2 text-sm font-medium backdrop-blur-lg bg-white/70 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/50 border border-white/50 dark:border-white/20 rounded-full transition-all shadow-lg"
+          className="px-4 py-2 text-sm font-medium bg-foreground/5 hover:bg-foreground/10 rounded-full transition-colors"
         >
           უკან დაბრუნება
         </Link>
@@ -360,12 +316,6 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   const gallery = locationPage.content?.shared_images?.gallery || [];
   const videos = locationPage.content?.shared_videos || [];
   const sharedFlightTypes: SharedFlightType[] = locationPage.content?.shared_flight_types || [];
-  
-  // Get first 3 gallery images for background rotation
-  const backgroundImages = gallery.slice(0, 3);
-  const currentBackgroundUrl = backgroundImages.length > 0 
-    ? backgroundImages[currentBgIndex]?.url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070'
-    : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070';
 
   // Labels
   const labels = {
@@ -382,40 +332,39 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
   return (
     <div className="min-h-screen relative selection:bg-blue-500/30">
-      {/* Enhanced Background System - Triple Layer with Rotation - Always Visible */}
-      <div className="fixed inset-0 -z-10">
-        {/* Layer 1: Rotating Background Images (First 3 from Gallery) */}
-        {backgroundImages.length > 0 && backgroundImages.map((image: any, index: number) => (
+      {/* Background Slideshow - Fixed Behind Everything */}
+      <div 
+        className="fixed inset-0 -z-10 transition-opacity duration-700"
+        style={{
+          opacity: Math.min(1, scrollY / 400),
+        }}
+      >
+        {backgroundImages.map((image, index) => (
           <div
             key={index}
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out"
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url(${image.url})`,
-              opacity: currentBgIndex === index ? 1 : 0,
-              zIndex: currentBgIndex === index ? 1 : 0,
+              backgroundImage: `url(${image})`,
+              animation: `fadeInOut ${backgroundImages.length * 8}s infinite`,
+              animationDelay: `${index * 8}s`,
+              opacity: 0,
             }}
           />
         ))}
-        
-        {/* Fallback if no gallery images */}
-        {backgroundImages.length === 0 && (
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070)`,
-            }}
-          />
-        )}
-        
-        {/* Layer 2: Smart Overlay - Adaptive darkness for any image brightness */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75 dark:from-black/80 dark:via-black/70 dark:to-black/85" style={{ zIndex: 2 }} />
-        
-        {/* Layer 3: Depth Gradient - Bottom to top for content hierarchy */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" style={{ zIndex: 3 }} />
+        {/* Dark overlay for better contrast */}
+        <div className="absolute inset-0 bg-black/40 dark:bg-black/60" />
       </div>
       
       {/* All Keyframes in One Style Tag */}
       <style jsx>{`
+        @keyframes fadeInOut {
+          0% { opacity: 0; }
+          4% { opacity: 1; }
+          20% { opacity: 1; }
+          24% { opacity: 0; }
+          100% { opacity: 0; }
+        }
+
         @keyframes kenBurns {
           0% {
             transform: scale(1) translate(0, 0);
@@ -462,18 +411,23 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
         }
       `}</style>
       
-      {/* Full Screen Hero - Behind Header with Hysteresis Fade */}
+      {/* Full Screen Hero - Behind Header with Parallax & Ken Burns Effect */}
       <div 
         ref={heroRef}
-        className="relative h-[calc(100vh+4rem)] lg:h-[calc(100vh+5rem)] w-full overflow-hidden -mt-16 lg:-mt-20 transition-all duration-500 ease-out"
+        className="relative h-[calc(100vh+4rem)] lg:h-[calc(100vh+5rem)] w-full overflow-hidden -mt-16 lg:-mt-20"
         style={{
-          opacity: heroVisible ? 1 : 0,
-          transform: heroVisible ? 'translateY(0)' : `translateY(-50px)`,
-          pointerEvents: heroVisible ? 'auto' : 'none',
+          opacity: Math.max(0, 1 - scrollY / 600),
+          transform: `translateY(${scrollY * 0.5}px)`,
         }}
       >
-        {/* Static Background Image */}
-        <div className="absolute inset-0">
+        {/* Animated Background Image */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            animation: 'kenBurns 25s ease-in-out infinite',
+            transform: `scale(1.1) translateY(${scrollY * 0.3}px)`,
+          }}
+        >
           <Image 
             src={heroImageUrl} 
             alt={heroImageAlt} 
@@ -481,6 +435,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             priority 
             unoptimized 
             className="object-cover"
+            style={{ transform: 'scale(1.1)' }}
             sizes="100vw" 
           />
         </div>
@@ -602,7 +557,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             
             {/* About / History */}
             {historyText && (
-              <article className="rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl overflow-hidden">
+              <article className="rounded-lg backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg overflow-hidden">
                 {/* Header with Mobile Accordion and Desktop Read More */}
                 <div className="w-full p-4 lg:p-5 flex items-start justify-between gap-3">
                   <button
@@ -610,7 +565,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     className="flex items-start gap-2 flex-1 lg:pointer-events-none text-left"
                   >
                     <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0 mt-0.5">
-                      <Info className="w-4 h-4 text-foreground" />
+                      <Info className="w-4 h-4 text-foreground/70" />
                     </div>
                     <h2 className="text-sm lg:text-lg font-bold text-foreground text-left">{h2History || 'About Location'}</h2>
                   </button>
@@ -621,14 +576,14 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     className="lg:hidden p-1"
                   >
                     <ChevronDown 
-                      className={`w-5 h-5 text-foreground transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
+                      className={`w-5 h-5 text-foreground/60 transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
                     />
                   </button>
                   
                   {/* Desktop: Read More Button */}
                   <button
                     onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md backdrop-blur-lg bg-white/70 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/50 border border-white/50 dark:border-white/20 transition-all text-[11px] font-medium text-foreground shadow-lg whitespace-nowrap"
+                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 hover:border-foreground/30 transition-all text-[11px] font-medium text-foreground/70 hover:text-foreground whitespace-nowrap"
                   >
                     <span>
                       {isHistoryExpanded ? labels.showLess : labels.readMore}
@@ -643,7 +598,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                 <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isHistoryExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 lg:max-h-[200px] lg:opacity-100'}`}>
                   <div className="px-4 pb-4 lg:px-5 lg:pb-5">
                     <div 
-                      className={`prose prose-sm max-w-none text-foreground transition-all duration-500 ease-in-out break-words
+                      className={`prose prose-sm max-w-none text-foreground/80 transition-all duration-500 ease-in-out break-words
                         [&>h2]:text-base [&>h2]:lg:text-lg [&>h2]:font-bold [&>h2]:text-foreground [&>h2]:mt-4 [&>h2]:mb-2 [&>h2]:break-words
                         [&>h3]:text-sm [&>h3]:lg:text-base [&>h3]:font-semibold [&>h3]:text-foreground [&>h3]:mt-3 [&>h3]:mb-2 [&>h3]:break-words
                         [&>p]:mb-2 [&>p]:text-xs [&>p]:lg:text-sm [&>p]:leading-relaxed [&>p]:break-words
@@ -687,12 +642,12 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     return (
                       <div 
                         key={idx} 
-                        className="flex flex-col p-4 md:p-5 rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 hover:border-white/60 dark:hover:border-white/30 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
+                        className="flex flex-col p-4 md:p-5 rounded-xl backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 hover:bg-white/30 dark:hover:bg-black/30 hover:border-white/50 dark:hover:border-white/30 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300"
                       >
                         {/* Header */}
                         <div className="mb-3">
                           <h3 className="text-base md:text-lg font-bold text-foreground mb-2">{pkg.name}</h3>
-                          <p className="text-xs text-foreground/90 min-h-[32px] line-clamp-2">
+                          <p className="text-xs text-foreground/60 min-h-[32px] line-clamp-2">
                             {pkg.description}
                           </p>
                         </div>
@@ -743,7 +698,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                                     ? flightTypeRatings[pkg.shared_id].avgRating.toFixed(1) 
                                     : '0.0'}
                                 </span>
-                                <span className="text-[10px] text-foreground/80">
+                                <span className="text-[10px] text-foreground/50">
                                   ({flightTypeRatings[pkg.shared_id].count})
                                 </span>
                               </div>
@@ -757,7 +712,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                                     showInput: !prev[pkg.shared_id!].showInput
                                   }
                                 }))}
-                                className="ml-auto px-3 py-1.5 text-[11px] font-semibold backdrop-blur-md bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-700 dark:text-yellow-400 rounded-lg border-2 border-yellow-400/40 hover:border-yellow-400/60 shadow-lg hover:shadow-yellow-400/20 transition-all hover:scale-105"
+                                className="ml-auto px-2 py-1 text-[10px] font-medium bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-600 dark:text-yellow-500 rounded border border-yellow-500/20 hover:border-yellow-500/40 transition-all"
                               >
                                 {flightTypeRatings[pkg.shared_id].userRating ? 'შეცვლა' : 'შეფასება'}
                               </button>
@@ -809,8 +764,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                             <span className="text-2xl md:text-3xl font-bold text-foreground">
                               {priceGel}
                             </span>
-                            <span className="text-lg md:text-xl font-bold text-foreground">₾</span>
-                            <span className="text-[10px] md:text-xs text-foreground/80">/ person</span>
+                            <span className="text-lg md:text-xl font-bold text-foreground/70">₾</span>
+                            <span className="text-[10px] md:text-xs text-foreground/50">/ person</span>
                           </div>
                           <div className="flex gap-1.5">
                             <span className="px-1.5 py-0.5 md:px-2 md:py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[9px] md:text-[10px] font-semibold">
@@ -826,7 +781,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                         <div className="flex-1 mb-5">
                           <div className="flex items-center gap-2 mb-3">
                             <div className="h-px flex-1 bg-foreground/10"></div>
-                            <p className="text-[10px] font-semibold text-foreground/90 uppercase tracking-wider">
+                            <p className="text-[10px] font-semibold text-foreground/50 uppercase tracking-wider">
                               შედის
                             </p>
                             <div className="h-px flex-1 bg-foreground/10"></div>
@@ -834,7 +789,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                           {pkg.features && (
                             <ul className="space-y-2.5">
                               {pkg.features.map((feature, i) => (
-                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/85">
+                                <li key={i} className="flex items-start gap-2 text-xs text-foreground/70">
                                   <CheckCircle2 className="w-3.5 h-3.5 text-green-600 dark:text-green-400 shrink-0 mt-0.5" />
                                   <span className="leading-tight">{feature}</span>
                                 </li>
@@ -862,13 +817,13 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
             {/* Gallery */}
             {gallery.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between px-4 py-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
+              <div className="space-y-4 p-4 rounded-lg backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
+                <div className="flex items-center justify-between px-1">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                    <ImageIcon className="w-4 h-4 text-foreground" />
+                    <ImageIcon className="w-4 h-4 text-foreground/60" />
                     {galleryDescription || labels.gallery}
                   </h3>
-                  <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
+                  <span className="text-xs text-foreground/50 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
                 </div>
                 
                 <div className="columns-2 lg:columns-3 gap-2">
@@ -910,7 +865,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
             {/* Videos */}
             {videos.length > 0 && (
-              <section className="space-y-4">
+              <section className="p-4 rounded-lg backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
                 <SectionTitle icon={Video} title={labels.videos} />
                 
                 {/* YouTube Style Layout */}
@@ -939,7 +894,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                           {locale === 'en' ? 'Now Playing' : locale === 'ru' ? 'Играет' : 'მიმდინარე'}
                         </span>
                       </div>
-                      <span className="text-xs text-foreground/90">
+                      <span className="text-xs text-foreground/60">
                         {activeVideoIndex + 1} / {videos.length}
                       </span>
                     </div>
@@ -947,10 +902,10 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
                   {/* Playlist - Right/Bottom - Height matches main video */}
                   <div className="lg:col-span-1 lg:self-start">
-                    <div className="rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 overflow-hidden max-h-[400px] lg:max-h-[360px] flex flex-col shadow-lg">
+                    <div className="rounded-lg border border-foreground/10 bg-foreground/[0.02] overflow-hidden max-h-[400px] lg:max-h-[360px] flex flex-col">
                       {/* Playlist Header */}
                       <div className="px-3 py-2 bg-foreground/5 border-b border-foreground/10 flex-shrink-0">
-                        <h4 className="text-[11px] font-semibold text-foreground uppercase tracking-wide">
+                        <h4 className="text-[11px] font-semibold text-foreground/70 uppercase tracking-wide">
                           {locale === 'en' ? 'Playlist' : locale === 'ru' ? 'Плейлист' : 'პლეილისტი'}
                         </h4>
                       </div>
@@ -1013,7 +968,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                                 <p className={`text-[11px] leading-tight line-clamp-2 transition-colors ${
                                   isActive 
                                     ? 'text-foreground font-semibold' 
-                                    : 'text-foreground/90 hover:text-foreground'
+                                    : 'text-foreground/70 hover:text-foreground'
                                 }`}>
                                   {locale === 'en' ? 'Video' : locale === 'ru' ? 'Видео' : 'ვიდეო'} {index + 1}
                                 </p>
@@ -1041,10 +996,10 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
             {/* Map */}
             {location.map_iframe_url && (
-              <div className="space-y-4 p-4 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+              <div className="space-y-4 p-4 rounded-lg backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
                 <div className="flex items-center justify-between px-1">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-foreground" />
+                    <MapPin className="w-4 h-4 text-foreground/60" />
                     {labels.map}
                   </h3>
                 </div>
@@ -1066,7 +1021,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             <div className="border-t border-foreground/10 my-6"></div>
 
             {/* Contact via Messaging Apps */}
-            <div className="overflow-hidden rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+            <div className="overflow-hidden rounded-xl backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
               {/* Header with Icon */}
               <div className="px-4 py-3 border-b border-foreground/10 bg-gradient-to-r from-foreground/[0.03] to-transparent">
                 <div className="flex items-center gap-2">
@@ -1083,7 +1038,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
               
               <div className="p-4 space-y-4">
                 {/* Info Text */}
-                <div className="text-xs text-foreground/90 leading-relaxed space-y-2">
+                <div className="text-xs text-foreground/70 leading-relaxed space-y-2">
                   <p className="flex items-start gap-2">
                     <svg className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -1163,7 +1118,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             <div className="sticky top-16 pt-2 space-y-3">
               
               {/* Booking Card */}
-              <div className="rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border-2 border-white/50 dark:border-white/20 overflow-hidden shadow-xl">
+              <div className="rounded-xl backdrop-blur-md bg-white/20 dark:bg-black/20 border-2 border-white/30 dark:border-white/20 overflow-hidden shadow-lg">
                 {/* Header */}
                 <div className="bg-foreground text-background px-4 py-3">
                   <div className="flex items-center gap-2">
@@ -1190,7 +1145,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                       <h4 className="text-sm font-bold text-foreground">
                         მზად ხართ თავგადასავლისთვის?
                       </h4>
-                      <p className="text-[11px] text-foreground/90 leading-relaxed">
+                      <p className="text-[11px] text-foreground/70 leading-relaxed">
                         განიცადეთ ფრენის შეუდარებელი გამოცდილება {locationName}-ში. დაჯავშნეთ ახლავე!
                       </p>
                     </div>
@@ -1235,7 +1190,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
               </div>
 
               {/* Quick Info / Weather Placeholder */}
-              <div className="p-5 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+              <div className="p-5 rounded-lg backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500">
                     <Clock className="w-5 h-5" />
@@ -1314,7 +1269,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
       {/* Comments Section */}
       <div className="max-w-[1280px] mx-auto px-4 py-16">
-        <div className="backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 rounded-2xl p-8 shadow-xl">
+        <div className="backdrop-blur-md bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 rounded-2xl p-8 shadow-lg">
           <CommentsList
             commentableType="location"
             commentableId={String(location.id)}

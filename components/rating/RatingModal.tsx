@@ -65,7 +65,7 @@ export default function RatingModal({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-gradient-to-br from-white via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-black rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 overflow-hidden animate-scale-in">
+      <div className="relative w-full max-w-md backdrop-blur-xl bg-white/95 dark:bg-black/95 rounded-2xl shadow-2xl border border-white/30 dark:border-white/10 overflow-hidden animate-scale-in">
         {/* Decorative Background Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-yellow-400/20 via-orange-400/10 to-transparent rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-yellow-500/20 via-amber-400/10 to-transparent rounded-full blur-3xl" />
@@ -73,10 +73,10 @@ export default function RatingModal({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-all duration-200 group"
+          className="absolute top-4 right-4 z-10 p-2 rounded-full backdrop-blur-md bg-white/30 dark:bg-black/20 hover:bg-white/40 dark:hover:bg-black/30 border border-white/30 dark:border-white/10 transition-all duration-200 group"
           aria-label="Close"
         >
-          <X className="w-5 h-5 text-gray-600 dark:text-white/70 group-hover:text-gray-900 dark:group-hover:text-white transition-colors" />
+          <X className="w-5 h-5 text-foreground group-hover:text-foreground/80 transition-colors" />
         </button>
 
         {/* Content */}
@@ -91,16 +91,16 @@ export default function RatingModal({
             </div>
 
             {/* Title */}
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-2xl font-bold text-foreground mb-2">
               {title}
             </h2>
-            <p className="text-sm text-gray-600 dark:text-white/60">
+            <p className="text-sm text-foreground/90">
               {subtitle}
             </p>
           </div>
 
           {/* Rating Component */}
-          <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-white/10">
+          <div className="backdrop-blur-md bg-white/30 dark:bg-black/20 rounded-xl p-6 border border-white/30 dark:border-white/10 shadow-lg">
             <RatingInput
               ratableType={ratableType}
               ratableId={ratableId}
@@ -110,7 +110,7 @@ export default function RatingModal({
           </div>
 
           {/* Footer Note */}
-          <p className="text-center text-xs text-gray-500 dark:text-white/40 mt-4">
+          <p className="text-center text-xs text-foreground/80 mt-4">
             დააჭირეთ ვარსკვლავებს შესაფასებლად
           </p>
         </div>

@@ -156,12 +156,12 @@ export default function RatingInput({
               onMouseLeave={() => setHoverRating(0)}
               className="group relative transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-1 focus:ring-yellow-400/50 rounded-full p-0.5"
             >
-              <div className={`absolute inset-0 rounded-full ${star <= displayRating ? 'bg-yellow-400/15' : 'bg-white/5'} blur-sm transition-all duration-200`}></div>
+              <div className={`absolute inset-0 rounded-full ${star <= displayRating ? 'bg-yellow-400/15' : 'bg-foreground/5'} blur-sm transition-all duration-200`}></div>
               <Star
                 className={`relative w-7 h-7 transition-all duration-200 ${
                   star <= displayRating
                     ? 'fill-yellow-400 text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.4)]'
-                    : 'text-white/30 group-hover:text-white/50'
+                    : 'text-foreground/30 group-hover:text-foreground/50'
                 } ${star === displayRating ? 'scale-105' : ''}`}
               />
             </button>
@@ -170,7 +170,7 @@ export default function RatingInput({
 
         {/* Compact Rating Label */}
         {displayRating > 0 && (
-          <div className="flex items-center gap-1.5 text-white/90 animate-fadeIn">
+          <div className="flex items-center gap-1.5 text-foreground animate-fadeIn">
             <Sparkles className="w-3 h-3 text-yellow-400" />
             <p className="text-xs font-medium">
               {ratingLabels[displayRating - 1]}
@@ -180,18 +180,18 @@ export default function RatingInput({
       </div>
 
       {/* Compact Actions & Status */}
-      <div className="flex items-center justify-between pt-2 border-t border-white/10">
+      <div className="flex items-center justify-between pt-2 border-t border-foreground/10">
         <div className="flex items-center gap-2">
           {rating > 0 && (
             <>
-              <p className="text-[10px] text-white/60">
-                <span className="font-semibold text-white/90">{rating}/5</span>
+              <p className="text-[10px] text-foreground/80">
+                <span className="font-semibold text-foreground">{rating}/5</span>
               </p>
               <button
                 type="button"
                 onClick={handleDeleteRating}
                 disabled={isSubmitting}
-                className="group flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-white/60 hover:text-red-400 hover:bg-red-400/10 rounded transition-all disabled:opacity-50"
+                className="group flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-foreground/80 hover:text-red-400 hover:bg-red-400/10 rounded transition-all disabled:opacity-50"
                 title="წაშლა"
               >
                 <X className="w-3 h-3" />
@@ -219,9 +219,9 @@ export default function RatingInput({
 
       {/* Loading Overlay */}
       {isSubmitting && (
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-          <div className="flex items-center gap-2 text-white">
-            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+          <div className="flex items-center gap-2 text-foreground">
+            <div className="w-4 h-4 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin"></div>
             <span className="text-sm font-medium">შენახვა...</span>
           </div>
         </div>

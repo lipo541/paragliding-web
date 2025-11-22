@@ -18,11 +18,11 @@ export default function Header() {
   const locale = pathname.split('/')[1] || 'ka';
 
   return (
-    <header 
-      className="sticky top-0 z-50 w-full backdrop-blur-xl bg-background/60 border-b border-foreground/20 supports-[backdrop-filter]:bg-background/50 shadow-sm"
-      onMouseLeave={() => setActiveMenu(null)}
-    >
-      <div className="relative">
+    <>
+      <header 
+        className="sticky top-0 z-50 w-full backdrop-blur-xl bg-background/80 border-b border-foreground/20 shadow-lg"
+        onMouseLeave={() => setActiveMenu(null)}
+      >
         <div className="mx-auto max-w-[1280px] px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
@@ -46,13 +46,15 @@ export default function Header() {
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Dropdown Mega Menu */}
-        {activeMenu && (
-          <div
-            className="absolute left-0 right-0 top-full bg-background border-t border-b border-foreground/10 shadow-xl z-40 animate-in fade-in slide-in-from-top-2 duration-200"
-            onMouseEnter={() => setActiveMenu(activeMenu)}
-          >
+      {/* Dropdown Mega Menu - Outside header to avoid blur stacking */}
+      {activeMenu && (
+        <div
+          className="fixed left-0 right-0 top-[57px] backdrop-blur-xl bg-background/90 border-b border-foreground/30 shadow-2xl z-40 animate-in fade-in slide-in-from-top-2 duration-200"
+          onMouseEnter={() => setActiveMenu(activeMenu)}
+          onMouseLeave={() => setActiveMenu(null)}
+        >
             <div className="mx-auto max-w-[1280px] px-4 py-8">
               {/* Special Layout for Locations */}
               {activeMenu === 'ლოკაციები' ? (
@@ -126,8 +128,7 @@ export default function Header() {
               </div>
             </div>
           </div>
-        )}
-      </div>
-    </header>
+      )}
+    </>
   );
 }

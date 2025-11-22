@@ -46,7 +46,7 @@ export default function RatingDisplay({
     if (hasHalfStar && fullStars < 5) {
       stars.push(
         <div key="half" className="relative">
-          <Star className={`${sizeClasses[size]} text-gray-300 dark:text-gray-600`} />
+          <Star className={`${sizeClasses[size]} text-foreground/30`} />
           <div className="absolute inset-0 overflow-hidden w-1/2">
             <Star className={`${sizeClasses[size]} fill-yellow-400 text-yellow-400`} />
           </div>
@@ -60,7 +60,7 @@ export default function RatingDisplay({
       stars.push(
         <Star
           key={`empty-${i}`}
-          className={`${sizeClasses[size]} text-gray-300 dark:text-gray-600`}
+          className={`${sizeClasses[size]} text-foreground/30`}
         />
       );
     }
@@ -72,7 +72,7 @@ export default function RatingDisplay({
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-0.5">{renderStars()}</div>
       {showCount && (
-        <div className={`${textSizeClasses[size]} text-gray-600 dark:text-gray-400`}>
+        <div className={`${textSizeClasses[size]} text-foreground`}>
           <span className="font-semibold">{averageRating.toFixed(1)}</span>
           <span className="ml-1">({ratingsCount})</span>
         </div>
