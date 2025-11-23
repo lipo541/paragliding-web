@@ -8,6 +8,7 @@ import RatingDisplay from '@/components/rating/RatingDisplay';
 import RatingInput from '@/components/rating/RatingInput';
 import RatingModal from '@/components/rating/RatingModal';
 import CommentsList from '@/components/comments/CommentsList';
+import LocationInfoCard from '@/components/locationinfocard/LocationInfoCard';
 
 interface Country {
   id: string;
@@ -34,6 +35,13 @@ interface Location {
   slug_en: string;
   slug_ru: string;
   country_id: string;
+  og_image_url?: string;
+  cached_rating?: number;
+  cached_rating_count?: number;
+  altitude?: number;
+  best_season_start?: number;
+  best_season_end?: number;
+  difficulty_level?: string;
 }
 
 interface CountryPageProps {
@@ -87,7 +95,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
         const { data: locationsData, error: locationsError } = await supabase
           .from('locations')
-          .select('*')
+          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, country_id, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
           .eq('country_id', countryData.id)
           .order('name_ka');
 
@@ -442,7 +450,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
             {/* Divider */}
             {gallery.length > 0 && (
-              <div className="border-t border-foreground/10 my-6"></div>
+              <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
             )}
 
             {/* Gallery - Masonry Layout with Pagination */}
@@ -611,7 +619,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
             {/* Divider */}
             {videos.length > 0 && (
-              <div className="border-t border-foreground/10 my-6"></div>
+              <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
             )}
 
             {/* YouTube Videos Playlist - YouTube Style Layout */}
@@ -764,6 +772,50 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               );
             })()}
 
+            {/* Divider */}
+            <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
+
+            {/* Locations Grid */}
+            {locations.length > 0 && (
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+                  <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  </svg>
+                  <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                    {locale === 'en' ? 'Flying Locations in Georgia' : locale === 'ru' ? 'Локации для полетов в Грузии' : 'საფრენი ლოკაციები საქართველოში'}
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {locations.map((location) => {
+                    const countrySlug = slug;
+                    const locationSlug = getLocalizedField(location, 'slug', locale);
+                    const locationUrl = `/${locale}/locations/${countrySlug}/${locationSlug}`;
+                    
+                    return (
+                      <LocationInfoCard
+                        key={location.id}
+                        id={location.id}
+                        name={getLocalizedField(location, 'name', locale)}
+                        imageUrl={location.og_image_url}
+                        rating={location.cached_rating}
+                        ratingCount={location.cached_rating_count}
+                        altitude={location.altitude}
+                        bestSeasonStart={location.best_season_start}
+                        bestSeasonEnd={location.best_season_end}
+                        difficultyLevel={location.difficulty_level}
+                        locationUrl={locationUrl}
+                        locale={locale}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Divider */}
+            <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
+
             {/* Contact via Messaging Apps */}
             <div className="overflow-hidden rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
               {/* Header with Icon */}
@@ -891,6 +943,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                 </div>
               );
             })}
+
           </div>
 
           {/* Sidebar - 1/4 */}

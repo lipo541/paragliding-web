@@ -556,34 +556,33 @@ export default function BookingsPage() {
         </div>
       ) : (
         <>
-          {/* Hero Section */}
-          <div className="relative z-10 pt-20 md:pt-24 pb-12 text-center px-5">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+          {/* Hero Section - Compact */}
+          <div className="relative z-10 pt-12 pb-4 text-center px-4">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 tracking-tight">
               დაჯავშნე ფრენა
             </h1>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm md:text-base text-gray-700 dark:text-gray-300">
-              {bookingDetails.locationName && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  <span>{bookingDetails.locationName}, {bookingDetails.countryName}</span>
+            {bookingDetails.locationName && bookingDetails.flightTypeName && (
+              <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-gray-600 dark:text-gray-400">
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  <span>{bookingDetails.locationName}</span>
                 </div>
-              )}
-              {bookingDetails.flightTypeName && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
+                <span className="text-gray-400 dark:text-gray-600">•</span>
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
                   <span>{bookingDetails.flightTypeName}</span>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Main Content */}
-          <div className={`mx-auto px-4 pb-12 relative z-10 transition-all duration-300 ${
+          <div className={`mx-auto px-4 pb-8 relative z-10 transition-all duration-300 ${
             selectedCountryId && selectedLocationId && selectedFlightTypeId 
-              ? 'max-w-5xl' 
+              ? 'max-w-[1280px]' 
               : 'max-w-2xl'
           }`}>
-        <div className={`grid grid-cols-1 gap-5 transition-all duration-300 ${
+        <div className={`grid grid-cols-1 gap-4 transition-all duration-300 ${
           selectedCountryId && selectedLocationId && selectedFlightTypeId 
             ? 'lg:grid-cols-3' 
             : ''
@@ -591,20 +590,20 @@ export default function BookingsPage() {
           
           {/* Booking Form - Left Column */}
           <div className={selectedCountryId && selectedLocationId && selectedFlightTypeId ? 'lg:col-span-2' : ''}>
-            <form onSubmit={handleSubmit} className="bg-gray-50 dark:bg-zinc-950 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm overflow-hidden">
+            <form onSubmit={handleSubmit} className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
               
-              <div className="p-5 space-y-4">
+              <div className="p-4 space-y-3">
                 
                 {/* Country Selector */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
                     აირჩიეთ ქვეყანა <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectedCountryId}
                     onChange={(e) => setSelectedCountryId(e.target.value)}
                     required
-                    className="w-full h-11 px-3.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
                   >
                     <option value="">აირჩიეთ ქვეყანა</option>
                     {countries.map((country) => (
@@ -617,7 +616,7 @@ export default function BookingsPage() {
 
                 {/* Location Selector */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
                     აირჩიეთ ლოკაცია <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -625,7 +624,7 @@ export default function BookingsPage() {
                     onChange={(e) => setSelectedLocationId(e.target.value)}
                     required
                     disabled={!selectedCountryId}
-                    className="w-full h-11 px-3.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">აირჩიეთ ლოკაცია</option>
                     {locations.map((location) => (
@@ -638,7 +637,7 @@ export default function BookingsPage() {
 
                 {/* Flight Type Selector */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
                     აირჩიეთ ფრენის ტიპი <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -652,7 +651,7 @@ export default function BookingsPage() {
                     }}
                     required
                     disabled={!selectedLocationId || flightTypes.length === 0}
-                    className="w-full h-11 px-3.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">
                       {flightTypes.length === 0 && selectedLocationId ? 'იტვირთება...' : 'აირჩიეთ ფრენის ტიპი'}
@@ -673,32 +672,32 @@ export default function BookingsPage() {
                 </div>
 
                 {selectedFlightTypeId && (
-                  <div className="border-t border-gray-200 dark:border-white/10 my-5" />
+                  <div className="border-t border-gray-200 dark:border-white/10 my-3" />
                 )}
 
                 {/* Name & Phone */}
                 {selectedFlightTypeId && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">სახელი და გვარი</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">სახელი და გვარი</label>
                     <input
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       required
-                      className="w-full h-11 px-3.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
                       placeholder="გიორგი მელაძე"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">ტელეფონი</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">ტელეფონი</label>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
-                      className="w-full h-11 px-3.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
                       placeholder="+995 XXX XX XX XX"
                     />
                   </div>
@@ -709,24 +708,24 @@ export default function BookingsPage() {
                 {selectedFlightTypeId && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">თარიღი</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">თარიღი</label>
                     <input
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
                       required
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full h-11 px-3.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                      className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">ადამიანების რაოდენობა</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">რაოდენობა</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setNumberOfPeople(Math.max(1, numberOfPeople - 1))}
-                        className="w-9 h-11 flex items-center justify-center bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-700 dark:text-gray-300 font-semibold text-lg"
+                        className="w-9 h-9 flex items-center justify-center bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95 transition-all text-gray-700 dark:text-gray-300 font-semibold"
                       >
                         −
                       </button>
@@ -735,12 +734,12 @@ export default function BookingsPage() {
                         value={numberOfPeople}
                         onChange={(e) => setNumberOfPeople(Math.max(1, parseInt(e.target.value) || 1))}
                         min="1"
-                        className="flex-1 h-11 text-center px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 dark:text-white font-semibold"
+                        className="flex-1 h-9 text-center px-2 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all text-gray-900 dark:text-white text-sm font-semibold"
                       />
                       <button
                         type="button"
                         onClick={() => setNumberOfPeople(numberOfPeople + 1)}
-                        className="w-9 h-11 flex items-center justify-center bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-gray-700 dark:text-gray-300 font-semibold text-lg"
+                        className="w-9 h-9 flex items-center justify-center bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95 transition-all text-gray-700 dark:text-gray-300 font-semibold"
                       >
                         +
                       </button>
@@ -752,51 +751,51 @@ export default function BookingsPage() {
                 {/* Contact Method Preference */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-2">კონტაქტის მეთოდი</label>
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1.5">კონტაქტის მეთოდი</label>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       type="button"
                       onClick={() => setContactMethod('whatsapp')}
-                      className={`h-11 flex items-center justify-center gap-2 rounded-xl border transition-all ${
+                      className={`h-9 flex items-center justify-center gap-1.5 rounded-lg border transition-all ${
                         contactMethod === 'whatsapp'
-                          ? 'bg-green-500 border-green-500 text-white'
+                          ? 'bg-green-500 border-green-500 text-white shadow-sm'
                           : 'bg-white dark:bg-black border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
                       }`}
                     >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                       </svg>
-                      <span className="text-xs font-semibold">WhatsApp</span>
+                      <span className="text-[10px] font-semibold">WhatsApp</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setContactMethod('telegram')}
-                      className={`h-11 flex items-center justify-center gap-2 rounded-xl border transition-all ${
+                      className={`h-9 flex items-center justify-center gap-1.5 rounded-lg border transition-all ${
                         contactMethod === 'telegram'
-                          ? 'bg-blue-500 border-blue-500 text-white'
+                          ? 'bg-blue-500 border-blue-500 text-white shadow-sm'
                           : 'bg-white dark:bg-black border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
                       }`}
                     >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
                       </svg>
-                      <span className="text-xs font-semibold">Telegram</span>
+                      <span className="text-[10px] font-semibold">Telegram</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setContactMethod('viber')}
-                      className={`h-11 flex items-center justify-center gap-2 rounded-xl border transition-all ${
+                      className={`h-9 flex items-center justify-center gap-1.5 rounded-lg border transition-all ${
                         contactMethod === 'viber'
-                          ? 'bg-purple-500 border-purple-500 text-white'
+                          ? 'bg-purple-500 border-purple-500 text-white shadow-sm'
                           : 'bg-white dark:bg-black border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
                       }`}
                     >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11.398.002C9.473.028 5.331.344 2.823 2.908 1.089 4.658.197 7.03.056 9.735c-.14 2.706-.1 7.636 4.648 8.991h.003l-.002 2.622s-.033.85.526 1.022c.678.209 1.075-.44 1.722-1.14.356-.385.85-.95 1.223-1.382 3.367.288 5.953-.37 6.25-.476 .685-.247 4.564-.798 5.196-6.499.652-5.905-.334-9.629-2.866-11.277C14.972.441 13.269.027 11.398.002zm.067 1.697c1.586.019 2.998.364 4.461 1.619 2.176 1.873 2.605 5.017 2.07 9.35-.535 4.332-3.23 4.934-4.931 5.256-.414.079-2.846.677-5.804.203 0 0-2.293 2.76-3.009 3.475-.091.091-.204.128-.292.102-.13-.037-.166-.188-.165-.414l.01-4.264c-.015 0-.015 0 0 0-3.632-1.004-3.418-5.292-3.308-7.544.109-2.252.798-4.254 2.24-5.709C5.023 1.481 8.576 1.679 11.465 1.7z"/>
                       </svg>
-                      <span className="text-xs font-semibold">Viber</span>
+                      <span className="text-[10px] font-semibold">Viber</span>
                     </button>
                   </div>
                 </div>
@@ -805,10 +804,10 @@ export default function BookingsPage() {
                 {/* Promo Code */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
                     პრომო კოდი
-                    <span className="ml-2 text-[10px] text-gray-500 dark:text-gray-600 font-normal">
-                      (მხოლოდ ავტორიზებული მომხმარებლებისთვის)
+                    <span className="ml-1.5 text-[9px] text-gray-500 dark:text-gray-600 font-normal">
+                      (მხოლოდ ავტორიზებულებისთვის)
                     </span>
                   </label>
                   <div className="flex gap-2">
@@ -820,7 +819,7 @@ export default function BookingsPage() {
                         setPromoError('');
                       }}
                       disabled={promoDiscount > 0}
-                      className={`flex-1 h-11 px-3.5 bg-white dark:bg-black border rounded-xl text-sm text-gray-900 dark:text-white uppercase focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
+                      className={`flex-1 h-9 px-3 bg-white dark:bg-black border rounded-lg text-xs text-gray-900 dark:text-white uppercase focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all ${
                         promoDiscount > 0 
                           ? 'border-green-500 bg-green-50 dark:bg-green-950/30' 
                           : promoError 
@@ -833,7 +832,7 @@ export default function BookingsPage() {
                       <button
                         type="button"
                         onClick={handlePromoCodeRemove}
-                        className="h-11 px-4 bg-white dark:bg-black border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-sm font-medium"
+                        className="h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-[11px] font-medium"
                       >
                         წაშლა
                       </button>
@@ -842,33 +841,61 @@ export default function BookingsPage() {
                         type="button"
                         onClick={handlePromoCodeApply}
                         disabled={!promoCode.trim()}
-                        className="h-11 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-9 px-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition-colors text-[11px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         გამოყენება
                       </button>
                     )}
                   </div>
                   {promoError && (
-                    <p className="mt-1.5 text-xs text-red-600 dark:text-red-400">{promoError}</p>
+                    <p className="mt-1 text-[10px] text-red-600 dark:text-red-400">{promoError}</p>
                   )}
                   {promoDiscount > 0 && (
-                    <p className="mt-1.5 text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      -{promoDiscount}% ფასდაკლება გამოყენებულია
+                    <p className="mt-1 text-[10px] text-green-600 dark:text-green-400 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      -{promoDiscount}% ფასდაკლება
                     </p>
                   )}
+                </div>
+                )}
+
+                {/* Weather Notice */}
+                {selectedFlightTypeId && (
+                <div className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-amber-900/40 border-2 border-amber-400/50 dark:border-amber-600/50 rounded-xl p-3.5 shadow-lg">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-300/20 to-orange-400/20 dark:from-amber-600/10 dark:to-orange-700/10 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                  <div className="relative flex gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 dark:from-amber-500 dark:to-orange-600 flex items-center justify-center shadow-md">
+                        <svg className="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-[13px] font-bold text-amber-900 dark:text-amber-200 mb-1.5 flex items-center gap-1.5">
+                        <span>მნიშვნელოვანი ინფორმაცია</span>
+                        <span className="inline-block w-1.5 h-1.5 bg-amber-600 dark:bg-amber-400 rounded-full animate-pulse"></span>
+                      </h4>
+                      <p className="text-[11px] leading-relaxed text-amber-950/90 dark:text-amber-100/90 font-medium">
+                        პარაპლანით ფრენა პირდაპირ დამოკიდებულია ამინდის პირობებსა და უსაფრთხოების სტანდარტებზე. 
+                        <span className="inline-block mt-1 pt-1 border-t border-amber-400/30 dark:border-amber-600/30 w-full">
+                          ჯავშნის დადასტურების შემდეგ ოპერატორი დაგიკავშირდებათ და შეუთანხმებთ ზუსტ დროს ამინდის პროგნოზის შესაბამისად.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 )}
 
                 {/* Special Requests */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 dark:text-gray-400 mb-1.5">დამატებითი შენიშვნები</label>
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">დამატებითი შენიშვნები</label>
                   <textarea
                     value={specialRequests}
                     onChange={(e) => setSpecialRequests(e.target.value)}
-                    rows={3}
-                    className="w-full px-3.5 py-2.5 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                    rows={2}
+                    className="w-full px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all resize-none"
                     placeholder="სპეციალური მოთხოვნები..."
                   />
                 </div>
@@ -881,35 +908,35 @@ export default function BookingsPage() {
           {/* Order Summary - Right Column */}
           <div className="lg:col-span-1">
             {selectedFlightTypeId && bookingDetails.flightTypeName && (
-            <div className="sticky top-20 space-y-4">
+            <div className="sticky top-20">
               
               {/* Summary Card */}
-              <div className="bg-gray-50 dark:bg-zinc-950 rounded-2xl border border-gray-200 dark:border-white/10 shadow-sm overflow-hidden">
+              <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
                 
-                <div className="p-5 space-y-4">
+                <div className="p-4 space-y-3">
                   
                   {/* Location Info */}
-                  <div className="space-y-2.5">
-                    <div className="flex items-start gap-2.5">
-                      <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-500 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
                           {bookingDetails.locationName}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">
+                        <p className="text-[10px] text-gray-500 dark:text-gray-500 truncate">
                           {bookingDetails.countryName}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-2.5">
-                      <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-500 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
                           {bookingDetails.flightTypeName}
                         </p>
                         {bookingDetails.duration && (
-                          <p className="text-xs text-gray-500 dark:text-gray-500">
+                          <p className="text-[10px] text-gray-500 dark:text-gray-500">
                             {bookingDetails.duration}
                           </p>
                         )}
@@ -919,12 +946,12 @@ export default function BookingsPage() {
 
                   {/* Features */}
                   {bookingDetails.features && bookingDetails.features.length > 0 && (
-                    <div className="pt-4 border-t border-gray-200 dark:border-white/10">
-                      <ul className="space-y-2">
-                        {bookingDetails.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-400">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
-                            <span>{feature}</span>
+                    <div className="pt-3 border-t border-gray-200 dark:border-white/10">
+                      <ul className="space-y-1.5">
+                        {bookingDetails.features.slice(0, 4).map((feature, idx) => (
+                          <li key={idx} className="flex items-start gap-1.5 text-[10px] text-gray-700 dark:text-gray-400">
+                            <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
+                            <span className="leading-tight">{feature}</span>
                           </li>
                         ))}
                       </ul>
@@ -932,16 +959,16 @@ export default function BookingsPage() {
                   )}
 
                   {/* Currency Selector */}
-                  <div className="pt-4 border-t border-gray-200 dark:border-white/10">
-                    <div className="flex gap-1.5">
+                  <div className="pt-3 border-t border-gray-200 dark:border-white/10">
+                    <div className="flex gap-1">
                       {(['GEL', 'USD', 'EUR'] as const).map((currency) => (
                         <button
                           key={currency}
                           type="button"
                           onClick={() => setSelectedCurrency(currency)}
-                          className={`flex-1 h-9 text-xs font-semibold rounded-lg transition-all ${
+                          className={`flex-1 h-7 text-[10px] font-semibold rounded-md transition-all ${
                             selectedCurrency === currency
-                              ? 'bg-blue-500 text-white'
+                              ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
                               : 'bg-white dark:bg-black border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5'
                           }`}
                         >
@@ -952,16 +979,16 @@ export default function BookingsPage() {
                   </div>
 
                   {/* Price Breakdown */}
-                  <div className="pt-4 border-t border-gray-200 dark:border-white/10 space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-500">ფასი × {numberOfPeople}</span>
+                  <div className="pt-3 border-t border-gray-200 dark:border-white/10 space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-600 dark:text-gray-400">ფასი × {numberOfPeople}</span>
                       <span className="font-medium text-gray-900 dark:text-white">
                         {getCurrencySymbol()}{getSubtotal()}
                       </span>
                     </div>
                     
                     {promoDiscount > 0 && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-xs">
                         <span className="text-green-600 dark:text-green-500">ფასდაკლება ({promoDiscount}%)</span>
                         <span className="font-medium text-green-600 dark:text-green-500">
                           -{getCurrencySymbol()}{getDiscount()}
@@ -970,30 +997,30 @@ export default function BookingsPage() {
                     )}
                     
                     <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-white/10">
-                      <span className="text-base font-semibold text-gray-900 dark:text-white">სულ</span>
-                      <span className="text-xl font-bold text-gray-900 dark:text-white">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">სულ</span>
+                      <span className="text-lg font-bold text-gray-900 dark:text-white">
                         {getCurrencySymbol()}{getTotalPrice()}
                       </span>
                     </div>
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-4">
+                  <div className="pt-3">
                     <button
                       type="button"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="w-full h-12 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
+                      className="w-full h-10 bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] text-white dark:text-black text-sm font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          მუშავდება...
+                          <div className="w-3.5 h-3.5 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin" />
+                          <span className="text-xs">მუშავდება...</span>
                         </>
                       ) : (
                         <>
-                          <CreditCard className="w-4 h-4" />
-                          დაჯავშნის დადასტურება
+                          <CreditCard className="w-3.5 h-3.5" />
+                          დაჯავშნა
                         </>
                       )}
                     </button>

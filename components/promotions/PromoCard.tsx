@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Tag, Calendar, MapPin, Copy, Check, Clock, Sparkles } from 'lucide-react';
+import { Tag, Calendar, MapPin, Copy, Check, Clock, Sparkles, ArrowRight } from 'lucide-react';
 
 interface PromoCardProps {
   promo: {
@@ -60,26 +60,26 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
       if (days > 0) {
         setTimeLeft(
           locale === 'ka'
-            ? `${days} დღე ${hours} საათი`
+            ? `${days} დღე დარჩა`
             : locale === 'en'
-            ? `${days}d ${hours}h`
-            : `${days}д ${hours}ч`
+            ? `${days}d left`
+            : `${days}д осталось`
         );
       } else if (hours > 0) {
         setTimeLeft(
           locale === 'ka'
-            ? `${hours} საათი ${minutes} წუთი`
+            ? `${hours} საათი დარჩა`
             : locale === 'en'
-            ? `${hours}h ${minutes}m`
-            : `${hours}ч ${minutes}м`
+            ? `${hours}h left`
+            : `${hours}ч осталось`
         );
       } else {
         setTimeLeft(
           locale === 'ka'
-            ? `${minutes} წუთი`
+            ? 'იწურება'
             : locale === 'en'
-            ? `${minutes} min`
-            : `${minutes} мин`
+            ? 'Expiring'
+            : 'Истекает'
         );
       }
     };
@@ -126,162 +126,127 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
     new Date(promo.valid_until).getTime() - new Date().getTime() < 3 * 24 * 60 * 60 * 1000; // 3 days
 
   return (
-    <div className="group relative rounded-xl overflow-hidden border border-foreground/10 bg-foreground/5 hover:bg-foreground/10 transition-all duration-300 hover:shadow-xl hover:shadow-foreground/5">
-      {/* Image */}
-      <div className="relative h-40 bg-gradient-to-br from-blue-500/10 to-purple-500/10 overflow-hidden">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={promo.code}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            unoptimized
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <Sparkles className="w-12 h-12 text-foreground/10" />
-          </div>
-        )}
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
+    <div className="group relative rounded-lg overflow-hidden bg-white/95 dark:bg-black/90 hover:shadow-xl transition-all border border-foreground/10 shadow-md">
+      {/* Image Section */}
+      <div className="relative h-32 lg:h-36 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={promo.code}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+              <Sparkles className="w-16 h-16 text-foreground/20" />
+            </div>
+          )}
+        </div>
+
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70" />
 
         {/* Discount Badge */}
-        <div className="absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold text-sm shadow-lg">
+        <div className="absolute top-2 right-2 px-2 py-1 rounded-md bg-red-500 text-white font-bold text-xs">
           -{promo.discount_percentage}%
         </div>
 
-        {/* Expiring Soon Badge */}
+        {/* Expiring Badge */}
         {isExpiringSoon && timeLeft !== 'expired' && (
-          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-amber-500 text-white text-xs font-medium shadow-lg flex items-center gap-1 animate-pulse">
-            <Clock className="w-3 h-3" />
-            {locale === 'ka' ? 'იწურება' : locale === 'en' ? 'Expiring' : 'Истекает'}
+          <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-semibold flex items-center gap-0.5">
+            <Clock className="w-2.5 h-2.5" />
+            {locale === 'ka' ? 'იწურება' : locale === 'en' ? 'Soon' : 'Скоро'}
           </div>
         )}
 
-        {/* Promo Code */}
-        <div className="absolute bottom-3 left-3 right-3">
-          <h3 className="text-xl font-bold text-foreground tracking-wide mb-0.5 drop-shadow-md">
-            {promo.code}
-          </h3>
-          <p className="text-xs text-foreground/70 drop-shadow">
-            {promo.discount_percentage}%{' '}
-            {locale === 'ka' ? 'ფასდაკლება' : locale === 'en' ? 'discount' : 'скидка'}
-          </p>
+        {/* Promo Code - Bottom */}
+        <div className="absolute bottom-2 left-2 right-2">
+          <p className="text-[9px] text-white/70 mb-0.5">{locale === 'ka' ? 'კოდი' : locale === 'en' ? 'Code' : 'Код'}</p>
+          <h3 className="text-sm font-bold text-white drop-shadow-lg truncate">{promo.code}</h3>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-3">
+      <div className="p-2.5 space-y-2">
         {/* Description */}
         {description && (
-          <p className="text-sm text-foreground/70 line-clamp-2 leading-relaxed">{description}</p>
+          <p className="text-[10px] text-foreground/70 line-clamp-2 leading-snug">{description}</p>
         )}
 
-        {/* Timer */}
+        {/* Detailed Timer */}
         {promo.valid_until && timeLeft && timeLeft !== 'expired' && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
-            <Clock className="w-4 h-4 text-blue-500 flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-foreground/50 truncate">
-                {locale === 'ka' ? 'დარჩენილი' : locale === 'en' ? 'Time left' : 'Осталось'}
+          <div className="bg-foreground/5 rounded-md p-2 border border-foreground/10">
+            <div className="flex items-center gap-1 mb-1">
+              <Clock className="w-3 h-3 text-blue-500" />
+              <p className="text-[9px] font-medium text-foreground/60">
+                {locale === 'ka' ? 'დარჩენილი დრო' : locale === 'en' ? 'Time Left' : 'Осталось'}
               </p>
-              <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">{timeLeft}</p>
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              {(() => {
+                const now = new Date().getTime();
+                const end = new Date(promo.valid_until!).getTime();
+                const diff = end - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                
+                return (
+                  <>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-foreground">{days}</p>
+                      <p className="text-[8px] text-foreground/60">{locale === 'ka' ? 'დღე' : locale === 'en' ? 'days' : 'дн'}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-foreground">{hours}</p>
+                      <p className="text-[8px] text-foreground/60">{locale === 'ka' ? 'საათი' : locale === 'en' ? 'hrs' : 'ч'}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-foreground">{minutes}</p>
+                      <p className="text-[8px] text-foreground/60">{locale === 'ka' ? 'წთ' : locale === 'en' ? 'min' : 'мин'}</p>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         )}
 
-        {/* Usage Progress */}
+        {/* Usage Info */}
         {promo.usage_limit && (
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-foreground/50">
-                {locale === 'ka' ? 'გამოყენებული' : locale === 'en' ? 'Used' : 'Использовано'}
-              </span>
-              <span className="text-foreground/70 font-medium">
-                {promo.usage_count} / {promo.usage_limit}
-              </span>
-            </div>
-            <div className="h-1.5 rounded-full bg-foreground/10 overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500"
-                style={{ width: `${Math.min(usagePercentage, 100)}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Dates */}
-        {(promo.valid_from || promo.valid_until) && (
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-foreground/50">
-            {promo.valid_from && (
-              <div className="flex items-center gap-1">
-                <Calendar className="w-3 h-3 flex-shrink-0" />
-                <span>
-                  {locale === 'ka' ? 'დან ' : locale === 'en' ? 'From ' : 'С '}
-                  {new Date(promo.valid_from!).toLocaleDateString(
-                    locale === 'en' ? 'en-US' : locale === 'ru' ? 'ru-RU' : 'ka-GE',
-                    { month: 'short', day: 'numeric' }
-                  )}
-                </span>
-              </div>
-            )}
-            {promo.valid_until && (
-              <div className="flex items-center gap-1">
-                <Calendar className="w-3 h-3 flex-shrink-0" />
-                <span>
-                  {locale === 'ka' ? 'მდე ' : locale === 'en' ? 'Until ' : 'До '}
-                  {new Date(promo.valid_until!).toLocaleDateString(
-                    locale === 'en' ? 'en-US' : locale === 'ru' ? 'ru-RU' : 'ka-GE',
-                    { month: 'short', day: 'numeric' }
-                  )}
-                </span>
-              </div>
-            )}
+          <div className="flex items-center justify-between text-[9px] text-foreground/60">
+            <span>{locale === 'ka' ? 'გამოყენება' : locale === 'en' ? 'Usage' : 'Использование'}</span>
+            <span className="font-medium">{promo.usage_count}/{promo.usage_limit}</span>
           </div>
         )}
 
         {/* Locations */}
         {locations.length > 0 && (
-          <div className="flex items-start gap-2 text-xs text-foreground/60 p-2 rounded-lg bg-foreground/5 border border-foreground/10">
-            <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0 text-green-500" />
-            <div className="flex-1 min-w-0">
-              <span className="font-medium">
-                {locale === 'ka' ? 'ლოკაციები: ' : locale === 'en' ? 'Locations: ' : 'Локации: '}
-              </span>
-              <span className="text-foreground/50">
-                {locations.map((loc) => getLocationName(loc)).join(', ')}
-              </span>
-            </div>
+          <div className="flex items-center gap-1">
+            <MapPin className="w-2.5 h-2.5 text-foreground/40 flex-shrink-0" />
+            <p className="text-[9px] text-foreground/60 line-clamp-1">
+              {locations.map((loc) => getLocationName(loc)).join(', ')}
+            </p>
           </div>
         )}
 
-        {/* Actions - Compact */}
-        <div className="flex gap-2 pt-2">
+        {/* Actions */}
+        <div className="flex gap-1.5 pt-1">
           <button
             onClick={handleCopy}
-            className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-              copied
-                ? 'bg-green-500 text-white'
-                : 'bg-foreground/10 hover:bg-foreground/20 text-foreground border border-foreground/10'
+            className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-medium transition-all ${
+              copied ? 'bg-green-500 text-white' : 'bg-foreground/10 hover:bg-foreground/15 text-foreground'
             }`}
           >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4" />
-                {locale === 'ka' ? 'კოპირდა' : locale === 'en' ? 'Copied' : 'Скопировано'}
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                {locale === 'ka' ? 'კოპირება' : locale === 'en' ? 'Copy' : 'Копировать'}
-              </>
-            )}
+            {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+            <span>{copied ? '✓' : (locale === 'ka' ? 'კოპირება' : locale === 'en' ? 'Copy' : 'Копия')}</span>
           </button>
 
           <Link
             href={`/${locale}/bookings?promo=${promo.code}`}
-            className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg transition-all"
+            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
           >
             {locale === 'ka' ? 'ჯავშანი' : locale === 'en' ? 'Book' : 'Бронь'}
           </Link>
