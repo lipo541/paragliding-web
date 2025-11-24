@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { navItemsData } from '../navigation/navigation';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 
@@ -12,9 +12,15 @@ interface Location {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
   slug_ka: string;
   slug_en: string;
   slug_ru: string;
+  slug_ar: string;
+  slug_de: string;
+  slug_tr: string;
   country_id: string;
 }
 
@@ -23,9 +29,15 @@ interface Country {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
   slug_ka: string;
   slug_en: string;
   slug_ru: string;
+  slug_ar: string;
+  slug_de: string;
+  slug_tr: string;
 }
 
 interface CountryWithLocations extends Country {
@@ -42,6 +54,57 @@ export default function MobileMenu() {
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'ka';
   const supabase = createClient();
+  const { t } = useTranslation('navigation');
+  const { t: tAuth } = useTranslation('auth');
+
+  const navItemsData = [
+    {
+      href: '/locations',
+      label: t('menu.locations'),
+      submenu: [
+        { 
+          href: '/locations/all', 
+          label: t('submenu.locations.all'), 
+          description: t('submenu.locations.allDescription')
+        },
+        { 
+          href: '/locations/popular', 
+          label: t('submenu.locations.popular'), 
+          description: t('submenu.locations.popularDescription')
+        },
+        { 
+          href: '/locations/beginner', 
+          label: t('submenu.locations.beginner'), 
+          description: t('submenu.locations.beginnerDescription')
+        },
+        { 
+          href: '/locations/advanced', 
+          label: t('submenu.locations.advanced'), 
+          description: t('submenu.locations.advancedDescription')
+        },
+      ],
+    },
+    {
+      href: '/bookings',
+      label: t('menu.bookings'),
+      submenu: undefined,
+    },
+    {
+      href: '/promotions',
+      label: t('menu.promotions'),
+      submenu: undefined,
+    },
+    {
+      href: '/about',
+      label: t('menu.about'),
+      submenu: undefined,
+    },
+    {
+      href: '/contact',
+      label: t('menu.contact'),
+      submenu: undefined,
+    },
+  ];
 
   useEffect(() => {
     const getUser = async () => {
@@ -78,13 +141,13 @@ export default function MobileMenu() {
       try {
         const { data: countries } = await supabase
           .from('countries')
-          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr')
           .eq('is_active', true)
           .order('name_ka');
 
         const { data: locations } = await supabase
           .from('locations')
-          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, country_id')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id')
           .order('name_ka');
 
         const grouped: CountryWithLocations[] = (countries || []).map((country: any) => ({
@@ -102,15 +165,23 @@ export default function MobileMenu() {
   }, []);
 
   const getLocalizedName = (item: Country | Location) => {
-    if (locale === 'en') return item.name_en;
-    if (locale === 'ru') return item.name_ru;
-    return item.name_ka;
+    const name = (item as any)[`name_${locale}`];
+    if (name) return name;
+    // Fallback: ar/de/tr → en → ka
+    if (['ar', 'de', 'tr'].includes(locale)) {
+      return item.name_en || item.name_ka;
+    }
+    return item.name_ka || item.name_en;
   };
 
   const getLocalizedSlug = (item: Country | Location) => {
-    if (locale === 'en') return item.slug_en;
-    if (locale === 'ru') return item.slug_ru;
-    return item.slug_ka;
+    const slug = (item as any)[`slug_${locale}`];
+    if (slug) return slug;
+    // Fallback: ar/de/tr → en → ka
+    if (['ar', 'de', 'tr'].includes(locale)) {
+      return item.slug_en || item.slug_ka;
+    }
+    return item.slug_ka || item.slug_en;
   };
 
   const handleLogout = async () => {
@@ -158,7 +229,7 @@ export default function MobileMenu() {
                 <div className="flex items-center">
                   {/* Left side - Link to page */}
                   <Link
-                    href={item.label === 'ლოკაციები' ? `/${locale}/locations` : `/${locale}${item.href}`}
+                    href={item.label === t('menu.locations') ? `/${locale}/locations` : `/${locale}${item.href}`}
                     onClick={() => setIsOpen(false)}
                     className="flex-1 px-3 py-3 text-sm font-medium text-foreground hover:bg-foreground/5 transition-colors"
                   >
@@ -194,7 +265,7 @@ export default function MobileMenu() {
                 {openSubmenu === item.label && (
                   <div className="pl-4 pb-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
                     {/* Special handling for Locations menu */}
-                    {item.label === 'ლოკაციები' ? (
+                    {item.label === t('menu.locations') ? (
                       <>
                         {countriesWithLocations.map((country) => (
                           <div key={country.id} className="border-b border-foreground/5 last:border-0">
@@ -306,7 +377,7 @@ export default function MobileMenu() {
                         onClick={handleLogout}
                         className="w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
                       >
-                        გასვლა
+                        {tAuth('logout')}
                       </button>
                     </>
                   )}
@@ -319,14 +390,14 @@ export default function MobileMenu() {
                     onClick={() => setIsOpen(false)}
                     className="block w-full px-4 py-2.5 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all text-center"
                   >
-                    შესვლა
+                    {tAuth('login')}
                   </Link>
                   <Link
                     href={`/${locale}/register`}
                     onClick={() => setIsOpen(false)}
                     className="block w-full px-4 py-2.5 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors text-center"
                   >
-                    რეგისტრაცია
+                    {tAuth('register')}
                   </Link>
                 </div>
               )}

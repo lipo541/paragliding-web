@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "التعليقات",
+    "loadError": "فشل تحميل التعليقات",
+    "noComments": "لا توجد تعليقات حتى الآن. كن أول من يعلق!"
+  },
+  "item": {
+    "user": "المستخدم",
+    "justNow": "الآن",
+    "edited": "معدل",
+    "awaitingModeration": "في انتظار المراجعة",
+    "like": "إعجاب",
+    "dislike": "عدم إعجاب",
+    "reply": "رد",
+    "replies": "رد",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا التعليق؟",
+    "rejectConfirm": "هل أنت متأكد أنك تريد رفض هذا التعليق؟",
+    "deleteError": "فشل حذف التعليق",
+    "updateError": "فشل تحديث التعليق",
+    "approveError": "فشلت الموافقة",
+    "rejectError": "فشل الرفض",
+    "loginRequired": "يرجى تسجيل الدخول"
+  },
+  "input": {
+    "placeholder": "اكتب تعليقا...",
+    "replyPlaceholder": "اكتب ردا...",
+    "emptyError": "لا يمكن أن يكون التعليق فارغا",
+    "loginRequired": "يرجى تسجيل الدخول للتعليق",
+    "published": "تم نشر التعليق!",
+    "awaitingModeration": "تم إرسال التعليق! سيظهر بعد المراجعة.",
+    "submitError": "فشل إرسال التعليق",
+    "addEmoji": "أضف رمز تعبيري",
+    "send": "إرسال"
+  }
+}

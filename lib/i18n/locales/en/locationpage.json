@@ -1,0 +1,54 @@
+{
+  "error": {
+    "notFound": "Location not found",
+    "backButton": "Go back"
+  },
+  "hero": {
+    "rate": "Rate",
+    "changeRating": "Change",
+    "contact": "Contact Us",
+    "bookFlight": "Book a Flight"
+  },
+  "content": {
+    "readMore": "Read More",
+    "showLess": "Show Less",
+    "aboutLocation": "About Location"
+  },
+  "flightTypes": {
+    "title": "Packages",
+    "startFrom": "Starts from",
+    "rateButton": "Rate",
+    "changeButton": "Change"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "photos": "Photos",
+    "videos": "Videos"
+  },
+  "map": {
+    "title": "Map"
+  },
+  "contact": {
+    "title": "Contact & Information",
+    "description": "Each location on our platform has unique flight prices, packages, and conditions.",
+    "visitText": "Visit ",
+    "locationsPage": "Locations page",
+    "detailsText": " for detailed information, or contact us directly:",
+    "messengers": "Messengers"
+  },
+  "sidebar": {
+    "bookNow": "Book Now",
+    "experienceText": "Experience an unforgettable flight in {locationName}. Book now!",
+    "flights": "Flights",
+    "photos": "Photos"
+  },
+  "quickInfo": {
+    "bestSeason": "Best Season",
+    "yearRound": "Year-round",
+    "flightConditions": "Flight Conditions",
+    "thermalAndDynamic": "Thermal & Dynamic"
+  },
+  "ratingModal": {
+    "title": "Rate Location"
+  }
+}

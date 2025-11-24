@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "Uçuşunuzu Rezerve Edin",
+    "subtitle": "Formu doldurun, en kısa sürede sizinle iletişime geçeceğiz",
+    "backToHome": "Ana Sayfaya Dön"
+  },
+  "steps": {
+    "selectLocation": "Konum Seçin",
+    "bookingDetails": "Rezervasyon Detayları",
+    "confirmation": "Onay"
+  },
+  "form": {
+    "selectCountry": "Ülke seçin",
+    "selectLocation": "Konum seçin",
+    "selectFlightType": "Uçuş tipi seçin",
+    "loading": "Yükleniyor...",
+    "fullName": "Ad Soyad",
+    "fullNamePlaceholder": "Adınızı ve soyadınızı girin",
+    "phone": "Telefon Numarası",
+    "phonePlaceholder": "+995 XXX XXX XXX",
+    "flightDate": "Uçuş Tarihi",
+    "numberOfPeople": "Kişi Sayısı",
+    "contactMethod": "İletişim Yöntemi",
+    "selectContactMethod": "İletişim yöntemi seçin",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "viber": "Viber",
+    "promoCode": "Promosyon Kodu",
+    "promoCodePlaceholder": "Promosyon kodu girin",
+    "applyPromo": "Uygula",
+    "promoApplied": "✓ %{discount} indirim uygulandı!",
+    "specialRequests": "Özel İstekler",
+    "specialRequestsPlaceholder": "Özel bir isteğiniz veya gereksinimiz var mı?",
+    "required": "Gerekli",
+    "weatherNoticeTitle": "Önemli Bilgi",
+    "weatherNoticeText": "Yamaç paraşütü uçuşları doğrudan hava koşullarına ve güvenlik standartlarına bağlıdır.",
+    "weatherNoticeConfirm": "Rezervasyon onayından sonra, operatör sizinle iletişime geçecek ve hava tahminlerine göre kesin zamanı ayarlayacaktır."
+  },
+  "summary": {
+    "bookingSummary": "Rezervasyon Özeti",
+    "location": "Konum",
+    "flightType": "Uçuş Tipi",
+    "date": "Tarih",
+    "people": "Kişi",
+    "duration": "Süre",
+    "features": "Özellikler"
+  },
+  "pricing": {
+    "priceSummary": "Fiyat Özeti",
+    "basePrice": "Temel Fiyat",
+    "discount": "İndirim",
+    "total": "Toplam",
+    "perPerson": "kişi başı",
+    "currency": "₾"
+  },
+  "errors": {
+    "fillAllFields": "Lütfen tüm gerekli alanları doldurun",
+    "selectCountry": "Lütfen bir ülke seçin",
+    "selectLocation": "Lütfen bir konum seçin",
+    "selectFlightType": "Lütfen bir uçuş tipi seçin",
+    "selectContactMethod": "Lütfen bir iletişim yöntemi seçin",
+    "invalidPromo": "Geçersiz promosyon kodu",
+    "promoNotActive": "Promosyon kodu henüz aktif değil",
+    "promoExpired": "Promosyon kodunun süresi doldu",
+    "promoLimitReached": "Promosyon kodu kullanım limiti aşıldı",
+    "promoRequiresAuth": "Promosyon kodunu kullanmak için yetkilendirme gerekli",
+    "promoAuthConfirm": "Promosyon kodunu kullanmak için lütfen giriş yapın veya kayıt olun. Giriş sayfasına gitmek ister misiniz?",
+    "enterPromoCode": "Lütfen bir promosyon kodu girin",
+    "bookingFailed": "Rezervasyon oluşturulamadı. Lütfen tekrar deneyin.",
+    "promoValidationFailed": "Promosyon kodu doğrulanamadı"
+  },
+  "success": {
+    "bookingCreated": "Rezervasyon başarıyla oluşturuldu!",
+    "thankYou": "Teşekkür ederiz!",
+    "willContactSoon": "En kısa sürede sizinle iletişime geçeceğiz",
+    "bookingNumber": "Rezervasyon numarası",
+    "checkEmail": "Onay için e-postanızı kontrol edin"
+  },
+  "actions": {
+    "confirmBooking": "Rezervasyonu Onayla",
+    "cancel": "İptal",
+    "back": "Geri",
+    "continue": "Devam",
+    "submitting": "Gönderiliyor..."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "page": {
+    "title": "აქციები",
+    "subtitle": "აქტიური აქციები და ფასდაკლებები",
+    "active": "აქტიური",
+    "loading": "იტვირთება პრომოები..."
+  },
+  "filters": {
+    "title": "ფილტრები",
+    "search": "ძებნა",
+    "searchPlaceholder": "ძებნა...",
+    "location": "ლოკაცია",
+    "allLocations": "ყველა",
+    "sort": "სორტირება",
+    "sortBy": "სორტირება",
+    "newest": "ახალი",
+    "highestDiscount": "ფასდაკლება",
+    "expiringSoon": "იწურება",
+    "clearFilters": "გასუფთავება",
+    "found": "ნაპოვნია"
+  },
+  "card": {
+    "code": "კოდი",
+    "discount": "ფასდაკლება",
+    "expiringSoon": "იწურება",
+    "soon": "იწურება",
+    "timeLeft": "დარჩენილი დრო",
+    "daysLeft": "{days} დღე დარჩა",
+    "hoursLeft": "{hours} საათი დარჩა",
+    "minutesLeft": "იწურება",
+    "days": "დღე",
+    "hours": "საათი",
+    "minutes": "წთ",
+    "usage": "გამოყენება",
+    "copy": "კოპირება",
+    "copied": "✓",
+    "book": "ჯავშანი",
+    "expired": "ვადაგასულია"
+  },
+  "empty": {
+    "title": "არ მოიძებნა",
+    "message": "პრომო კოდები ამ კრიტერიუმებით არ მოიძებნა",
+    "clearButton": "გასუფთავება"
+  },
+  "stats": {
+    "active": "აქტიური",
+    "avgDiscount": "საშუალო ფასდაკლება",
+    "maxDiscount": "მაქსიმალური ფასდაკლება"
+  }
+}

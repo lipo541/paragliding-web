@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "Book Your Flight",
+    "subtitle": "Fill out the form and we'll contact you soon",
+    "backToHome": "Back to Home"
+  },
+  "steps": {
+    "selectLocation": "Select Location",
+    "bookingDetails": "Booking Details",
+    "confirmation": "Confirmation"
+  },
+  "form": {
+    "selectCountry": "Select country",
+    "selectLocation": "Select location",
+    "selectFlightType": "Select flight type",
+    "loading": "Loading...",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+995 XXX XXX XXX",
+    "flightDate": "Flight Date",
+    "numberOfPeople": "Number of People",
+    "contactMethod": "Contact Method",
+    "selectContactMethod": "Select contact method",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "viber": "Viber",
+    "promoCode": "Promo Code",
+    "promoCodePlaceholder": "Enter promo code",
+    "applyPromo": "Apply",
+    "promoApplied": "✓ {discount}% discount applied!",
+    "specialRequests": "Special Requests",
+    "specialRequestsPlaceholder": "Any special requirements or requests?",
+    "required": "Required",
+    "weatherNoticeTitle": "Important Information",
+    "weatherNoticeText": "Paragliding flights are directly dependent on weather conditions and safety standards.",
+    "weatherNoticeConfirm": "After booking confirmation, the operator will contact you and arrange the exact time according to the weather forecast."
+  },
+  "summary": {
+    "bookingSummary": "Booking Summary",
+    "location": "Location",
+    "flightType": "Flight Type",
+    "date": "Date",
+    "people": "People",
+    "duration": "Duration",
+    "features": "Features"
+  },
+  "pricing": {
+    "priceSummary": "Price Summary",
+    "basePrice": "Base Price",
+    "discount": "Discount",
+    "total": "Total",
+    "perPerson": "per person",
+    "currency": "₾"
+  },
+  "errors": {
+    "fillAllFields": "Please fill all required fields",
+    "selectCountry": "Please select a country",
+    "selectLocation": "Please select a location",
+    "selectFlightType": "Please select a flight type",
+    "selectContactMethod": "Please select a contact method",
+    "invalidPromo": "Invalid promo code",
+    "promoNotActive": "Promo code is not active yet",
+    "promoExpired": "Promo code has expired",
+    "promoLimitReached": "Promo code usage limit reached",
+    "promoRequiresAuth": "Authorization required to use promo code",
+    "promoAuthConfirm": "Please sign in or register to use the promo code. Do you want to go to the login page?",
+    "enterPromoCode": "Please enter a promo code",
+    "bookingFailed": "Failed to create booking. Please try again.",
+    "promoValidationFailed": "Failed to validate promo code"
+  },
+  "success": {
+    "bookingCreated": "Booking created successfully!",
+    "thankYou": "Thank you!",
+    "willContactSoon": "We will contact you soon",
+    "bookingNumber": "Booking number",
+    "checkEmail": "Check your email for confirmation"
+  },
+  "actions": {
+    "confirmBooking": "Confirm Booking",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue",
+    "submitting": "Submitting..."
+  }
+}

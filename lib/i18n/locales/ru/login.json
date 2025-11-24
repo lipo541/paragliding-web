@@ -1,0 +1,23 @@
+{
+  "title": "Вход",
+  "email": {
+    "label": "Эл. почта",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Пароль",
+    "placeholder": "••••••••"
+  },
+  "submit": "Войти",
+  "loading": "Загрузка...",
+  "forgotPassword": "Забыли пароль?",
+  "register": "Регистрация",
+  "divider": "или",
+  "social": {
+    "google": "Войти через Google"
+  },
+  "errors": {
+    "loginFailed": "Не удалось войти",
+    "authFailed": "Не удалось авторизоваться"
+  }
+}

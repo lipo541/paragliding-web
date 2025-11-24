@@ -566,6 +566,15 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       const country = countries.find(c => c.id === location.country_id);
       if (!country) return;
 
+      // Check and refresh session if needed
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        alert("სესია ამოიწურა! გთხოვთ logout → login გააკეთოთ ხელახლა.");
+        console.error("Session error:", sessionError);
+        return;
+      }
+
       // Insert or update
       const { error } = await supabase
         .from('location_pages')

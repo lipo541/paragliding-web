@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "locations": "Lokasyonlar",
+    "bookings": "Rezervasyonlar",
+    "promotions": "Promosyonlar",
+    "about": "Hakkımızda",
+    "contact": "İletişim"
+  },
+  "submenu": {
+    "locations": {
+      "all": "Tüm Lokasyonlar",
+      "allDescription": "Gürcistan'daki yamaç paraşütü lokasyonları",
+      "popular": "Popüler",
+      "popularDescription": "En popüler yerler",
+      "beginner": "Başlayanlar İçin",
+      "beginnerDescription": "Öğrenmek için güvenli yerler",
+      "advanced": "Deneyimliler İçin",
+      "advancedDescription": "Zorlu ve ekstrem yerler"
+    }
+  },
+  "footer": {
+    "followUs": "Güncellemeler için bizi takip edin",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter"
+  },
+  "notifications": {
+    "title": "Bildirimler",
+    "noNew": "Yeni bildirim yok"
+  }
+}

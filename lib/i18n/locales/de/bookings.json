@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "Buchen Sie Ihren Flug",
+    "subtitle": "Füllen Sie das Formular aus und wir kontaktieren Sie bald",
+    "backToHome": "Zurück zur Startseite"
+  },
+  "steps": {
+    "selectLocation": "Standort auswählen",
+    "bookingDetails": "Buchungsdetails",
+    "confirmation": "Bestätigung"
+  },
+  "form": {
+    "selectCountry": "Land auswählen",
+    "selectLocation": "Standort auswählen",
+    "selectFlightType": "Flugtyp auswählen",
+    "loading": "Laden...",
+    "fullName": "Vollständiger Name",
+    "fullNamePlaceholder": "Geben Sie Ihren vollständigen Namen ein",
+    "phone": "Telefonnummer",
+    "phonePlaceholder": "+995 XXX XXX XXX",
+    "flightDate": "Flugdatum",
+    "numberOfPeople": "Anzahl der Personen",
+    "contactMethod": "Kontaktmethode",
+    "selectContactMethod": "Kontaktmethode auswählen",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "viber": "Viber",
+    "promoCode": "Promo-Code",
+    "promoCodePlaceholder": "Promo-Code eingeben",
+    "applyPromo": "Anwenden",
+    "promoApplied": "✓ {discount}% Rabatt angewendet!",
+    "specialRequests": "Besondere Wünsche",
+    "specialRequestsPlaceholder": "Haben Sie besondere Anforderungen oder Wünsche?",
+    "required": "Erforderlich",
+    "weatherNoticeTitle": "Wichtige Information",
+    "weatherNoticeText": "Gleitschirmflüge sind direkt abhängig von Wetterbedingungen und Sicherheitsstandards.",
+    "weatherNoticeConfirm": "Nach der Buchungsbestätigung wird sich der Betreiber mit Ihnen in Verbindung setzen und die genaue Zeit entsprechend der Wettervorhersage vereinbaren."
+  },
+  "summary": {
+    "bookingSummary": "Buchungszusammenfassung",
+    "location": "Standort",
+    "flightType": "Flugtyp",
+    "date": "Datum",
+    "people": "Personen",
+    "duration": "Dauer",
+    "features": "Merkmale"
+  },
+  "pricing": {
+    "priceSummary": "Preisübersicht",
+    "basePrice": "Grundpreis",
+    "discount": "Rabatt",
+    "total": "Gesamt",
+    "perPerson": "pro Person",
+    "currency": "₾"
+  },
+  "errors": {
+    "fillAllFields": "Bitte füllen Sie alle erforderlichen Felder aus",
+    "selectCountry": "Bitte wählen Sie ein Land aus",
+    "selectLocation": "Bitte wählen Sie einen Standort aus",
+    "selectFlightType": "Bitte wählen Sie einen Flugtyp aus",
+    "selectContactMethod": "Bitte wählen Sie eine Kontaktmethode aus",
+    "invalidPromo": "Ungültiger Promo-Code",
+    "promoNotActive": "Promo-Code ist noch nicht aktiv",
+    "promoExpired": "Promo-Code ist abgelaufen",
+    "promoLimitReached": "Nutzungslimit des Promo-Codes erreicht",
+    "promoRequiresAuth": "Autorisierung erforderlich für Promo-Code",
+    "promoAuthConfirm": "Bitte melden Sie sich an oder registrieren Sie sich, um den Promo-Code zu verwenden. Möchten Sie zur Anmeldeseite gehen?",
+    "enterPromoCode": "Bitte geben Sie einen Promo-Code ein",
+    "bookingFailed": "Buchung konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "promoValidationFailed": "Promo-Code konnte nicht validiert werden"
+  },
+  "success": {
+    "bookingCreated": "Buchung erfolgreich erstellt!",
+    "thankYou": "Vielen Dank!",
+    "willContactSoon": "Wir werden uns bald bei Ihnen melden",
+    "bookingNumber": "Buchungsnummer",
+    "checkEmail": "Überprüfen Sie Ihre E-Mail zur Bestätigung"
+  },
+  "actions": {
+    "confirmBooking": "Buchung bestätigen",
+    "cancel": "Abbrechen",
+    "back": "Zurück",
+    "continue": "Fortsetzen",
+    "submitting": "Wird gesendet..."
+  }
+}

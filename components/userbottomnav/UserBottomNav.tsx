@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface NavItem {
   id: string;
@@ -28,6 +29,7 @@ export default function UserBottomNav() {
 
   // Extract locale from pathname
   const locale = useMemo(() => pathname.split('/')[1] || 'ka', [pathname]);
+  const { t } = useTranslation('userbottomnav');
 
   // Get active tab
   const activeTab = useMemo(() => {
@@ -133,7 +135,7 @@ export default function UserBottomNav() {
   const navItems: NavItem[] = useMemo(() => [
     {
       id: 'profile',
-      label: 'პროფილი',
+      label: t('profile'),
       path: `/${locale}/user/profile`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +145,7 @@ export default function UserBottomNav() {
     },
     {
       id: 'notifications',
-      label: 'შეტყობინებები',
+      label: t('notifications'),
       path: `/${locale}/user/notifications`,
       badge: notificationCount,
       icon: (
@@ -154,7 +156,7 @@ export default function UserBottomNav() {
     },
     {
       id: 'bookings',
-      label: 'ჯავშნები',
+      label: t('bookings'),
       path: `/${locale}/user/bookings`,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +164,7 @@ export default function UserBottomNav() {
         </svg>
       ),
     },
-  ], [locale, notificationCount]);
+  ], [locale, notificationCount, t]);
 
   if (!isVisible) return null;
 
@@ -217,12 +219,12 @@ export default function UserBottomNav() {
               window.location.href = `/${locale}`;
             }}
             className="relative flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-all duration-300 ease-out text-red-500 hover:text-red-600 hover:scale-105 active:scale-95"
-            aria-label="გასვლა"
+            aria-label={t('logout')}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span className="text-[10px] font-medium">გასვლა</span>
+            <span className="text-[10px] font-medium">{t('logout')}</span>
           </button>
         </div>
       </nav>
@@ -257,7 +259,7 @@ export default function UserBottomNav() {
             {/* User info - shown on hover */}
             <div className="opacity-0 invisible group-hover/sidebar:opacity-100 group-hover/sidebar:visible transition-all duration-300 text-center px-2">
               <p className="text-xs font-semibold text-foreground truncate max-w-[200px]">
-                {userProfile?.full_name || 'User'}
+                {userProfile?.full_name || t('user')}
               </p>
               <p className="text-[10px] text-foreground/60 truncate max-w-[200px]">
                 {userEmail}
@@ -339,7 +341,7 @@ export default function UserBottomNav() {
               
               {/* Logout label - shown on hover */}
               <span className="whitespace-nowrap overflow-hidden text-sm font-medium transition-all duration-500 opacity-0 w-0 group-hover/sidebar:opacity-100 group-hover/sidebar:w-auto group-hover/sidebar:delay-100">
-                გასვლა
+                {t('logout')}
               </span>
             </button>
           </div>

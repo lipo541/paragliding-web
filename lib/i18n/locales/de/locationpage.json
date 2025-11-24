@@ -1,0 +1,54 @@
+{
+  "error": {
+    "notFound": "Standort nicht gefunden",
+    "backButton": "Zurück"
+  },
+  "hero": {
+    "rate": "Bewerten",
+    "changeRating": "Ändern",
+    "contact": "Kontakt",
+    "bookFlight": "Flug buchen"
+  },
+  "content": {
+    "readMore": "Mehr lesen",
+    "showLess": "Weniger anzeigen",
+    "aboutLocation": "Über den Standort"
+  },
+  "flightTypes": {
+    "title": "Pakete",
+    "startFrom": "Ab",
+    "rateButton": "Bewerten",
+    "changeButton": "Ändern"
+  },
+  "gallery": {
+    "title": "Galerie",
+    "photos": "Fotos",
+    "videos": "Videos"
+  },
+  "map": {
+    "title": "Karte"
+  },
+  "contact": {
+    "title": "Kontakt & Information",
+    "description": "Alle Standorte auf unserer Plattform haben unterschiedliche Flugpreise, Pakete und Bedingungen.",
+    "visitText": "Besuchen Sie ",
+    "locationsPage": "Standortseite",
+    "detailsText": " für detaillierte Informationen oder kontaktieren Sie uns direkt:",
+    "messengers": "Messenger"
+  },
+  "sidebar": {
+    "bookNow": "Jetzt buchen",
+    "experienceText": "Erleben Sie einen unvergesslichen Flug in {locationName}. Jetzt buchen!",
+    "flights": "Flüge",
+    "photos": "Fotos"
+  },
+  "quickInfo": {
+    "bestSeason": "Beste Saison",
+    "yearRound": "Ganzjährig",
+    "flightConditions": "Flugbedingungen",
+    "thermalAndDynamic": "Thermisch & Dynamisch"
+  },
+  "ratingModal": {
+    "title": "Standort bewerten"
+  }
+}

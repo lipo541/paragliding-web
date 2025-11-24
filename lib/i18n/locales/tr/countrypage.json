@@ -1,0 +1,56 @@
+{
+  "error": {
+    "notFound": "Ülke bulunamadı",
+    "backToHome": "Ana sayfaya dön"
+  },
+  "hero": {
+    "rate": "Değerlendir",
+    "changeRating": "Değiştir",
+    "contact": "İletişim",
+    "bookFlight": "Uçuş rezervasyonu yap"
+  },
+  "content": {
+    "readMore": "Devamını oku",
+    "readLess": "Daha az"
+  },
+  "gallery": {
+    "photos": "Fotoğraflar",
+    "photo": "Fotoğraf",
+    "videos": "Videolar",
+    "video": "Video",
+    "nowPlaying": "Şu anda oynatılıyor",
+    "playlist": "Çalma listesi",
+    "now": "Şimdi"
+  },
+  "locations": {
+    "title": "Gürcistan'daki uçuş lokasyonları"
+  },
+  "contact": {
+    "title": "İletişim & Bilgi",
+    "description": "Platformumuzdaki her lokasyonun benzersiz uçuş fiyatları, paketleri ve koşulları vardır.",
+    "visitText": "Ziyaret et ",
+    "locationsPage": "Lokasyonlar sayfası",
+    "detailsText": " ayrıntılı bilgi için veya bize doğrudan ulaşın:",
+    "messengers": "Mesajlaşma"
+  },
+  "comments": {
+    "title": "Yorumlar"
+  },
+  "sidebar": {
+    "locations": "Lokasyonlar",
+    "photos": "Fotoğraflar",
+    "flyingSpots": "Uçuş Noktaları",
+    "bookFlight": "Uçuş Rezervasyonu",
+    "readyForAdventure": "Maceraya Hazır mısınız?",
+    "bookingDescription": "{count} lokasyonumuzdan herhangi birinde tandem yamaç paraşütü uçuşunuzu rezerve edin",
+    "professionalPilots": "Profesyonel pilotlar",
+    "certifiedEquipment": "Güvenlik sertifikalı ekipman",
+    "photoVideoIncluded": "Fotoğraf ve video dahil",
+    "bookNow": "Şimdi rezerve et",
+    "helpText": "Uçuşunuz için en iyi lokasyonu ve zamanı seçmenize yardımcı olacağız"
+  },
+  "ratingModal": {
+    "title": "Ülkeyi değerlendirin",
+    "subtitle": "Görüşünüz önemli"
+  }
+}

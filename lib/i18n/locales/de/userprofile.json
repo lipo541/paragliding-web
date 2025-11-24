@@ -1,0 +1,52 @@
+{
+  "title": "Profil",
+  "subtitle": "Aktualisieren Sie Ihre persönlichen Informationen",
+  "avatar": {
+    "title": "Profilbild",
+    "delete": "Foto löschen",
+    "choose": "Datei auswählen",
+    "or": "oder ziehen und ablegen",
+    "maxSize": "Max. 2MB",
+    "uploadSuccess": "Foto erfolgreich hochgeladen!",
+    "deleteSuccess": "Foto gelöscht",
+    "deleteConfirm": "Sind Sie sicher, dass Sie das Foto löschen möchten?",
+    "uploadError": "Foto konnte nicht hochgeladen werden",
+    "deleteError": "Foto konnte nicht gelöscht werden",
+    "invalidType": "Bitte wählen Sie ein Bild",
+    "tooLarge": "Dateigröße darf 2MB nicht überschreiten"
+  },
+  "form": {
+    "title": "Grundinformationen",
+    "fullName": {
+      "label": "Vollständiger Name",
+      "placeholder": "Geben Sie Ihren vollständigen Namen ein"
+    },
+    "phone": {
+      "label": "Telefonnummer"
+    },
+    "email": {
+      "label": "E-Mail",
+      "helperText": "E-Mail kann nicht geändert werden"
+    },
+    "save": "Speichern",
+    "updateSuccess": "Profil erfolgreich aktualisiert!",
+    "updateError": "Ein Fehler ist aufgetreten",
+    "loadError": "Profil konnte nicht geladen werden",
+    "unsavedChanges": "Sie haben ungespeicherte Änderungen"
+  },
+  "password": {
+    "title": "Passwort ändern",
+    "newPassword": {
+      "label": "Neues Passwort",
+      "placeholder": "Neues Passwort eingeben"
+    },
+    "confirmPassword": {
+      "label": "Neues Passwort bestätigen",
+      "placeholder": "Neues Passwort bestätigen"
+    },
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "changeSuccess": "Passwort erfolgreich geändert!",
+    "changeError": "Passwort konnte nicht geändert werden"
+  }
+}

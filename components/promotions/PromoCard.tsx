@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tag, Calendar, MapPin, Copy, Check, Clock, Sparkles, ArrowRight } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface PromoCardProps {
   promo: {
@@ -29,6 +30,9 @@ interface PromoCardProps {
         name_ka: string;
         name_en: string;
         name_ru: string;
+        name_ar: string;
+        name_de: string;
+        name_tr: string;
       };
     }>;
   };
@@ -39,6 +43,13 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState('');
   const supabase = createClient();
+  const { t } = useTranslation('promotionpage');
+  
+  // Helper function to get localized name
+  const getLocalizedName = (item: any) => {
+    const nameKey = `name_${locale}` as keyof typeof item;
+    return item[nameKey] || item.name_ka || '';
+  };
 
   useEffect(() => {
     if (!promo.valid_until) return;
@@ -58,29 +69,11 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
       if (days > 0) {
-        setTimeLeft(
-          locale === 'ka'
-            ? `${days} დღე დარჩა`
-            : locale === 'en'
-            ? `${days}d left`
-            : `${days}д осталось`
-        );
+        setTimeLeft(t('card.daysLeft', { days }));
       } else if (hours > 0) {
-        setTimeLeft(
-          locale === 'ka'
-            ? `${hours} საათი დარჩა`
-            : locale === 'en'
-            ? `${hours}h left`
-            : `${hours}ч осталось`
-        );
+        setTimeLeft(t('card.hoursLeft', { hours }));
       } else {
-        setTimeLeft(
-          locale === 'ka'
-            ? 'იწურება'
-            : locale === 'en'
-            ? 'Expiring'
-            : 'Истекает'
-        );
+        setTimeLeft(t('card.minutesLeft'));
       }
     };
 
@@ -88,7 +81,7 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
     const interval = setInterval(calculateTimeLeft, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, [promo.valid_until, locale]);
+  }, [promo.valid_until, locale, t]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(promo.code);
@@ -96,19 +89,12 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const getDescription = () => {
-    if (locale === 'en') return promo.description_en || promo.description_ka;
-    if (locale === 'ru') return promo.description_ru || promo.description_ka;
-    if (locale === 'ar') return promo.description_ar || promo.description_ka;
-    if (locale === 'de') return promo.description_de || promo.description_ka;
-    if (locale === 'tr') return promo.description_tr || promo.description_ka;
-    return promo.description_ka;
-  };
-
-  const getLocationName = (location: any) => {
-    if (locale === 'en') return location.name_en || location.name_ka;
-    if (locale === 'ru') return location.name_ru || location.name_ka;
-    return location.name_ka;
+  const getDescription = (): string | null => {
+    const descKey = `description_${locale}` as keyof typeof promo;
+    const desc = promo[descKey];
+    if (typeof desc === 'string') return desc;
+    if (typeof promo.description_ka === 'string') return promo.description_ka;
+    return null;
   };
 
   const imageUrl = promo.image_path
@@ -157,13 +143,13 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
         {isExpiringSoon && timeLeft !== 'expired' && (
           <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-semibold flex items-center gap-0.5">
             <Clock className="w-2.5 h-2.5" />
-            {locale === 'ka' ? 'იწურება' : locale === 'en' ? 'Soon' : 'Скоро'}
+            {t('card.soon')}
           </div>
         )}
 
         {/* Promo Code - Bottom */}
         <div className="absolute bottom-2 left-2 right-2">
-          <p className="text-[9px] text-white/70 mb-0.5">{locale === 'ka' ? 'კოდი' : locale === 'en' ? 'Code' : 'Код'}</p>
+          <p className="text-[9px] text-white/70 mb-0.5">{t('card.code')}</p>
           <h3 className="text-sm font-bold text-white drop-shadow-lg truncate">{promo.code}</h3>
         </div>
       </div>
@@ -181,7 +167,7 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
             <div className="flex items-center gap-1 mb-1">
               <Clock className="w-3 h-3 text-blue-500" />
               <p className="text-[9px] font-medium text-foreground/60">
-                {locale === 'ka' ? 'დარჩენილი დრო' : locale === 'en' ? 'Time Left' : 'Осталось'}
+                {t('card.timeLeft')}
               </p>
             </div>
             <div className="grid grid-cols-3 gap-1">
@@ -197,15 +183,15 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
                   <>
                     <div className="text-center">
                       <p className="text-sm font-bold text-foreground">{days}</p>
-                      <p className="text-[8px] text-foreground/60">{locale === 'ka' ? 'დღე' : locale === 'en' ? 'days' : 'дн'}</p>
+                      <p className="text-[8px] text-foreground/60">{t('card.days')}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-sm font-bold text-foreground">{hours}</p>
-                      <p className="text-[8px] text-foreground/60">{locale === 'ka' ? 'საათი' : locale === 'en' ? 'hrs' : 'ч'}</p>
+                      <p className="text-[8px] text-foreground/60">{t('card.hours')}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-sm font-bold text-foreground">{minutes}</p>
-                      <p className="text-[8px] text-foreground/60">{locale === 'ka' ? 'წთ' : locale === 'en' ? 'min' : 'мин'}</p>
+                      <p className="text-[8px] text-foreground/60">{t('card.minutes')}</p>
                     </div>
                   </>
                 );
@@ -217,7 +203,7 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
         {/* Usage Info */}
         {promo.usage_limit && (
           <div className="flex items-center justify-between text-[9px] text-foreground/60">
-            <span>{locale === 'ka' ? 'გამოყენება' : locale === 'en' ? 'Usage' : 'Использование'}</span>
+            <span>{t('card.usage')}</span>
             <span className="font-medium">{promo.usage_count}/{promo.usage_limit}</span>
           </div>
         )}
@@ -227,7 +213,7 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
           <div className="flex items-center gap-1">
             <MapPin className="w-2.5 h-2.5 text-foreground/40 flex-shrink-0" />
             <p className="text-[9px] text-foreground/60 line-clamp-1">
-              {locations.map((loc) => getLocationName(loc)).join(', ')}
+              {locations.map((loc) => getLocalizedName(loc)).join(', ')}
             </p>
           </div>
         )}
@@ -241,14 +227,14 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
             }`}
           >
             {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-            <span>{copied ? '✓' : (locale === 'ka' ? 'კოპირება' : locale === 'en' ? 'Copy' : 'Копия')}</span>
+            <span>{copied ? t('card.copied') : t('card.copy')}</span>
           </button>
 
           <Link
             href={`/${locale}/bookings?promo=${promo.code}`}
             className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
           >
-            {locale === 'ka' ? 'ჯავშანი' : locale === 'en' ? 'Book' : 'Бронь'}
+            {t('card.book')}
           </Link>
         </div>
       </div>

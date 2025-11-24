@@ -1,0 +1,50 @@
+{
+  "page": {
+    "title": "Акции",
+    "subtitle": "Активные акции и скидки",
+    "active": "активных",
+    "loading": "Загрузка акций..."
+  },
+  "filters": {
+    "title": "Фильтры",
+    "search": "Поиск",
+    "searchPlaceholder": "Поиск...",
+    "location": "Локация",
+    "allLocations": "Все",
+    "sort": "Сортировка",
+    "sortBy": "Сортировка",
+    "newest": "Новые",
+    "highestDiscount": "Скидка",
+    "expiringSoon": "Истекает",
+    "clearFilters": "Очистить",
+    "found": "Найдено"
+  },
+  "card": {
+    "code": "Код",
+    "discount": "Скидка",
+    "expiringSoon": "Истекает скоро",
+    "soon": "Скоро",
+    "timeLeft": "Осталось",
+    "daysLeft": "{days}д осталось",
+    "hoursLeft": "{hours}ч осталось",
+    "minutesLeft": "Истекает",
+    "days": "дн",
+    "hours": "ч",
+    "minutes": "мин",
+    "usage": "Использование",
+    "copy": "Копия",
+    "copied": "✓",
+    "book": "Бронь",
+    "expired": "Истекло"
+  },
+  "empty": {
+    "title": "Не найдено",
+    "message": "Промокоды с этими критериями не найдены",
+    "clearButton": "Очистить"
+  },
+  "stats": {
+    "active": "активных",
+    "avgDiscount": "Средняя скидка",
+    "maxDiscount": "Макс скидка"
+  }
+}

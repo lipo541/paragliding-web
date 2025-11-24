@@ -1,0 +1,38 @@
+{
+  "title": "Kayıt Ol",
+  "fullName": {
+    "label": "Tam Ad",
+    "placeholder": "Tam adınızı girin"
+  },
+  "email": {
+    "label": "E-posta",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Şifre",
+    "placeholder": "••••••••"
+  },
+  "confirmPassword": {
+    "label": "Şifreyi Onayla",
+    "placeholder": "Şifreyi tekrar girin"
+  },
+  "submit": "Hesap Oluştur",
+  "loading": "Yükleniyor...",
+  "divider": "veya e-posta ile",
+  "social": {
+    "google": "Google ile devam et"
+  },
+  "haveAccount": "Zaten bir hesabınız var mı?",
+  "signIn": "Giriş Yap",
+  "agreement": "Bir hesap oluşturarak",
+  "terms": "Hizmet Şartlarımızı",
+  "and": "ve",
+  "privacy": "Gizlilik Politikamızı",
+  "errors": {
+    "allFields": "Lütfen tüm alanları doldurun",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "passwordLength": "Şifre en az 6 karakter olmalıdır",
+    "registerFailed": "Kayıt başarısız",
+    "authFailed": "Yetkilendirme başarısız"
+  }
+}

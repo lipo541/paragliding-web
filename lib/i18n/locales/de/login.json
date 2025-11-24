@@ -1,0 +1,23 @@
+{
+  "title": "Anmelden",
+  "email": {
+    "label": "E-Mail",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Passwort",
+    "placeholder": "••••••••"
+  },
+  "submit": "Anmelden",
+  "loading": "Lädt...",
+  "forgotPassword": "Passwort vergessen?",
+  "register": "Registrieren",
+  "divider": "oder",
+  "social": {
+    "google": "Mit Google anmelden"
+  },
+  "errors": {
+    "loginFailed": "Anmeldung fehlgeschlagen",
+    "authFailed": "Autorisierung fehlgeschlagen"
+  }
+}

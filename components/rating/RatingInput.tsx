@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Star, X, Check, Sparkles } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface RatingInputProps {
   ratableType: 'country' | 'location' | 'flight_type';
@@ -23,6 +24,7 @@ export default function RatingInput({
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
+  const { t } = useTranslation('rating');
 
   useEffect(() => {
     if (existingRating) {
@@ -40,7 +42,7 @@ export default function RatingInput({
       } = await supabase.auth.getUser();
 
       if (!user) {
-        setError('გთხოვთ შეხვიდეთ სისტემაში რეიტინგის მისაცემად');
+        setError(t('input.loginRequired'));
         setIsSubmitting(false);
         return;
       }
@@ -92,7 +94,7 @@ export default function RatingInput({
       }
     } catch (err: any) {
       console.error('Error submitting rating:', err?.message || err);
-      setError('შეფასების შენახვა ვერ მოხერხდა');
+      setError(t('input.saveError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -108,7 +110,7 @@ export default function RatingInput({
       } = await supabase.auth.getUser();
 
       if (!user) {
-        setError('გთხოვთ შეხვიდეთ სისტემაში');
+        setError(t('input.loginRequired'));
         setIsSubmitting(false);
         return;
       }
@@ -130,7 +132,7 @@ export default function RatingInput({
       }
     } catch (err) {
       console.error('Error deleting rating:', err);
-      setError('შეფასების წაშლა ვერ მოხერხდა');
+      setError(t('input.deleteError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -138,7 +140,13 @@ export default function RatingInput({
 
   const displayRating = hoverRating || rating;
 
-  const ratingLabels = ['ცუდი', 'საშუალო', 'კარგი', 'ძალიან კარგი', 'შესანიშნავი'];
+  const ratingLabels = [
+    t('input.labels.poor'),
+    t('input.labels.average'),
+    t('input.labels.good'),
+    t('input.labels.veryGood'),
+    t('input.labels.excellent')
+  ];
 
   return (
     <div className="space-y-2.5">
@@ -192,10 +200,10 @@ export default function RatingInput({
                 onClick={handleDeleteRating}
                 disabled={isSubmitting}
                 className="group flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-foreground/80 hover:text-red-400 hover:bg-red-400/10 rounded transition-all disabled:opacity-50"
-                title="წაშლა"
+                title={t('input.delete')}
               >
                 <X className="w-3 h-3" />
-                <span>წაშლა</span>
+                <span>{t('input.delete')}</span>
               </button>
             </>
           )}
@@ -205,7 +213,7 @@ export default function RatingInput({
         {showSuccess && (
           <div className="flex items-center gap-1 text-green-400 animate-fadeIn">
             <Check className="w-3 h-3" />
-            <span className="text-[10px] font-medium">შენახულია!</span>
+            <span className="text-[10px] font-medium">{t('input.saved')}</span>
           </div>
         )}
       </div>
@@ -222,7 +230,7 @@ export default function RatingInput({
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-2xl flex items-center justify-center">
           <div className="flex items-center gap-2 text-foreground">
             <div className="w-4 h-4 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin"></div>
-            <span className="text-sm font-medium">შენახვა...</span>
+            <span className="text-sm font-medium">{t('input.saving')}</span>
           </div>
         </div>
       )}

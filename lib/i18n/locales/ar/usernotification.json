@@ -1,0 +1,18 @@
+{
+  "title": "الإشعارات",
+  "loading": "جاري التحميل...",
+  "empty": {
+    "title": "لا توجد إشعارات",
+    "description": "ليس لديك أي رسائل بعد"
+  },
+  "newMessage": "لديك رسالة جديدة!",
+  "selectMessage": "اختر رسالة للعرض",
+  "delete": "حذف",
+  "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه الرسالة؟",
+  "deleteSuccess": "تم حذف الرسالة",
+  "deleteFailed": "فشل الحذف",
+  "readAt": "مقروءة",
+  "markAsReadFailed": "حدث خطأ",
+  "fetchFailed": "فشل تحميل الرسائل",
+  "notAuthorized": "غير مصرح"
+}

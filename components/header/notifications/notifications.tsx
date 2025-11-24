@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/lib/supabase/SupabaseProvider';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 export default function Notifications() {
   const [notificationCount] = useState(3);
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const { client, session } = useSupabase();
+  const { t } = useTranslation('navigation');
 
   useEffect(() => {
     const user = session?.user;
@@ -58,8 +60,8 @@ export default function Notifications() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 bg-background border border-foreground/10 rounded-lg shadow-lg p-4 z-50">
-          <h3 className="font-semibold mb-2 text-foreground">Notifications</h3>
-          <p className="text-sm text-foreground/60">No new notifications</p>
+          <h3 className="font-semibold mb-2 text-foreground">{t('notifications.title')}</h3>
+          <p className="text-sm text-foreground/60">{t('notifications.noNew')}</p>
         </div>
       )}
     </div>

@@ -1,0 +1,54 @@
+{
+  "error": {
+    "notFound": "الموقع غير موجود",
+    "backButton": "العودة"
+  },
+  "hero": {
+    "rate": "تقييم",
+    "changeRating": "تغيير",
+    "contact": "اتصل بنا",
+    "bookFlight": "احجز رحلة"
+  },
+  "content": {
+    "readMore": "اقرأ المزيد",
+    "showLess": "إخفاء",
+    "aboutLocation": "حول الموقع"
+  },
+  "flightTypes": {
+    "title": "الباقات",
+    "startFrom": "من",
+    "rateButton": "تقييم",
+    "changeButton": "تغيير"
+  },
+  "gallery": {
+    "title": "المعرض",
+    "photos": "صور",
+    "videos": "فيديوهات"
+  },
+  "map": {
+    "title": "الخريطة"
+  },
+  "contact": {
+    "title": "معلومات الاتصال",
+    "description": "جميع المواقع على منصتنا لديها أسعار رحلات وباقات وشروط مختلفة.",
+    "visitText": "قم بزيارة ",
+    "locationsPage": "صفحة المواقع",
+    "detailsText": " للحصول على معلومات مفصلة أو اتصل بنا مباشرة:",
+    "messengers": "المراسلة"
+  },
+  "sidebar": {
+    "bookNow": "احجز الآن",
+    "experienceText": "اختبر تجربة طيران لا تُنسى في {locationName}. احجز الآن!",
+    "flights": "رحلات",
+    "photos": "صور"
+  },
+  "quickInfo": {
+    "bestSeason": "أفضل موسم",
+    "yearRound": "على مدار السنة",
+    "flightConditions": "ظروف الطيران",
+    "thermalAndDynamic": "حرارية وديناميكية"
+  },
+  "ratingModal": {
+    "title": "قيّم الموقع"
+  }
+}

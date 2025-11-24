@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 import Image from 'next/image';
 import { Calendar, MapPin, Clock, CheckCircle2, User, Mail, Phone, MessageSquare, CreditCard, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -11,12 +12,20 @@ interface Country {
   id: string;
   name_ka: string;
   name_en: string;
+  name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
 }
 
 interface Location {
   id: string;
   name_ka: string;
   name_en: string;
+  name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
   country_id: string;
   og_image_url?: string;
 }
@@ -45,10 +54,18 @@ interface BookingDetails {
 }
 
 export default function BookingsPage() {
+  const { t, locale } = useTranslation('bookings');
   const searchParams = useSearchParams();
   const [bookingDetails, setBookingDetails] = useState<BookingDetails>({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState<'GEL' | 'USD' | 'EUR'>('GEL');
+
+  // Helper function to get localized name
+  const getLocalizedName = (item: any): string => {
+    if (!item) return '';
+    const nameKey = `name_${locale}` as keyof typeof item;
+    return item[nameKey] || item.name_en || item.name_ka || '';
+  };
   
   // Dropdown Data
   const [countries, setCountries] = useState<Country[]>([]);
@@ -82,7 +99,7 @@ export default function BookingsPage() {
         // Fetch all countries
         const { data: countriesData } = await supabase
           .from('countries')
-          .select('id, name_ka, name_en')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr')
           .eq('is_active', true)
           .order('name_ka');
         
@@ -96,7 +113,7 @@ export default function BookingsPage() {
           // Pre-fill from URL parameters
           const { data: locationData } = await supabase
             .from('locations')
-            .select('id, name_ka, name_en, country_id, og_image_url')
+            .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, country_id, og_image_url')
             .eq('id', locationId)
             .single();
 
@@ -108,7 +125,7 @@ export default function BookingsPage() {
             // Fetch locations for this country
             const { data: locationsData } = await supabase
               .from('locations')
-              .select('id, name_ka, name_en, country_id, og_image_url')
+              .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, country_id, og_image_url')
               .eq('country_id', locationData.country_id)
               .order('name_ka');
             
@@ -122,36 +139,41 @@ export default function BookingsPage() {
               .single();
 
             if (locationPageData?.content) {
-              const kaFlightTypes = locationPageData.content.ka?.flight_types || [];
+              // Get flight types for current locale, fallback to ka
+              const initialLocaleFlightTypes = locationPageData.content[locale]?.flight_types || locationPageData.content.ka?.flight_types || [];
               const sharedTypes = locationPageData.content.shared_flight_types || [];
               
-              setFlightTypes(kaFlightTypes);
+              setFlightTypes(initialLocaleFlightTypes);
               setSharedFlightTypes(sharedTypes);
 
               // Set booking details
-              const selectedFlight = kaFlightTypes.find((ft: any) => ft.shared_id === flightTypeId);
+              const selectedFlight = initialLocaleFlightTypes.find((ft: any) => ft.shared_id === flightTypeId);
               const sharedFlight = sharedTypes.find((sft: any) => sft.id === flightTypeId);
               
               const { data: countryData } = await supabase
                 .from('countries')
-                .select('name_ka, name_en')
+                .select('name_ka, name_en, name_ru, name_ar, name_de, name_tr')
                 .eq('id', locationData.country_id)
                 .single();
 
               const heroImage = locationPageData.content.shared_images?.hero_image?.url || locationData.og_image_url;
 
+              // Get flight type name based on current locale
+              const localeFlightTypes = locationPageData.content[locale]?.flight_types || locationPageData.content.ka?.flight_types || [];
+              const localizedFlight = localeFlightTypes.find((ft: any) => ft.shared_id === flightTypeId);
+
               setBookingDetails({
                 locationId: locationData.id,
-                locationName: locationData.name_ka || locationData.name_en,
+                locationName: getLocalizedName(locationData),
                 countryId: locationData.country_id,
-                countryName: countryData?.name_ka || countryData?.name_en,
-                flightTypeName: selectedFlight?.name || 'Flight',
+                countryName: getLocalizedName(countryData),
+                flightTypeName: localizedFlight?.name || selectedFlight?.name || 'Flight',
                 flightTypeId: flightTypeId,
                 priceGel: sharedFlight?.price_gel || selectedFlight?.price_gel,
                 priceUsd: sharedFlight?.price_usd || selectedFlight?.price_usd,
                 priceEur: sharedFlight?.price_eur || selectedFlight?.price_eur,
-                duration: selectedFlight?.duration,
-                features: selectedFlight?.features || [],
+                duration: localizedFlight?.duration || selectedFlight?.duration,
+                features: localizedFlight?.features || selectedFlight?.features || [],
                 heroImage: heroImage,
               });
             }
@@ -175,7 +197,7 @@ export default function BookingsPage() {
       const supabase = createClient();
       const { data } = await supabase
         .from('locations')
-        .select('id, name_ka, name_en, country_id, og_image_url')
+        .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, country_id, og_image_url')
         .eq('country_id', selectedCountryId)
         .order('name_ka');
       
@@ -205,24 +227,26 @@ export default function BookingsPage() {
         .single();
 
       if (locationPageData?.content) {
-        const kaFlightTypes = locationPageData.content.ka?.flight_types || [];
+        // Get flight types for current locale, fallback to ka
+        const localeFlightTypes = locationPageData.content[locale]?.flight_types || locationPageData.content.ka?.flight_types || [];
         const sharedTypes = locationPageData.content.shared_flight_types || [];
         
         if (process.env.NODE_ENV === 'development') {
           console.log('📦 Loaded flight types for location:', selectedLocationId, {
-            kaFlightTypes: kaFlightTypes.map((ft: any) => ({ id: ft.shared_id, name: ft.name })),
+            locale: locale,
+            localeFlightTypes: localeFlightTypes.map((ft: any) => ({ id: ft.shared_id, name: ft.name })),
             sharedTypes: sharedTypes.map((st: any) => ({ id: st.id, price_gel: st.price_gel })),
             currentSelection: selectedFlightTypeId
           });
         }
         
-        // Set flight types first
-        setFlightTypes(kaFlightTypes);
+        // Set flight types first (using locale-specific)
+        setFlightTypes(localeFlightTypes);
         setSharedFlightTypes(sharedTypes);
         
         // Then validate current selection
         if (selectedFlightTypeId) {
-          const flightExists = kaFlightTypes.find((ft: any) => ft.shared_id === selectedFlightTypeId);
+          const flightExists = localeFlightTypes.find((ft: any) => ft.shared_id === selectedFlightTypeId);
           const sharedExists = sharedTypes.find((st: any) => st.id === selectedFlightTypeId);
           
           if (!flightExists || !sharedExists) {
@@ -238,7 +262,7 @@ export default function BookingsPage() {
     };
 
     fetchFlightTypes();
-  }, [selectedLocationId]);
+  }, [selectedLocationId, locale]);
 
   // Update booking details when selections change
   useEffect(() => {
@@ -294,9 +318,9 @@ export default function BookingsPage() {
 
         const newBookingDetails = {
           locationId: selectedLocationId,
-          locationName: selectedLocation?.name_ka || selectedLocation?.name_en || '',
+          locationName: getLocalizedName(selectedLocation),
           countryId: selectedCountryId,
-          countryName: selectedCountry?.name_ka || selectedCountry?.name_en || '',
+          countryName: getLocalizedName(selectedCountry),
           flightTypeName: selectedFlight.name || 'Flight',
           flightTypeId: selectedFlightTypeId,
           priceGel: sharedFlight.price_gel || 0,
@@ -318,18 +342,18 @@ export default function BookingsPage() {
     return () => {
       isCancelled = true;
     };
-  }, [selectedCountryId, selectedLocationId, selectedFlightTypeId, countries, locations, flightTypes, sharedFlightTypes, bookingDetails]);
+  }, [selectedCountryId, selectedLocationId, selectedFlightTypeId, countries, locations, flightTypes, sharedFlightTypes, bookingDetails, locale]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!contactMethod) {
-      alert('გთხოვთ აირჩიოთ კონტაქტის მეთოდი');
+      alert(t('errors.selectContactMethod'));
       return;
     }
 
     if (!selectedCountryId || !selectedLocationId || !selectedFlightTypeId) {
-      alert('გთხოვთ შეავსოთ ყველა აუცილებელი ველი');
+      alert(t('errors.fillAllFields'));
       return;
     }
     
@@ -392,17 +416,17 @@ export default function BookingsPage() {
       if (error) {
         console.error('Edge Function error:', error);
         console.error('Error details:', JSON.stringify(error, null, 2));
-        alert(`შეცდომა: ${error?.message || 'დაფიქსირდა შეცდომა ჯავშნის გაგზავნისას'}`);
+        alert(`${t('errors.bookingFailed')}: ${error?.message || t('errors.bookingFailed')}`);
         throw error;
       }
 
       if (!data?.success) {
         console.error('Booking failed:', data);
-        alert(`შეცდომა: ${data?.error || 'დაფიქსირდა შეცდომა ჯავშნის გაგზავნისას'}`);
+        alert(`${t('errors.bookingFailed')}: ${data?.error || t('errors.bookingFailed')}`);
         throw new Error(data?.error);
       }
 
-      alert('ჯავშანი წარმატებით გაიგზავნა! ჩვენ მალე დაგიკავშირდებით.');
+      alert(t('success.bookingCreated'));
       
       // Reset form
       setFullName('');
@@ -419,7 +443,7 @@ export default function BookingsPage() {
       
     } catch (error) {
       console.error('Error submitting booking:', error);
-      alert('დაფიქსირდა შეცდომა. გთხოვთ სცადოთ თავიდან.');
+      alert(t('errors.bookingFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -459,7 +483,7 @@ export default function BookingsPage() {
     const code = promoCode.trim().toUpperCase();
     
     if (!code) {
-      setPromoError('გთხოვთ შეიყვანოთ პრომო კოდი');
+      setPromoError(t('errors.enterPromoCode'));
       return;
     }
 
@@ -470,11 +494,11 @@ export default function BookingsPage() {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        setPromoError('პრომო კოდის გამოსაყენებლად საჭიროა ავტორიზაცია');
+        setPromoError(t('errors.promoRequiresAuth'));
         setPromoDiscount(0);
         
         // Show login/register prompt
-        if (confirm('პრომო კოდის გამოსაყენებლად გთხოვთ შეხვიდეთ ან დარეგისტრირდეთ. გსურთ გადასვლა ავტორიზაციის გვერდზე?')) {
+        if (confirm(t('errors.promoAuthConfirm'))) {
           window.location.href = '/ka/login?redirect=/ka/bookings';
         }
         return;
@@ -489,7 +513,7 @@ export default function BookingsPage() {
         .single();
 
       if (error || !promoData) {
-        setPromoError('არასწორი პრომო კოდი');
+        setPromoError(t('errors.invalidPromo'));
         setPromoDiscount(0);
         return;
       }
@@ -498,20 +522,20 @@ export default function BookingsPage() {
       const now = new Date();
       
       if (promoData.valid_from && new Date(promoData.valid_from) > now) {
-        setPromoError('პრომო კოდი ჯერ არ გააქტიურებულა');
+        setPromoError(t('errors.promoNotActive'));
         setPromoDiscount(0);
         return;
       }
 
       if (promoData.valid_until && new Date(promoData.valid_until) < now) {
-        setPromoError('პრომო კოდის ვადა ამოიწურა');
+        setPromoError(t('errors.promoExpired'));
         setPromoDiscount(0);
         return;
       }
 
       // Check usage limit
       if (promoData.usage_limit && promoData.usage_count >= promoData.usage_limit) {
-        setPromoError('პრომო კოდის გამოყენების ლიმიტი ამოიწურა');
+        setPromoError(t('errors.promoLimitReached'));
         setPromoDiscount(0);
         return;
       }
@@ -559,7 +583,7 @@ export default function BookingsPage() {
           {/* Hero Section - Compact */}
           <div className="relative z-10 pt-12 pb-4 text-center px-4">
             <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 tracking-tight">
-              დაჯავშნე ფრენა
+              {t('page.title')}
             </h1>
             {bookingDetails.locationName && bookingDetails.flightTypeName && (
               <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-gray-600 dark:text-gray-400">
@@ -597,7 +621,7 @@ export default function BookingsPage() {
                 {/* Country Selector */}
                 <div>
                   <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    აირჩიეთ ქვეყანა <span className="text-red-500">*</span>
+                    {t('form.selectCountry')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectedCountryId}
@@ -605,10 +629,10 @@ export default function BookingsPage() {
                     required
                     className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
                   >
-                    <option value="">აირჩიეთ ქვეყანა</option>
+                    <option value="">{t('form.selectCountry')}</option>
                     {countries.map((country) => (
                       <option key={country.id} value={country.id}>
-                        {country.name_ka}
+                        {getLocalizedName(country)}
                       </option>
                     ))}
                   </select>
@@ -617,7 +641,7 @@ export default function BookingsPage() {
                 {/* Location Selector */}
                 <div>
                   <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    აირჩიეთ ლოკაცია <span className="text-red-500">*</span>
+                    {t('form.selectLocation')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectedLocationId}
@@ -626,10 +650,10 @@ export default function BookingsPage() {
                     disabled={!selectedCountryId}
                     className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <option value="">აირჩიეთ ლოკაცია</option>
+                    <option value="">{t('form.selectLocation')}</option>
                     {locations.map((location) => (
                       <option key={location.id} value={location.id}>
-                        {location.name_ka}
+                        {getLocalizedName(location)}
                       </option>
                     ))}
                   </select>
@@ -638,7 +662,7 @@ export default function BookingsPage() {
                 {/* Flight Type Selector */}
                 <div>
                   <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    აირჩიეთ ფრენის ტიპი <span className="text-red-500">*</span>
+                    {t('form.selectFlightType')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectedFlightTypeId}
@@ -654,7 +678,7 @@ export default function BookingsPage() {
                     className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">
-                      {flightTypes.length === 0 && selectedLocationId ? 'იტვირთება...' : 'აირჩიეთ ფრენის ტიპი'}
+                      {flightTypes.length === 0 && selectedLocationId ? t('form.loading') : t('form.selectFlightType')}
                     </option>
                     {flightTypes.map((ft) => {
                       const sharedType = sharedFlightTypes.find(sft => sft.id === ft.shared_id);
@@ -679,26 +703,26 @@ export default function BookingsPage() {
                 {selectedFlightTypeId && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">სახელი და გვარი</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.fullName')}</label>
                     <input
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       required
                       className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
-                      placeholder="გიორგი მელაძე"
+                      placeholder={t('form.fullNamePlaceholder')}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">ტელეფონი</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.phone')}</label>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
                       className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
-                      placeholder="+995 XXX XX XX XX"
+                      placeholder={t('form.phonePlaceholder')}
                     />
                   </div>
                 </div>
@@ -708,7 +732,7 @@ export default function BookingsPage() {
                 {selectedFlightTypeId && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">თარიღი</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.flightDate')}</label>
                     <input
                       type="date"
                       value={selectedDate}
@@ -720,7 +744,7 @@ export default function BookingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">რაოდენობა</label>
+                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.numberOfPeople')}</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -751,7 +775,7 @@ export default function BookingsPage() {
                 {/* Contact Method Preference */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1.5">კონტაქტის მეთოდი</label>
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1.5">{t('form.contactMethod')}</label>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       type="button"
@@ -765,7 +789,7 @@ export default function BookingsPage() {
                       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                       </svg>
-                      <span className="text-[10px] font-semibold">WhatsApp</span>
+                      <span className="text-[10px] font-semibold">{t('form.whatsapp')}</span>
                     </button>
 
                     <button
@@ -780,7 +804,7 @@ export default function BookingsPage() {
                       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
                       </svg>
-                      <span className="text-[10px] font-semibold">Telegram</span>
+                      <span className="text-[10px] font-semibold">{t('form.telegram')}</span>
                     </button>
 
                     <button
@@ -795,7 +819,7 @@ export default function BookingsPage() {
                       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11.398.002C9.473.028 5.331.344 2.823 2.908 1.089 4.658.197 7.03.056 9.735c-.14 2.706-.1 7.636 4.648 8.991h.003l-.002 2.622s-.033.85.526 1.022c.678.209 1.075-.44 1.722-1.14.356-.385.85-.95 1.223-1.382 3.367.288 5.953-.37 6.25-.476 .685-.247 4.564-.798 5.196-6.499.652-5.905-.334-9.629-2.866-11.277C14.972.441 13.269.027 11.398.002zm.067 1.697c1.586.019 2.998.364 4.461 1.619 2.176 1.873 2.605 5.017 2.07 9.35-.535 4.332-3.23 4.934-4.931 5.256-.414.079-2.846.677-5.804.203 0 0-2.293 2.76-3.009 3.475-.091.091-.204.128-.292.102-.13-.037-.166-.188-.165-.414l.01-4.264c-.015 0-.015 0 0 0-3.632-1.004-3.418-5.292-3.308-7.544.109-2.252.798-4.254 2.24-5.709C5.023 1.481 8.576 1.679 11.465 1.7z"/>
                       </svg>
-                      <span className="text-[10px] font-semibold">Viber</span>
+                      <span className="text-[10px] font-semibold">{t('form.viber')}</span>
                     </button>
                   </div>
                 </div>
@@ -805,9 +829,9 @@ export default function BookingsPage() {
                 {selectedFlightTypeId && (
                 <div>
                   <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    პრომო კოდი
+                    {t('form.promoCode')}
                     <span className="ml-1.5 text-[9px] text-gray-500 dark:text-gray-600 font-normal">
-                      (მხოლოდ ავტორიზებულებისთვის)
+                      ({t('errors.promoRequiresAuth')})
                     </span>
                   </label>
                   <div className="flex gap-2">
@@ -826,7 +850,7 @@ export default function BookingsPage() {
                           ? 'border-red-500' 
                           : 'border-gray-300 dark:border-white/20'
                       }`}
-                      placeholder="კოდი"
+                      placeholder={t('form.promoCodePlaceholder')}
                     />
                     {promoDiscount > 0 ? (
                       <button
@@ -834,7 +858,7 @@ export default function BookingsPage() {
                         onClick={handlePromoCodeRemove}
                         className="h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-[11px] font-medium"
                       >
-                        წაშლა
+                        {t('actions.cancel')}
                       </button>
                     ) : (
                       <button
@@ -843,7 +867,7 @@ export default function BookingsPage() {
                         disabled={!promoCode.trim()}
                         className="h-9 px-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition-colors text-[11px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        გამოყენება
+                        {t('form.applyPromo')}
                       </button>
                     )}
                   </div>
@@ -853,7 +877,7 @@ export default function BookingsPage() {
                   {promoDiscount > 0 && (
                     <p className="mt-1 text-[10px] text-green-600 dark:text-green-400 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" />
-                      -{promoDiscount}% ფასდაკლება
+                      {t('form.promoApplied', { discount: promoDiscount.toString() })}
                     </p>
                   )}
                 </div>
@@ -873,13 +897,13 @@ export default function BookingsPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-[13px] font-bold text-amber-900 dark:text-amber-200 mb-1.5 flex items-center gap-1.5">
-                        <span>მნიშვნელოვანი ინფორმაცია</span>
+                        <span>{t('form.weatherNoticeTitle')}</span>
                         <span className="inline-block w-1.5 h-1.5 bg-amber-600 dark:bg-amber-400 rounded-full animate-pulse"></span>
                       </h4>
                       <p className="text-[11px] leading-relaxed text-amber-950/90 dark:text-amber-100/90 font-medium">
-                        პარაპლანით ფრენა პირდაპირ დამოკიდებულია ამინდის პირობებსა და უსაფრთხოების სტანდარტებზე. 
+                        {t('form.weatherNoticeText')}
                         <span className="inline-block mt-1 pt-1 border-t border-amber-400/30 dark:border-amber-600/30 w-full">
-                          ჯავშნის დადასტურების შემდეგ ოპერატორი დაგიკავშირდებათ და შეუთანხმებთ ზუსტ დროს ამინდის პროგნოზის შესაბამისად.
+                          {t('form.weatherNoticeConfirm')}
                         </span>
                       </p>
                     </div>
@@ -890,13 +914,13 @@ export default function BookingsPage() {
                 {/* Special Requests */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">დამატებითი შენიშვნები</label>
+                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.specialRequests')}</label>
                   <textarea
                     value={specialRequests}
                     onChange={(e) => setSpecialRequests(e.target.value)}
                     rows={2}
                     className="w-full px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all resize-none"
-                    placeholder="სპეციალური მოთხოვნები..."
+                    placeholder={t('form.specialRequestsPlaceholder')}
                   />
                 </div>
                 )}
@@ -981,7 +1005,7 @@ export default function BookingsPage() {
                   {/* Price Breakdown */}
                   <div className="pt-3 border-t border-gray-200 dark:border-white/10 space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="text-gray-600 dark:text-gray-400">ფასი × {numberOfPeople}</span>
+                      <span className="text-gray-600 dark:text-gray-400">{t('pricing.basePrice')} × {numberOfPeople}</span>
                       <span className="font-medium text-gray-900 dark:text-white">
                         {getCurrencySymbol()}{getSubtotal()}
                       </span>
@@ -989,7 +1013,7 @@ export default function BookingsPage() {
                     
                     {promoDiscount > 0 && (
                       <div className="flex justify-between text-xs">
-                        <span className="text-green-600 dark:text-green-500">ფასდაკლება ({promoDiscount}%)</span>
+                        <span className="text-green-600 dark:text-green-500">{t('pricing.discount')} ({promoDiscount}%)</span>
                         <span className="font-medium text-green-600 dark:text-green-500">
                           -{getCurrencySymbol()}{getDiscount()}
                         </span>
@@ -997,7 +1021,7 @@ export default function BookingsPage() {
                     )}
                     
                     <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-white/10">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">სულ</span>
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('pricing.total')}</span>
                       <span className="text-lg font-bold text-gray-900 dark:text-white">
                         {getCurrencySymbol()}{getTotalPrice()}
                       </span>
@@ -1015,12 +1039,12 @@ export default function BookingsPage() {
                       {isSubmitting ? (
                         <>
                           <div className="w-3.5 h-3.5 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin" />
-                          <span className="text-xs">მუშავდება...</span>
+                          <span className="text-xs">{t('actions.submitting')}</span>
                         </>
                       ) : (
                         <>
                           <CreditCard className="w-3.5 h-3.5" />
-                          დაჯავშნა
+                          {t('actions.confirmBooking')}
                         </>
                       )}
                     </button>

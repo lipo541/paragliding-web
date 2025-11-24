@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "Бронирование полета",
+    "subtitle": "Заполните форму и мы свяжемся с вами в ближайшее время",
+    "backToHome": "Вернуться на главную"
+  },
+  "steps": {
+    "selectLocation": "Выбор локации",
+    "bookingDetails": "Детали бронирования",
+    "confirmation": "Подтверждение"
+  },
+  "form": {
+    "selectCountry": "Выберите страну",
+    "selectLocation": "Выберите локацию",
+    "selectFlightType": "Выберите тип полета",
+    "loading": "Загрузка...",
+    "fullName": "Полное имя",
+    "fullNamePlaceholder": "Введите ваше полное имя",
+    "phone": "Номер телефона",
+    "phonePlaceholder": "+995 XXX XXX XXX",
+    "flightDate": "Дата полета",
+    "numberOfPeople": "Количество человек",
+    "contactMethod": "Способ связи",
+    "selectContactMethod": "Выберите способ связи",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "viber": "Viber",
+    "promoCode": "Промокод",
+    "promoCodePlaceholder": "Введите промокод",
+    "applyPromo": "Применить",
+    "promoApplied": "✓ Скидка {discount}% применена!",
+    "specialRequests": "Специальные пожелания",
+    "specialRequestsPlaceholder": "Есть ли у вас особые требования или пожелания?",
+    "required": "Обязательно",
+    "weatherNoticeTitle": "Важная информация",
+    "weatherNoticeText": "Полеты на параплане напрямую зависят от погодных условий и стандартов безопасности.",
+    "weatherNoticeConfirm": "После подтверждения бронирования оператор свяжется с вами и согласует точное время в соответствии с прогнозом погоды."
+  },
+  "summary": {
+    "bookingSummary": "Итоги бронирования",
+    "location": "Локация",
+    "flightType": "Тип полета",
+    "date": "Дата",
+    "people": "Человек",
+    "duration": "Длительность",
+    "features": "Особенности"
+  },
+  "pricing": {
+    "priceSummary": "Итоговая стоимость",
+    "basePrice": "Базовая цена",
+    "discount": "Скидка",
+    "total": "Итого",
+    "perPerson": "за человека",
+    "currency": "₾"
+  },
+  "errors": {
+    "fillAllFields": "Пожалуйста, заполните все обязательные поля",
+    "selectCountry": "Пожалуйста, выберите страну",
+    "selectLocation": "Пожалуйста, выберите локацию",
+    "selectFlightType": "Пожалуйста, выберите тип полета",
+    "selectContactMethod": "Пожалуйста, выберите способ связи",
+    "invalidPromo": "Неверный промокод",
+    "promoNotActive": "Промокод еще не активирован",
+    "promoExpired": "Срок действия промокода истек",
+    "promoLimitReached": "Лимит использования промокода исчерпан",
+    "promoRequiresAuth": "Для использования промокода требуется авторизация",
+    "promoAuthConfirm": "Для использования промокода войдите в систему или зарегистрируйтесь. Хотите перейти на страницу входа?",
+    "enterPromoCode": "Пожалуйста, введите промокод",
+    "bookingFailed": "Не удалось создать бронирование. Пожалуйста, попробуйте снова.",
+    "promoValidationFailed": "Не удалось проверить промокод"
+  },
+  "success": {
+    "bookingCreated": "Бронирование успешно создано!",
+    "thankYou": "Спасибо!",
+    "willContactSoon": "Мы свяжемся с вами в ближайшее время",
+    "bookingNumber": "Номер бронирования",
+    "checkEmail": "Проверьте электронную почту для подтверждения"
+  },
+  "actions": {
+    "confirmBooking": "Подтвердить бронирование",
+    "cancel": "Отмена",
+    "back": "Назад",
+    "continue": "Продолжить",
+    "submitting": "Отправка..."
+  }
+}

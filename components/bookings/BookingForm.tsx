@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { bookingSchema, type BookingFormData } from '@/lib/validations/booking';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Spinner from '@/components/ui/Spinner';
@@ -38,6 +39,7 @@ export default function BookingForm({
   flightTypes,
   currency = 'GEL',
 }: BookingFormProps) {
+  const { t } = useTranslation('bookings');
   const supabase = createClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidatingPromo, setIsValidatingPromo] = useState(false);
@@ -104,15 +106,15 @@ export default function BookingForm({
           discount: result.discount_percentage,
         });
         setValue('promo_discount', result.discount_percentage);
-        toast.success(`Promo code applied! ${result.discount_percentage}% discount`);
+        toast.success(t('form.promoApplied', { discount: result.discount_percentage.toString() }));
       } else {
         setPromoData(null);
         setValue('promo_discount', 0);
-        toast.error(result.error_message || 'Invalid promo code');
+        toast.error(result.error_message || t('errors.invalidPromo'));
       }
     } catch (error) {
       console.error('Promo validation error:', error);
-      toast.error('Failed to validate promo code');
+      toast.error(t('errors.promoValidationFailed'));
       setPromoData(null);
       setValue('promo_discount', 0);
     } finally {
@@ -179,13 +181,13 @@ export default function BookingForm({
         }
       }
 
-      toast.success('Booking created successfully!');
+      toast.success(t('success.bookingCreated'));
       
       // Redirect or reset form
       window.location.href = user ? `/${user.user_metadata?.locale || 'en'}/bookings` : '/';
     } catch (error) {
       console.error('Booking error:', error);
-      toast.error('Failed to create booking. Please try again.');
+      toast.error(t('errors.bookingFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -194,28 +196,28 @@ export default function BookingForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-2xl mx-auto">
       <div className="glass-card p-6 space-y-6">
-        <h2 className="text-2xl font-bold">Book Your Flight</h2>
+        <h2 className="text-2xl font-bold">{t('page.title')}</h2>
 
         {/* Full Name */}
         <Input
-          label="Full Name"
+          label={t('form.fullName')}
           error={errors.full_name?.message}
           {...register('full_name')}
-          placeholder="Enter your full name"
+          placeholder={t('form.fullNamePlaceholder')}
         />
 
         {/* Phone */}
         <Input
-          label="Phone Number"
+          label={t('form.phone')}
           type="tel"
           error={errors.phone?.message}
           {...register('phone')}
-          placeholder="+995 XXX XXX XXX"
+          placeholder={t('form.phonePlaceholder')}
         />
 
         {/* Flight Type */}
         <div>
-          <label className="block text-sm font-medium mb-2">Flight Type</label>
+          <label className="block text-sm font-medium mb-2">{t('summary.flightType')}</label>
           <select
             {...register('flight_type_id', {
               onChange: (e) => {
@@ -227,7 +229,7 @@ export default function BookingForm({
             })}
             className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 focus:border-white/40 focus:outline-none"
           >
-            <option value="">Select flight type</option>
+            <option value="">{t('form.selectFlightType')}</option>
             {flightTypes.map((ft) => (
               <option key={ft.id} value={ft.id}>
                 {ft.name} - {ft.price} {currency}
@@ -241,7 +243,7 @@ export default function BookingForm({
 
         {/* Date */}
         <Input
-          label="Flight Date"
+          label={t('form.flightDate')}
           type="date"
           error={errors.selected_date?.message}
           {...register('selected_date')}
@@ -249,7 +251,7 @@ export default function BookingForm({
 
         {/* Number of People */}
         <Input
-          label="Number of People"
+          label={t('form.numberOfPeople')}
           type="number"
           min={1}
           max={20}
@@ -259,21 +261,21 @@ export default function BookingForm({
 
         {/* Contact Method */}
         <div>
-          <label className="block text-sm font-medium mb-2">Preferred Contact Method</label>
+          <label className="block text-sm font-medium mb-2">{t('form.contactMethod')}</label>
           <select
             {...register('contact_method')}
             className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 focus:border-white/40 focus:outline-none"
           >
-            <option value="">Select contact method</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="telegram">Telegram</option>
-            <option value="viber">Viber</option>
+            <option value="">{t('form.selectContactMethod')}</option>
+            <option value="whatsapp">{t('form.whatsapp')}</option>
+            <option value="telegram">{t('form.telegram')}</option>
+            <option value="viber">{t('form.viber')}</option>
           </select>
         </div>
 
         {/* Promo Code */}
         <div>
-          <label className="block text-sm font-medium mb-2">Promo Code (Optional)</label>
+          <label className="block text-sm font-medium mb-2">{t('form.promoCode')}</label>
           <div className="flex gap-2">
             <Input
               {...register('promo_code', {
@@ -282,7 +284,7 @@ export default function BookingForm({
                   setPromoData(null);
                 },
               })}
-              placeholder="Enter promo code"
+              placeholder={t('form.promoCodePlaceholder')}
               className="flex-1"
             />
             <Button
@@ -291,24 +293,24 @@ export default function BookingForm({
               disabled={!promoCode || isValidatingPromo}
               variant="secondary"
             >
-              {isValidatingPromo ? <Spinner size="sm" /> : 'Apply'}
+              {isValidatingPromo ? <Spinner size="sm" /> : t('form.applyPromo')}
             </Button>
           </div>
           {promoData?.isValid && (
             <p className="text-green-500 text-sm mt-1">
-              ✓ {promoData.discount}% discount applied!
+              {t('form.promoApplied', { discount: promoData.discount.toString() })}
             </p>
           )}
         </div>
 
         {/* Special Requests */}
         <div>
-          <label className="block text-sm font-medium mb-2">Special Requests (Optional)</label>
+          <label className="block text-sm font-medium mb-2">{t('form.specialRequests')}</label>
           <textarea
             {...register('special_requests')}
             rows={3}
             maxLength={500}
-            placeholder="Any special requirements or requests?"
+            placeholder={t('form.specialRequestsPlaceholder')}
             className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 focus:border-white/40 focus:outline-none resize-none"
           />
         </div>
@@ -316,19 +318,19 @@ export default function BookingForm({
         {/* Price Summary */}
         {selectedFlightType && (
           <div className="glass-card p-4 space-y-2 bg-white/5">
-            <h3 className="font-semibold text-lg">Price Summary</h3>
+            <h3 className="font-semibold text-lg">{t('pricing.priceSummary')}</h3>
             <div className="flex justify-between text-sm">
-              <span>Base Price ({numberOfPeople} × {selectedFlightType.price} {currency})</span>
+              <span>{t('pricing.basePrice')} ({numberOfPeople} × {selectedFlightType.price} {currency})</span>
               <span>{basePrice.toFixed(2)} {currency}</span>
             </div>
             {promoData?.isValid && (
               <div className="flex justify-between text-sm text-green-500">
-                <span>Discount ({promoData.discount}%)</span>
+                <span>{t('pricing.discount')} ({promoData.discount}%)</span>
                 <span>-{discountAmount.toFixed(2)} {currency}</span>
               </div>
             )}
             <div className="flex justify-between font-bold text-lg border-t border-white/20 pt-2">
-              <span>Total</span>
+              <span>{t('pricing.total')}</span>
               <span>{totalPrice.toFixed(2)} {currency}</span>
             </div>
           </div>
@@ -336,7 +338,7 @@ export default function BookingForm({
 
         {/* Submit Button */}
         <Button type="submit" disabled={isSubmitting || !selectedFlightType} className="w-full">
-          {isSubmitting ? <Spinner /> : 'Confirm Booking'}
+          {isSubmitting ? <Spinner /> : t('actions.confirmBooking')}
         </Button>
       </div>
     </form>

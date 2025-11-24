@@ -1,0 +1,56 @@
+{
+  "error": {
+    "notFound": "Country not found",
+    "backToHome": "Back to home"
+  },
+  "hero": {
+    "rate": "Rate",
+    "changeRating": "Change",
+    "contact": "Contact Us",
+    "bookFlight": "Book a Flight"
+  },
+  "content": {
+    "readMore": "Read More",
+    "readLess": "Less"
+  },
+  "gallery": {
+    "photos": "Photos",
+    "photo": "Photo",
+    "videos": "Videos",
+    "video": "Video",
+    "nowPlaying": "Now Playing",
+    "playlist": "Playlist",
+    "now": "Now"
+  },
+  "locations": {
+    "title": "Flying Locations in Georgia"
+  },
+  "contact": {
+    "title": "Contact & Information",
+    "description": "Each location on our platform has unique flight prices, packages, and conditions.",
+    "visitText": "Visit ",
+    "locationsPage": "Locations page",
+    "detailsText": " for detailed information, or contact us directly:",
+    "messengers": "Messengers"
+  },
+  "comments": {
+    "title": "Comments"
+  },
+  "sidebar": {
+    "locations": "Locations",
+    "photos": "Photos",
+    "flyingSpots": "Flying Spots",
+    "bookFlight": "Book a Flight",
+    "readyForAdventure": "Ready for Adventure?",
+    "bookingDescription": "Book your tandem paragliding flight at any of our {count} locations",
+    "professionalPilots": "Professional pilots",
+    "certifiedEquipment": "Safety certified equipment",
+    "photoVideoIncluded": "Photo & video included",
+    "bookNow": "Book Now",
+    "helpText": "We will help you choose the best location and time for your flight"
+  },
+  "ratingModal": {
+    "title": "Rate Country",
+    "subtitle": "Your opinion matters"
+  }
+}

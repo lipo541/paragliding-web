@@ -1,0 +1,38 @@
+{
+  "title": "Registrieren",
+  "fullName": {
+    "label": "Vollständiger Name",
+    "placeholder": "Geben Sie Ihren vollständigen Namen ein"
+  },
+  "email": {
+    "label": "E-Mail",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Passwort",
+    "placeholder": "••••••••"
+  },
+  "confirmPassword": {
+    "label": "Passwort bestätigen",
+    "placeholder": "Passwort wiederholen"
+  },
+  "submit": "Konto erstellen",
+  "loading": "Lädt...",
+  "divider": "oder mit E-Mail",
+  "social": {
+    "google": "Mit Google fortfahren"
+  },
+  "haveAccount": "Haben Sie bereits ein Konto?",
+  "signIn": "Anmelden",
+  "agreement": "Mit der Erstellung eines Kontos stimmen Sie unseren",
+  "terms": "Nutzungsbedingungen",
+  "and": "und",
+  "privacy": "Datenschutzrichtlinien",
+  "errors": {
+    "allFields": "Bitte füllen Sie alle Felder aus",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
+    "passwordLength": "Passwort muss mindestens 6 Zeichen lang sein",
+    "registerFailed": "Registrierung fehlgeschlagen",
+    "authFailed": "Autorisierung fehlgeschlagen"
+  }
+}

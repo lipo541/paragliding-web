@@ -1,0 +1,50 @@
+{
+  "page": {
+    "title": "العروض الترويجية",
+    "subtitle": "العروض والخصومات النشطة",
+    "active": "نشط",
+    "loading": "جاري تحميل العروض..."
+  },
+  "filters": {
+    "title": "الفلاتر",
+    "search": "بحث",
+    "searchPlaceholder": "بحث...",
+    "location": "الموقع",
+    "allLocations": "الكل",
+    "sort": "ترتيب",
+    "sortBy": "ترتيب",
+    "newest": "الأحدث",
+    "highestDiscount": "الخصم",
+    "expiringSoon": "ينتهي قريبًا",
+    "clearFilters": "مسح",
+    "found": "تم العثور"
+  },
+  "card": {
+    "code": "الكود",
+    "discount": "خصم",
+    "expiringSoon": "ينتهي قريبًا",
+    "soon": "قريبًا",
+    "timeLeft": "الوقت المتبقي",
+    "daysLeft": "{days} يوم متبقي",
+    "hoursLeft": "{hours} ساعة متبقية",
+    "minutesLeft": "ينتهي",
+    "days": "أيام",
+    "hours": "ساعات",
+    "minutes": "دقائق",
+    "usage": "الاستخدام",
+    "copy": "نسخ",
+    "copied": "✓",
+    "book": "حجز",
+    "expired": "منتهي الصلاحية"
+  },
+  "empty": {
+    "title": "لم يتم العثور",
+    "message": "لم يتم العثور على رموز ترويجية بهذه المعايير",
+    "clearButton": "مسح"
+  },
+  "stats": {
+    "active": "نشط",
+    "avgDiscount": "متوسط الخصم",
+    "maxDiscount": "أقصى خصم"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Yorumlar",
+    "loadError": "Yorumlar yüklenemedi",
+    "noComments": "Henüz yorum yok. İlk sen ol!"
+  },
+  "item": {
+    "user": "Kullanıcı",
+    "justNow": "şimdi",
+    "edited": "düz.",
+    "awaitingModeration": "Onay bekliyor",
+    "like": "Beğen",
+    "dislike": "Beğenme",
+    "reply": "Yanıtla",
+    "replies": "yanıt",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "approve": "Onayla",
+    "reject": "Reddet",
+    "deleteConfirm": "Bu yorumu silmek istediğinizden emin misiniz?",
+    "rejectConfirm": "Bu yorumu reddetmek istediğinizden emin misiniz?",
+    "deleteError": "Yorum silinemedi",
+    "updateError": "Yorum güncellenemedi",
+    "approveError": "Onaylama başarısız",
+    "rejectError": "Reddetme başarısız",
+    "loginRequired": "Lütfen giriş yapın"
+  },
+  "input": {
+    "placeholder": "Yorum yazın...",
+    "replyPlaceholder": "Yanıt yazın...",
+    "emptyError": "Yorum boş olamaz",
+    "loginRequired": "Yorum yapmak için lütfen giriş yapın",
+    "published": "Yorum yayınlandı!",
+    "awaitingModeration": "Yorum gönderildi! Onaydan sonra görünecek.",
+    "submitError": "Yorum gönderilemedi",
+    "addEmoji": "Emoji ekle",
+    "send": "Gönder"
+  }
+}

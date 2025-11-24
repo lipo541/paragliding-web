@@ -1,0 +1,22 @@
+{
+  "modal": {
+    "defaultTitle": "Bewerten",
+    "defaultSubtitle": "Ihre Meinung zählt",
+    "clickToRate": "Klicken Sie auf die Sterne zum Bewerten"
+  },
+  "input": {
+    "loginRequired": "Bitte melden Sie sich an, um zu bewerten",
+    "saveError": "Bewertung konnte nicht gespeichert werden",
+    "deleteError": "Bewertung konnte nicht gelöscht werden",
+    "delete": "Löschen",
+    "saved": "Gespeichert!",
+    "saving": "Speichern...",
+    "labels": {
+      "poor": "Schlecht",
+      "average": "Durchschnittlich",
+      "good": "Gut",
+      "veryGood": "Sehr gut",
+      "excellent": "Ausgezeichnet"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Giriş Yap",
+  "email": {
+    "label": "E-posta",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Şifre",
+    "placeholder": "••••••••"
+  },
+  "submit": "Giriş Yap",
+  "loading": "Yükleniyor...",
+  "forgotPassword": "Şifrenizi mi unuttunuz?",
+  "register": "Kayıt Ol",
+  "divider": "veya",
+  "social": {
+    "google": "Google ile giriş yap"
+  },
+  "errors": {
+    "loginFailed": "Giriş başarısız",
+    "authFailed": "Yetkilendirme başarısız"
+  }
+}

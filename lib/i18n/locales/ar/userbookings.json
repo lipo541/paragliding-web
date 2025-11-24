@@ -1,0 +1,33 @@
+{
+  "title": "حجوزاتي",
+  "empty": "ليس لديك أي حجوزات بعد",
+  "status": {
+    "pending": "قيد المعالجة",
+    "confirmed": "مؤكد",
+    "cancelled": "ملغى",
+    "completed": "مكتمل"
+  },
+  "fields": {
+    "date": "التاريخ",
+    "people": "الأشخاص",
+    "contact": "جهة الاتصال",
+    "method": "الطريقة",
+    "promoCode": "الرمز الترويجي",
+    "comment": "تعليق"
+  },
+  "actions": {
+    "cancel": "إلغاء"
+  },
+  "dialog": {
+    "title": "إلغاء الحجز",
+    "message": "هل أنت متأكد أنك تريد إلغاء هذا الحجز؟",
+    "confirm": "نعم، إلغاء",
+    "cancel": "لا"
+  },
+  "messages": {
+    "authRequired": "الرجاء تسجيل الدخول",
+    "fetchError": "فشل تحميل الحجوزات",
+    "cancelSuccess": "تم إلغاء الحجز",
+    "cancelError": "فشل إلغاء الحجز"
+  }
+}

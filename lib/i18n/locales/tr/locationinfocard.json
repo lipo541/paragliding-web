@@ -1,0 +1,25 @@
+{
+  "months": {
+    "jan": "Oca",
+    "feb": "Şub",
+    "mar": "Mar",
+    "apr": "Nis",
+    "may": "May",
+    "jun": "Haz",
+    "jul": "Tem",
+    "aug": "Ağu",
+    "sep": "Eyl",
+    "oct": "Eki",
+    "nov": "Kas",
+    "dec": "Ara"
+  },
+  "difficulty": {
+    "beginner": "Başlangıç",
+    "intermediate": "Orta",
+    "advanced": "İleri",
+    "expert": "Uzman"
+  },
+  "altitude": "m",
+  "priceFrom": "başlayan",
+  "bookNow": "Şimdi rezerve et"
+}

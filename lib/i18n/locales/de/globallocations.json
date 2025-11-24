@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "Alle Standorte",
+    "subtitle": "Entdecken Sie die besten Gleitschirm-Standorte in Georgien und darüber hinaus",
+    "searchPlaceholder": "Schnellsuche - Standort wählen...",
+    "loading": "Standorte werden geladen...",
+    "locationBadge": "Standort",
+    "countryBadge": "Land",
+    "moreFlight": "weitere Flugart",
+    "notFound": "Standort nicht gefunden"
+  },
+  "stats": {
+    "location": "Standorte",
+    "country": "Länder",
+    "rating": "Bewertung"
+  },
+  "filters": {
+    "allCountries": "Alle Länder",
+    "searchPlaceholder": "Nach Name filtern...",
+    "sortByRating": "Bewertung (Hoch-Niedrig)",
+    "sortByName": "Name (A-Z)",
+    "sortByAltitude": "Höhe (Hoch-Niedrig)",
+    "ratingShort": "Bewertung",
+    "nameShort": "Name",
+    "altitudeShort": "Höhe",
+    "clearFilters": "Filter löschen",
+    "clear": "Löschen",
+    "resultsFound": "Gefunden",
+    "activeFilters": "Aktiv:"
+  },
+  "empty": {
+    "title": "Standort nicht gefunden",
+    "description": "Versuchen Sie andere Suchkriterien",
+    "viewAll": "Alle Standorte anzeigen"
+  },
+  "country": {
+    "locations": "Standorte",
+    "countryPage": "Länderseite →"
+  },
+  "difficulty": {
+    "beginner": "Anfänger",
+    "intermediate": "Mittelstufe",
+    "advanced": "Fortgeschritten",
+    "expert": "Experte"
+  },
+  "location": {
+    "bookNow": "Jetzt buchen",
+    "book": "Buchen"
+  },
+  "months": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+}

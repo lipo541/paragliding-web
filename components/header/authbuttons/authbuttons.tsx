@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/lib/supabase/SupabaseProvider';
 import { User } from '@supabase/supabase-js';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 export default function AuthButtons() {
   const pathname = usePathname();
@@ -13,6 +14,7 @@ export default function AuthButtons() {
   const [userProfile, setUserProfile] = useState<{ full_name: string | null; role: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const { client, session } = useSupabase();
+  const { t } = useTranslation('auth');
 
   useEffect(() => {
     // Check current user
@@ -67,7 +69,7 @@ export default function AuthButtons() {
             onClick={handleLogout}
             className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
           >
-            გასვლა
+            {t('logout')}
           </button>
         </div>
       );
@@ -84,13 +86,13 @@ export default function AuthButtons() {
         href={`/${locale}/login`}
         className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
       >
-        შესვლა
+        {t('login')}
       </Link>
       <Link
         href={`/${locale}/register`}
         className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
       >
-        რეგისტრაცია
+        {t('register')}
       </Link>
     </div>
   );

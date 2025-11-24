@@ -1,0 +1,54 @@
+{
+  "error": {
+    "notFound": "Lokasyon bulunamadı",
+    "backButton": "Geri dön"
+  },
+  "hero": {
+    "rate": "Değerlendir",
+    "changeRating": "Değiştir",
+    "contact": "İletişim",
+    "bookFlight": "Uçuş rezervasyonu yap"
+  },
+  "content": {
+    "readMore": "Devamını oku",
+    "showLess": "Daha az göster",
+    "aboutLocation": "Lokasyon hakkında"
+  },
+  "flightTypes": {
+    "title": "Paketler",
+    "startFrom": "Başlangıç",
+    "rateButton": "Değerlendir",
+    "changeButton": "Değiştir"
+  },
+  "gallery": {
+    "title": "Galeri",
+    "photos": "Fotoğraflar",
+    "videos": "Videolar"
+  },
+  "map": {
+    "title": "Harita"
+  },
+  "contact": {
+    "title": "İletişim & Bilgi",
+    "description": "Platformumuzdaki her lokasyonun benzersiz uçuş fiyatları, paketleri ve koşulları vardır.",
+    "visitText": "Ziyaret et ",
+    "locationsPage": "Lokasyonlar sayfası",
+    "detailsText": " ayrıntılı bilgi için veya bize doğrudan ulaşın:",
+    "messengers": "Mesajlaşma"
+  },
+  "sidebar": {
+    "bookNow": "Şimdi rezerve et",
+    "experienceText": "{locationName} bölgesinde unutulmaz bir uçuş deneyimi yaşayın. Hemen rezerve edin!",
+    "flights": "Uçuşlar",
+    "photos": "Fotoğraflar"
+  },
+  "quickInfo": {
+    "bestSeason": "En İyi Sezon",
+    "yearRound": "Tüm yıl",
+    "flightConditions": "Uçuş Koşulları",
+    "thermalAndDynamic": "Termal & Dinamik"
+  },
+  "ratingModal": {
+    "title": "Lokasyonu değerlendirin"
+  }
+}

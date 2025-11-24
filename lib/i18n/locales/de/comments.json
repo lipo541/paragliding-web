@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Kommentare",
+    "loadError": "Kommentare konnten nicht geladen werden",
+    "noComments": "Noch keine Kommentare. Seien Sie der Erste!"
+  },
+  "item": {
+    "user": "Benutzer",
+    "justNow": "gerade eben",
+    "edited": "bearb.",
+    "awaitingModeration": "Wartet auf Freigabe",
+    "like": "Gefällt mir",
+    "dislike": "Gefällt mir nicht",
+    "reply": "Antworten",
+    "replies": "Antwort",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "approve": "Genehmigen",
+    "reject": "Ablehnen",
+    "deleteConfirm": "Möchten Sie diesen Kommentar wirklich löschen?",
+    "rejectConfirm": "Möchten Sie diesen Kommentar wirklich ablehnen?",
+    "deleteError": "Kommentar konnte nicht gelöscht werden",
+    "updateError": "Kommentar konnte nicht aktualisiert werden",
+    "approveError": "Genehmigung fehlgeschlagen",
+    "rejectError": "Ablehnung fehlgeschlagen",
+    "loginRequired": "Bitte melden Sie sich an"
+  },
+  "input": {
+    "placeholder": "Kommentar schreiben...",
+    "replyPlaceholder": "Antwort schreiben...",
+    "emptyError": "Kommentar darf nicht leer sein",
+    "loginRequired": "Bitte melden Sie sich an, um zu kommentieren",
+    "published": "Kommentar veröffentlicht!",
+    "awaitingModeration": "Kommentar gesendet! Er erscheint nach der Freigabe.",
+    "submitError": "Kommentar konnte nicht gesendet werden",
+    "addEmoji": "Emoji hinzufügen",
+    "send": "Senden"
+  }
+}

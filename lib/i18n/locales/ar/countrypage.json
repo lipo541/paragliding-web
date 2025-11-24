@@ -1,0 +1,56 @@
+{
+  "error": {
+    "notFound": "الدولة غير موجودة",
+    "backToHome": "العودة للرئيسية"
+  },
+  "hero": {
+    "rate": "تقييم",
+    "changeRating": "تغيير",
+    "contact": "اتصل بنا",
+    "bookFlight": "احجز رحلة"
+  },
+  "content": {
+    "readMore": "اقرأ المزيد",
+    "readLess": "أقل"
+  },
+  "gallery": {
+    "photos": "صور",
+    "photo": "صورة",
+    "videos": "فيديوهات",
+    "video": "فيديو",
+    "nowPlaying": "يتم التشغيل الآن",
+    "playlist": "قائمة التشغيل",
+    "now": "الآن"
+  },
+  "locations": {
+    "title": "مواقع الطيران في جورجيا"
+  },
+  "contact": {
+    "title": "معلومات الاتصال",
+    "description": "جميع المواقع على منصتنا لديها أسعار رحلات وباقات وشروط مختلفة.",
+    "visitText": "قم بزيارة ",
+    "locationsPage": "صفحة المواقع",
+    "detailsText": " للحصول على معلومات مفصلة أو اتصل بنا مباشرة:",
+    "messengers": "المراسلة"
+  },
+  "comments": {
+    "title": "التعليقات"
+  },
+  "sidebar": {
+    "locations": "المواقع",
+    "photos": "الصور",
+    "flyingSpots": "أماكن الطيران",
+    "bookFlight": "احجز رحلة",
+    "readyForAdventure": "هل أنت مستعد للمغامرة؟",
+    "bookingDescription": "احجز رحلة طيران تندم في أي من مواقعنا الـ {count}",
+    "professionalPilots": "طيارون محترفون",
+    "certifiedEquipment": "معدات معتمدة للسلامة",
+    "photoVideoIncluded": "الصور والفيديو متضمنة",
+    "bookNow": "احجز الآن",
+    "helpText": "سنساعدك في اختيار أفضل موقع ووقت لرحلتك"
+  },
+  "ratingModal": {
+    "title": "قيّم البلد",
+    "subtitle": "رأيك مهم"
+  }
+}

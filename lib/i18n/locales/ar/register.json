@@ -1,0 +1,38 @@
+{
+  "title": "التسجيل",
+  "fullName": {
+    "label": "الاسم الكامل",
+    "placeholder": "أدخل اسمك الكامل"
+  },
+  "email": {
+    "label": "البريد الإلكتروني",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "كلمة المرور",
+    "placeholder": "••••••••"
+  },
+  "confirmPassword": {
+    "label": "تأكيد كلمة المرور",
+    "placeholder": "أعد إدخال كلمة المرور"
+  },
+  "submit": "إنشاء حساب",
+  "loading": "جاري التحميل...",
+  "divider": "أو بالبريد الإلكتروني",
+  "social": {
+    "google": "المتابعة مع Google"
+  },
+  "haveAccount": "هل لديك حساب بالفعل؟",
+  "signIn": "تسجيل الدخول",
+  "agreement": "بإنشاء حساب، فإنك توافق على",
+  "terms": "شروط الخدمة",
+  "and": "و",
+  "privacy": "سياسة الخصوصية",
+  "errors": {
+    "allFields": "يرجى ملء جميع الحقول",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "passwordLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "registerFailed": "فشل التسجيل",
+    "authFailed": "فشل التفويض"
+  }
+}

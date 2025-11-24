@@ -1,0 +1,25 @@
+{
+  "months": {
+    "jan": "იან",
+    "feb": "თებ",
+    "mar": "მარ",
+    "apr": "აპრ",
+    "may": "მაი",
+    "jun": "ივნ",
+    "jul": "ივლ",
+    "aug": "აგვ",
+    "sep": "სექ",
+    "oct": "ოქტ",
+    "nov": "ნოე",
+    "dec": "დეკ"
+  },
+  "difficulty": {
+    "beginner": "დამწყები",
+    "intermediate": "საშუალო",
+    "advanced": "პროფი",
+    "expert": "ექსპერტი"
+  },
+  "altitude": "მ",
+  "priceFrom": "-დან",
+  "bookNow": "დაჯავშნე ახლავე"
+}

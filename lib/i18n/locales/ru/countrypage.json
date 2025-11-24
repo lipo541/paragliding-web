@@ -1,0 +1,56 @@
+{
+  "error": {
+    "notFound": "Страна не найдена",
+    "backToHome": "На главную"
+  },
+  "hero": {
+    "rate": "Оценить",
+    "changeRating": "Изменить",
+    "contact": "Связаться",
+    "bookFlight": "Забронировать полёт"
+  },
+  "content": {
+    "readMore": "Читать далее",
+    "readLess": "Меньше"
+  },
+  "gallery": {
+    "photos": "Фото",
+    "photo": "Фото",
+    "videos": "Видео",
+    "video": "Видео",
+    "nowPlaying": "Играет",
+    "playlist": "Плейлист",
+    "now": "Сейчас"
+  },
+  "locations": {
+    "title": "Локации для полетов в Грузии"
+  },
+  "contact": {
+    "title": "Контакт и информация",
+    "description": "У всех локаций на нашей платформе разные цены полетов, пакеты и условия.",
+    "visitText": "Посетите ",
+    "locationsPage": "страницу локаций",
+    "detailsText": " для подробной информации или свяжитесь с нами напрямую:",
+    "messengers": "Мессенджеры"
+  },
+  "comments": {
+    "title": "Комментарии"
+  },
+  "sidebar": {
+    "locations": "Локации",
+    "photos": "Фото",
+    "flyingSpots": "Места",
+    "bookFlight": "Забронировать",
+    "readyForAdventure": "Готовы к приключению?",
+    "bookingDescription": "Забронируйте тандемный полет на любой из {count} локаций",
+    "professionalPilots": "Профессиональные пилоты",
+    "certifiedEquipment": "Сертифицированное оборудование",
+    "photoVideoIncluded": "Фото и видео включены",
+    "bookNow": "Забронировать",
+    "helpText": "Мы поможем выбрать лучшую локацию и время для полета"
+  },
+  "ratingModal": {
+    "title": "Оцените страну",
+    "subtitle": "Ваше мнение очень важно"
+  }
+}

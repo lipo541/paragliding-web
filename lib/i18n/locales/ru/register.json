@@ -1,0 +1,38 @@
+{
+  "title": "Регистрация",
+  "fullName": {
+    "label": "Полное имя",
+    "placeholder": "Введите ваше полное имя"
+  },
+  "email": {
+    "label": "Эл. почта",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Пароль",
+    "placeholder": "••••••••"
+  },
+  "confirmPassword": {
+    "label": "Подтвердите пароль",
+    "placeholder": "Повторите пароль"
+  },
+  "submit": "Создать аккаунт",
+  "loading": "Загрузка...",
+  "divider": "или с эл. почтой",
+  "social": {
+    "google": "Продолжить с Google"
+  },
+  "haveAccount": "Уже есть аккаунт?",
+  "signIn": "Войти",
+  "agreement": "Создавая аккаунт, вы соглашаетесь с нашими",
+  "terms": "Условиями обслуживания",
+  "and": "и",
+  "privacy": "Политикой конфиденциальности",
+  "errors": {
+    "allFields": "Пожалуйста, заполните все поля",
+    "passwordMismatch": "Пароли не совпадают",
+    "passwordLength": "Пароль должен содержать минимум 6 символов",
+    "registerFailed": "Не удалось зарегистрироваться",
+    "authFailed": "Не удалось авторизоваться"
+  }
+}

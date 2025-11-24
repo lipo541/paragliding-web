@@ -5,6 +5,7 @@ import { useSupabase } from '@/lib/supabase/SupabaseProvider';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Grid, List, MapPin, Filter, ChevronDown, ChevronUp, TrendingUp, Globe, Star, X } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 // --- Interfaces ---
 
@@ -13,9 +14,15 @@ interface Country {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
   slug_ka: string;
   slug_en: string;
   slug_ru: string;
+  slug_ar: string;
+  slug_de: string;
+  slug_tr: string;
   og_image_url?: string;
   cached_rating?: number;
   cached_rating_count?: number;
@@ -34,9 +41,15 @@ interface Location {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
   slug_ka: string;
   slug_en: string;
   slug_ru: string;
+  slug_ar: string;
+  slug_de: string;
+  slug_tr: string;
   og_image_url?: string;
   hero_image_url?: string;
   cached_rating?: number;
@@ -57,12 +70,15 @@ type ViewMode = 'grid' | 'list';
 type SortOption = 'rating' | 'name' | 'altitude';
 
 export default function GlobalLocations({ locale }: GlobalLocationsProps) {
+  // Translation hook
+  const { t } = useTranslation('globallocations');
+  
   // --- State Management ---
   const [countries, setCountries] = useState<Country[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(''); // Sticky bar-ის ფილტრაციის search
-  const [heroSearchQuery, setHeroSearchQuery] = useState(''); // Hero-ს dropdown search
+  const [searchQuery, setSearchQuery] = useState('');
+  const [heroSearchQuery, setHeroSearchQuery] = useState('');
   const [isHeroSearchOpen, setIsHeroSearchOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
@@ -85,26 +101,36 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
   // --- Helper Functions ---
   
   const getLocalizedName = (obj: any, field: string) => {
+    if (!obj) return '';
+    const localizedValue = obj?.[`${field}_${locale}`];
+    if (localizedValue) return localizedValue;
+    
+    // Fallback logic: ar/de/tr → en → ka
+    if (['ar', 'de', 'tr'].includes(locale)) {
+      return obj?.[`${field}_en`] || obj?.[`${field}_ka`] || '';
+    }
     return obj?.[`${field}_ka`] || obj?.[`${field}_en`] || '';
   };
 
   const getLocalizedSlug = (obj: any) => {
-    return obj?.[`slug_${locale}`] || obj?.[`slug_en`] || '';
+    if (!obj) return '';
+    const localizedSlug = obj?.[`slug_${locale}`];
+    if (localizedSlug) return localizedSlug;
+    
+    // Fallback logic: ar/de/tr → en → ka
+    if (['ar', 'de', 'tr'].includes(locale)) {
+      return obj?.[`slug_en`] || obj?.[`slug_ka`] || '';
+    }
+    return obj?.[`slug_ka`] || obj?.[`slug_en`] || '';
   };
 
   const getMonthName = (month: number) => {
-    const months = ['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'];
+    const months = t('months') as unknown as string[];
     return months[month - 1] || '';
   };
 
   const getDifficultyLabel = (level: string) => {
-    const labels: { [key: string]: string } = {
-      beginner: 'დამწყები',
-      intermediate: 'საშუალო',
-      advanced: 'პროფი',
-      expert: 'ექსპერტი'
-    };
-    return labels[level] || level;
+    return t(`difficulty.${level}`) || level;
   };
 
   const getDifficultyColor = (level: string) => {
@@ -129,7 +155,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
         // Fetch countries (public data, no auth required)
         const { data: countriesData, error: countriesError } = await supabase
           .from('countries')
-          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, og_image_url, cached_rating, cached_rating_count')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, og_image_url, cached_rating, cached_rating_count')
           .eq('is_active', true)
           .order('name_ka', { ascending: true });
 
@@ -142,7 +168,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
         // Fetch locations (public data, no auth required)
         const { data: locationsData, error: locationsError } = await supabase
           .from('locations')
-          .select('id, country_id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
+          .select('id, country_id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
           .order('name_ka', { ascending: true });
 
         if (locationsError) {
@@ -165,12 +191,14 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
           const locationPage = locationPagesData?.find((lp: any) => lp.location_id === loc.id);
           const heroImageUrl = locationPage?.content?.shared_images?.hero_image?.url;
           
-          // Extract flight types and prices from content.ka.flight_types
-          const kaFlightTypes = locationPage?.content?.ka?.flight_types || [];
+          // Extract flight types and prices from current locale with fallback
+          const localeFlightTypes = locationPage?.content?.[locale]?.flight_types || 
+                                    locationPage?.content?.en?.flight_types || 
+                                    locationPage?.content?.ka?.flight_types || [];
           const sharedFlightTypes = locationPage?.content?.shared_flight_types || [];
           
-          // Merge ka flight types with shared prices
-          const flightTypes = kaFlightTypes.map((ft: any) => {
+          // Merge locale flight types with shared prices
+          const flightTypes = localeFlightTypes.map((ft: any) => {
             const shared = sharedFlightTypes.find((s: any) => String(s.id) === String(ft.shared_id));
             return {
               name: ft.name,
@@ -238,6 +266,11 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
       const currentScroll = window.scrollY;
       setScrollY(currentScroll);
       
+      // Close hero search dropdown on scroll
+      if (isHeroSearchOpen) {
+        setIsHeroSearchOpen(false);
+      }
+      
       if (currentScroll > THRESHOLD && heroVisible) {
         setHeroVisible(false);
       } else if (currentScroll <= 50 && !heroVisible) {
@@ -247,7 +280,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [heroVisible]);
+  }, [heroVisible, isHeroSearchOpen]);
 
   // Ref for main content area
   const contentRef = useRef<HTMLDivElement>(null);
@@ -372,7 +405,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-3 border-foreground/20 border-t-foreground rounded-full animate-spin" />
-          <p className="text-sm text-foreground/60 animate-pulse">იტვირთება ლოკაციები...</p>
+          <p className="text-sm text-foreground/60 animate-pulse">{t('hero.loading')}</p>
         </div>
       </div>
     );
@@ -413,7 +446,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
       {/* Hero Section - Compact for Mobile - with Hysteresis Fade */}
       <div
         ref={heroRef}
-        className="relative min-h-[50vh] lg:min-h-[60vh] w-full flex items-center justify-center transition-all duration-500 ease-out"
+        className="relative z-[60] min-h-[50vh] lg:min-h-[60vh] w-full flex items-center justify-center transition-all duration-500 ease-out"
         style={{
           opacity: heroVisible ? 1 : 0,
           transform: heroVisible ? 'translateY(0)' : 'translateY(-50px)',
@@ -425,10 +458,10 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
             {/* Main Heading */}
             <div className="space-y-1.5 lg:space-y-3">
               <h1 className="text-2xl lg:text-5xl xl:text-6xl font-bold text-foreground">
-                ყველა ლოკაცია
+                {t('hero.title')}
               </h1>
               <p className="text-sm lg:text-lg text-foreground/80 max-w-2xl mx-auto px-4">
-                აღმოაჩინე პარაპლანერიზმის საუკეთესო ლოკაციები საქართველოში და მის ფარგლებს გარეთ
+                {t('hero.subtitle')}
               </p>
             </div>
 
@@ -448,7 +481,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                     // Delay to allow click on dropdown items
                     setTimeout(() => setIsHeroSearchOpen(false), 300);
                   }}
-                  placeholder="სწრაფი ძებნა - აირჩიე ლოკაცია..."
+                  placeholder={t('hero.searchPlaceholder')}
                   className="w-full pl-12 pr-12 py-4 text-base rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all text-foreground placeholder:text-foreground/50 shadow-xl"
                 />
                 {heroSearchQuery && (
@@ -465,7 +498,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
 
                 {/* Dropdown Results */}
                 {isHeroSearchOpen && heroSearchResults.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/95 dark:bg-black/95 border border-white/50 dark:border-white/20 rounded-xl shadow-2xl overflow-hidden z-50 max-h-[500px] overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/95 dark:bg-black/95 border border-white/50 dark:border-white/20 rounded-xl shadow-2xl overflow-hidden z-[100] max-h-[500px] overflow-y-auto">
                     {heroSearchResults.map((result, index) => {
                       if (result.type === 'location') {
                         // LOCATION CARD - with image and country info
@@ -478,7 +511,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                           <Link
                             key={`location-${location.id}`}
                             href={`/${locale}/${countrySlug}/${locationSlug}`}
-                            className="block p-3 hover:bg-white/50 dark:hover:bg-black/50 transition-all border-b border-foreground/5 last:border-0 group"
+                            className="block p-3 hover:bg-black/5 dark:hover:bg-white/10 transition-all border-b border-foreground/5 last:border-0 group"
                             onMouseDown={(e) => {
                               e.preventDefault();
                               setHeroSearchQuery('');
@@ -503,7 +536,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                 )}
                                 {/* Location Badge */}
                                 <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md text-[9px] font-bold bg-blue-500 text-white shadow-md backdrop-blur-sm">
-                                  ლოკაცია
+                                  {t('hero.locationBadge')}
                                 </div>
                                 {/* Rating Badge on Image */}
                                 {location.cached_rating && (
@@ -558,7 +591,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                     ))}
                                     {location.flight_types.length > 2 && (
                                       <p className="text-[10px] text-foreground/50 italic text-center pt-0.5">
-                                        +{location.flight_types.length - 2} სხვა ფრენის ტიპი
+                                        +{location.flight_types.length - 2} {t('hero.moreFlight')}
                                       </p>
                                     )}
                                   </div>
@@ -590,7 +623,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                               <Globe className="w-8 h-8 text-green-500" />
                               {/* Country Badge */}
                               <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500 text-white shadow-lg">
-                                ქვეყანა
+                                {t('hero.countryBadge')}
                               </div>
                             </div>
 
@@ -600,7 +633,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                 {getLocalizedName(country, 'name')}
                               </p>
                               <p className="text-sm text-foreground/60">
-                                {countryLocationsCount} ლოკაცია
+                                {countryLocationsCount} {t('country.locations')}
                               </p>
                             </div>
 
@@ -622,9 +655,9 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
 
                 {/* No Results Message */}
                 {isHeroSearchOpen && heroSearchQuery && heroSearchResults.length === 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/95 dark:bg-black/95 border border-white/50 dark:border-white/20 rounded-xl shadow-2xl p-6 text-center z-50">
+                  <div className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/95 dark:bg-black/95 border border-white/50 dark:border-white/20 rounded-xl shadow-2xl p-6 text-center z-[100]">
                     <p className="text-foreground/60">
-                      "{heroSearchQuery}" - ვერ მოიძებნა ლოკაცია
+                      "{heroSearchQuery}" - {t('hero.notFound')}
                     </p>
                   </div>
                 )}
@@ -639,7 +672,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   <MapPin className="w-4 h-4 lg:w-6 lg:h-6 text-blue-500" />
                   <p className="text-xl lg:text-3xl font-bold text-foreground">{totalLocations}</p>
                 </div>
-                <p className="text-[10px] lg:text-sm text-foreground/80 font-medium">ლოკაცია</p>
+                <p className="text-[10px] lg:text-sm text-foreground/80 font-medium">{t('stats.location')}</p>
               </div>
 
               {/* Total Countries */}
@@ -648,7 +681,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   <Globe className="w-4 h-4 lg:w-6 lg:h-6 text-green-500" />
                   <p className="text-xl lg:text-3xl font-bold text-foreground">{totalCountries}</p>
                 </div>
-                <p className="text-[10px] lg:text-sm text-foreground/80 font-medium">ქვეყანა</p>
+                <p className="text-[10px] lg:text-sm text-foreground/80 font-medium">{t('stats.country')}</p>
               </div>
 
               {/* Average Rating */}
@@ -657,7 +690,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   <Star className="w-4 h-4 lg:w-6 lg:h-6 text-yellow-500 fill-yellow-500" />
                   <p className="text-xl lg:text-3xl font-bold text-foreground">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</p>
                 </div>
-                <p className="text-[10px] lg:text-sm text-foreground/80 font-medium">რეიტინგი</p>
+                <p className="text-[10px] lg:text-sm text-foreground/80 font-medium">{t('stats.rating')}</p>
               </div>
             </div>
           </div>
@@ -684,7 +717,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   <Filter className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" />
                   <span className="truncate">
                     {selectedCountry === 'all' 
-                      ? 'ყველა ქვეყანა' 
+                      ? t('filters.allCountries') 
                       : getLocalizedName(countries.find(c => c.id === selectedCountry), 'name')}
                   </span>
                   <ChevronDown className={`w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
@@ -697,11 +730,11 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                         setSelectedCountry('all');
                         setIsFilterOpen(false);
                       }}
-                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-white/50 dark:hover:bg-black/50 transition-all ${
+                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all ${
                         selectedCountry === 'all' ? 'bg-blue-500/10 font-semibold' : ''
                       }`}
                     >
-                      ყველა ქვეყანა
+                      {t('filters.allCountries')}
                     </button>
                     {countries.map((country) => (
                       <button
@@ -710,7 +743,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                           setSelectedCountry(country.id);
                           setIsFilterOpen(false);
                         }}
-                        className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-white/50 dark:hover:bg-black/50 transition-all ${
+                        className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all ${
                           selectedCountry === country.id ? 'bg-blue-500/10 font-semibold' : ''
                         }`}
                       >
@@ -728,7 +761,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="ფილტრაცია სახელით..."
+                  placeholder={t('filters.searchPlaceholder')}
                   className="w-full pl-9 lg:pl-10 pr-9 lg:pr-10 py-1.5 lg:py-2 text-xs lg:text-sm rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 outline-none transition-all text-foreground placeholder:text-foreground/50 shadow-lg"
                 />
                 {searchQuery && (
@@ -752,7 +785,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                 >
                   <TrendingUp className="w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0" />
                   <span className="truncate">
-                    {sortBy === 'rating' ? 'რეიტინგი' : sortBy === 'name' ? 'სახელი' : 'სიმაღლე'}
+                    {sortBy === 'rating' ? t('filters.ratingShort') : sortBy === 'name' ? t('filters.nameShort') : t('filters.altitudeShort')}
                   </span>
                   <ChevronDown className={`w-3.5 h-3.5 lg:w-4 lg:h-4 flex-shrink-0 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -764,33 +797,33 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                         setSortBy('rating');
                         setIsSortOpen(false);
                       }}
-                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-white/50 dark:hover:bg-black/50 transition-all ${
+                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all ${
                         sortBy === 'rating' ? 'bg-blue-500/10 font-semibold' : ''
                       }`}
                     >
-                      რეიტინგი (მაღალი-დაბალი)
+                      {t('filters.sortByRating')}
                     </button>
                     <button
                       onClick={() => {
                         setSortBy('name');
                         setIsSortOpen(false);
                       }}
-                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-white/50 dark:hover:bg-black/50 transition-all ${
+                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all ${
                         sortBy === 'name' ? 'bg-blue-500/10 font-semibold' : ''
                       }`}
                     >
-                      სახელი (ა-ჰ)
+                      {t('filters.sortByName')}
                     </button>
                     <button
                       onClick={() => {
                         setSortBy('altitude');
                         setIsSortOpen(false);
                       }}
-                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-white/50 dark:hover:bg-black/50 transition-all ${
+                      className={`w-full px-4 py-3 text-sm text-left text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all ${
                         sortBy === 'altitude' ? 'bg-blue-500/10 font-semibold' : ''
                       }`}
                     >
-                      სიმაღლე (მაღალი-დაბალი)
+                      {t('filters.sortByAltitude')}
                     </button>
                   </div>
                 )}
@@ -803,8 +836,8 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                   className="flex items-center gap-1.5 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm rounded-lg backdrop-blur-lg bg-red-500/10 dark:bg-red-500/20 border border-red-500/30 hover:bg-red-500/20 dark:hover:bg-red-500/30 transition-all text-red-600 dark:text-red-400 shadow-lg"
                 >
                   <X className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  <span className="hidden lg:inline">გასუფთავება</span>
-                  <span className="lg:hidden">Clear</span>
+                  <span className="hidden lg:inline">{t('filters.clearFilters')}</span>
+                  <span className="lg:hidden">{t('filters.clear')}</span>
                 </button>
               )}
             </div>
@@ -813,7 +846,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
             <div className="flex items-center justify-between gap-2 lg:gap-3 w-full lg:w-auto">
               {/* Results Count - Mobile First */}
               <p className="text-[10px] lg:text-xs text-foreground/70 order-1 lg:order-2">
-                ნაპოვნია <span className="font-semibold text-foreground">{sortedLocations.length}</span>
+                {t('filters.resultsFound')} <span className="font-semibold text-foreground">{sortedLocations.length}</span>
               </p>
               
               {/* View Mode Toggle */}
@@ -847,7 +880,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
           {/* Active Filter Badges */}
           {hasActiveFilters && (
             <div className="flex items-center gap-1.5 lg:gap-2 mt-2 lg:mt-3 flex-wrap">
-              <span className="text-[10px] lg:text-xs text-foreground/70">აქტიური:</span>
+              <span className="text-[10px] lg:text-xs text-foreground/70">{t('filters.activeFilters')}</span>
               
               {selectedCountry !== 'all' && (
                 <span className="flex items-center gap-1 lg:gap-1.5 px-2 lg:px-3 py-0.5 lg:py-1 text-[10px] lg:text-xs rounded-full backdrop-blur-lg bg-blue-500/10 border border-blue-500/30 text-blue-600 dark:text-blue-400">
@@ -885,13 +918,13 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 mb-6 shadow-xl">
               <MapPin className="w-10 h-10 text-foreground/40" />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">ლოკაცია ვერ მოიძებნა</h3>
-            <p className="text-foreground/70 mb-6">სცადეთ სხვა ძიების კრიტერიუმები</p>
+            <h3 className="text-xl font-bold text-foreground mb-2">{t('empty.title')}</h3>
+            <p className="text-foreground/70 mb-6">{t('empty.description')}</p>
             <button
               onClick={clearFilters}
               className="px-6 py-3 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 transition-all text-foreground font-medium shadow-xl"
             >
-              ყველა ლოკაციის ნახვა
+              {t('empty.viewAll')}
             </button>
           </div>
         ) : (
@@ -924,7 +957,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                           
                           <div className="flex items-center gap-2 lg:gap-3 flex-wrap">
                             <span className="text-xs lg:text-sm text-foreground/70 whitespace-nowrap">
-                              {countryLocations.length} ლოკაცია
+                              {countryLocations.length} {t('country.locations')}
                             </span>
                             
                             {country.cached_rating && country.cached_rating > 0 && (
@@ -947,7 +980,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                         href={`/${locale}/locations/${getLocalizedSlug(country)}`}
                         className="px-3 py-1.5 lg:px-4 lg:py-2 text-xs lg:text-sm rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 transition-all text-foreground font-medium shadow-lg text-center lg:whitespace-nowrap"
                       >
-                        ქვეყნის გვერდი →
+                        {t('country.countryPage')}
                       </Link>
                     </div>
                   </div>
@@ -1054,7 +1087,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                   }}
                                   className="w-full mt-2 lg:mt-3 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] z-10 relative"
                                 >
-                                  დაჯავშნე ახლავე
+                                  {t('location.bookNow')}
                                 </button>
                               </div>
                               
@@ -1165,7 +1198,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
                                 }}
                                 className="px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold rounded-md lg:rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white shadow-md hover:shadow-lg transition-all duration-300 flex-shrink-0 z-10 relative"
                               >
-                                დაჯავშნე
+                                {t('location.book')}
                               </button>
 
                               {/* Clickable overlay for card */}

@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "جميع المواقع",
+    "subtitle": "اكتشف أفضل مواقع الطيران الشراعي في جورجيا وخارجها",
+    "searchPlaceholder": "بحث سريع - اختر موقعًا...",
+    "loading": "تحميل المواقع...",
+    "locationBadge": "موقع",
+    "countryBadge": "دولة",
+    "moreFlight": "نوع طيران آخر",
+    "notFound": "الموقع غير موجود"
+  },
+  "stats": {
+    "location": "مواقع",
+    "country": "دول",
+    "rating": "التقييم"
+  },
+  "filters": {
+    "allCountries": "جميع الدول",
+    "searchPlaceholder": "البحث بالاسم...",
+    "sortByRating": "التقييم (عالي-منخفض)",
+    "sortByName": "الاسم (أ-ي)",
+    "sortByAltitude": "الارتفاع (عالي-منخفض)",
+    "ratingShort": "التقييم",
+    "nameShort": "الاسم",
+    "altitudeShort": "الارتفاع",
+    "clearFilters": "مسح المرشحات",
+    "clear": "مسح",
+    "resultsFound": "تم العثور على",
+    "activeFilters": "نشط:"
+  },
+  "empty": {
+    "title": "الموقع غير موجود",
+    "description": "جرب معايير بحث مختلفة",
+    "viewAll": "عرض جميع المواقع"
+  },
+  "country": {
+    "locations": "مواقع",
+    "countryPage": "صفحة الدولة ←"
+  },
+  "difficulty": {
+    "beginner": "مبتدئ",
+    "intermediate": "متوسط",
+    "advanced": "متقدم",
+    "expert": "خبير"
+  },
+  "location": {
+    "bookNow": "احجز الآن",
+    "book": "احجز"
+  },
+  "months": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
+}

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Send, Smile } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface CommentInputProps {
   commentableType: 'country' | 'location' | 'flight_type';
@@ -18,14 +19,17 @@ export default function CommentInput({
   commentableId,
   parentCommentId = null,
   onCommentAdded,
-  placeholder = 'დაწერეთ კომენტარი...',
+  placeholder,
   replyToUserName = null,
 }: CommentInputProps) {
+  const { t } = useTranslation('comments');
   const [content, setContent] = useState(replyToUserName ? `@${replyToUserName} ` : '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const supabase = createClient();
+  
+  const displayPlaceholder = placeholder || (parentCommentId ? t('input.replyPlaceholder') : t('input.placeholder'));
 
   // Paragliding and flying related emojis with common ones
   const commonEmojis = [
@@ -46,7 +50,7 @@ export default function CommentInput({
     e.preventDefault();
 
     if (!content.trim()) {
-      setError('კომენტარი არ შეიძლება იყოს ცარიელი');
+      setError(t('input.emptyError'));
       return;
     }
 
@@ -62,7 +66,7 @@ export default function CommentInput({
       console.log('User:', user);
 
       if (!user) {
-        setError('გთხოვთ შეხვიდეთ სისტემაში კომენტარის დასაწერად');
+        setError(t('input.loginRequired'));
         setIsSubmitting(false);
         return;
       }
@@ -102,14 +106,14 @@ export default function CommentInput({
 
       setContent('');
       if (isSuperAdmin) {
-        alert('კომენტარი გამოქვეყნდა!');
+        alert(t('input.published'));
       } else {
-        alert('კომენტარი გაგზავნილია! მოდერაციის შემდეგ გამოჩნდება.');
+        alert(t('input.awaitingModeration'));
       }
       onCommentAdded();
     } catch (err) {
       console.error('Error submitting comment:', err);
-      setError('კომენტარის გაგზავნა ვერ მოხერხდა: ' + (err as any)?.message);
+      setError(t('input.submitError') + ': ' + (err as any)?.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -121,7 +125,7 @@ export default function CommentInput({
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder={placeholder}
+          placeholder={displayPlaceholder}
           rows={1}
           maxLength={5000}
           disabled={isSubmitting}
@@ -137,7 +141,7 @@ export default function CommentInput({
             type="button"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="p-1 sm:p-1.5 hover:bg-foreground/10 rounded-full transition-colors"
-            title="დაამატე სმაილი"
+            title={t('input.addEmoji')}
           >
             <Smile className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-foreground/50" />
           </button>
@@ -147,7 +151,7 @@ export default function CommentInput({
             className="p-1 sm:p-1.5 bg-blue-500 text-white rounded-full
                      hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed
                      transition-all"
-            title="გაგზავნა"
+            title={t('input.send')}
           >
             {isSubmitting ? (
               <div className="animate-spin rounded-full h-3.5 w-3.5 sm:h-4 sm:w-4 border-2 border-white border-t-transparent"></div>

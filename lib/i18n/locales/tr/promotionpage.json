@@ -1,0 +1,50 @@
+{
+  "page": {
+    "title": "Promosyonlar",
+    "subtitle": "Aktif promosyonlar ve indirimler",
+    "active": "aktif",
+    "loading": "Promosyonlar yükleniyor..."
+  },
+  "filters": {
+    "title": "Filtreler",
+    "search": "Ara",
+    "searchPlaceholder": "Ara...",
+    "location": "Konum",
+    "allLocations": "Tümü",
+    "sort": "Sırala",
+    "sortBy": "Sırala",
+    "newest": "En Yeni",
+    "highestDiscount": "İndirim",
+    "expiringSoon": "Sona Eriyor",
+    "clearFilters": "Temizle",
+    "found": "Bulundu"
+  },
+  "card": {
+    "code": "Kod",
+    "discount": "İndirim",
+    "expiringSoon": "Yakında sona eriyor",
+    "soon": "Yakında",
+    "timeLeft": "Kalan Süre",
+    "daysLeft": "{days}g kaldı",
+    "hoursLeft": "{hours}s kaldı",
+    "minutesLeft": "Sona eriyor",
+    "days": "gün",
+    "hours": "saat",
+    "minutes": "dk",
+    "usage": "Kullanım",
+    "copy": "Kopyala",
+    "copied": "✓",
+    "book": "Rezerve Et",
+    "expired": "Süresi doldu"
+  },
+  "empty": {
+    "title": "Bulunamadı",
+    "message": "Bu kriterlere uygun promosyon kodu bulunamadı",
+    "clearButton": "Temizle"
+  },
+  "stats": {
+    "active": "aktif",
+    "avgDiscount": "Ort. indirim",
+    "maxDiscount": "Maks. indirim"
+  }
+}

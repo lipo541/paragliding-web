@@ -1,0 +1,18 @@
+{
+  "title": "Bildirimler",
+  "loading": "Yükleniyor...",
+  "empty": {
+    "title": "Bildirim yok",
+    "description": "Henüz hiç mesajınız yok"
+  },
+  "newMessage": "Yeni bir mesajınız var!",
+  "selectMessage": "Görüntülemek için bir mesaj seçin",
+  "delete": "Sil",
+  "deleteConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
+  "deleteSuccess": "Mesaj silindi",
+  "deleteFailed": "Silme başarısız",
+  "readAt": "Okundu",
+  "markAsReadFailed": "Bir hata oluştu",
+  "fetchFailed": "Mesajlar yüklenemedi",
+  "notAuthorized": "Yetkilendirilmedi"
+}

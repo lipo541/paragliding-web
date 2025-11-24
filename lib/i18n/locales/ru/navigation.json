@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "locations": "Локации",
+    "bookings": "Бронирования",
+    "promotions": "Акции",
+    "about": "О нас",
+    "contact": "Контакты"
+  },
+  "submenu": {
+    "locations": {
+      "all": "Все локации",
+      "allDescription": "Локации для парапланеризма в Грузии",
+      "popular": "Популярные",
+      "popularDescription": "Самые популярные места",
+      "beginner": "Для начинающих",
+      "beginnerDescription": "Безопасные места для обучения",
+      "advanced": "Для опытных",
+      "advancedDescription": "Сложные и экстремальные места"
+    }
+  },
+  "footer": {
+    "followUs": "Следите за обновлениями",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "noNew": "Нет новых уведомлений"
+  }
+}

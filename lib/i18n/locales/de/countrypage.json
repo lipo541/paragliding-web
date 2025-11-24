@@ -1,0 +1,56 @@
+{
+  "error": {
+    "notFound": "Land nicht gefunden",
+    "backToHome": "Zurück zur Startseite"
+  },
+  "hero": {
+    "rate": "Bewerten",
+    "changeRating": "Ändern",
+    "contact": "Kontakt",
+    "bookFlight": "Flug buchen"
+  },
+  "content": {
+    "readMore": "Mehr lesen",
+    "readLess": "Weniger"
+  },
+  "gallery": {
+    "photos": "Fotos",
+    "photo": "Foto",
+    "videos": "Videos",
+    "video": "Video",
+    "nowPlaying": "Aktuell",
+    "playlist": "Wiedergabeliste",
+    "now": "Jetzt"
+  },
+  "locations": {
+    "title": "Flugstandorte in Georgien"
+  },
+  "contact": {
+    "title": "Kontakt & Information",
+    "description": "Alle Standorte auf unserer Plattform haben unterschiedliche Flugpreise, Pakete und Bedingungen.",
+    "visitText": "Besuchen Sie ",
+    "locationsPage": "Standortseite",
+    "detailsText": " für detaillierte Informationen oder kontaktieren Sie uns direkt:",
+    "messengers": "Messenger"
+  },
+  "comments": {
+    "title": "Kommentare"
+  },
+  "sidebar": {
+    "locations": "Standorte",
+    "photos": "Fotos",
+    "flyingSpots": "Flugplätze",
+    "bookFlight": "Flug buchen",
+    "readyForAdventure": "Bereit für Abenteuer?",
+    "bookingDescription": "Buchen Sie Ihren Tandem-Gleitschirmflug an einem unserer {count} Standorte",
+    "professionalPilots": "Professionelle Piloten",
+    "certifiedEquipment": "Sicherheitszertifizierte Ausrüstung",
+    "photoVideoIncluded": "Foto & Video inklusive",
+    "bookNow": "Jetzt buchen",
+    "helpText": "Wir helfen Ihnen, den besten Standort und die beste Zeit für Ihren Flug zu wählen"
+  },
+  "ratingModal": {
+    "title": "Land bewerten",
+    "subtitle": "Ihre Meinung zählt"
+  }
+}

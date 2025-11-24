@@ -1,0 +1,52 @@
+{
+  "title": "Profile",
+  "subtitle": "Update your personal information",
+  "avatar": {
+    "title": "Profile Photo",
+    "delete": "Delete photo",
+    "choose": "Choose file",
+    "or": "or drag and drop",
+    "maxSize": "Max 2MB",
+    "uploadSuccess": "Photo uploaded successfully!",
+    "deleteSuccess": "Photo deleted",
+    "deleteConfirm": "Are you sure you want to delete the photo?",
+    "uploadError": "Failed to upload photo",
+    "deleteError": "Failed to delete photo",
+    "invalidType": "Please select an image",
+    "tooLarge": "File size must not exceed 2MB"
+  },
+  "form": {
+    "title": "Basic Information",
+    "fullName": {
+      "label": "Full Name",
+      "placeholder": "Enter your full name"
+    },
+    "phone": {
+      "label": "Phone Number"
+    },
+    "email": {
+      "label": "Email",
+      "helperText": "Email cannot be changed"
+    },
+    "save": "Save",
+    "updateSuccess": "Profile updated successfully!",
+    "updateError": "An error occurred",
+    "loadError": "Failed to load profile",
+    "unsavedChanges": "You have unsaved changes"
+  },
+  "password": {
+    "title": "Change Password",
+    "newPassword": {
+      "label": "New Password",
+      "placeholder": "Enter new password"
+    },
+    "confirmPassword": {
+      "label": "Confirm New Password",
+      "placeholder": "Confirm new password"
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+    "changeSuccess": "Password changed successfully!",
+    "changeError": "Failed to change password"
+  }
+}

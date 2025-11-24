@@ -1,0 +1,52 @@
+{
+  "title": "Profil",
+  "subtitle": "Kişisel bilgilerinizi güncelleyin",
+  "avatar": {
+    "title": "Profil Fotoğrafı",
+    "delete": "Fotoğrafı sil",
+    "choose": "Dosya seç",
+    "or": "veya sürükleyip bırakın",
+    "maxSize": "Maks. 2MB",
+    "uploadSuccess": "Fotoğraf başarıyla yüklendi!",
+    "deleteSuccess": "Fotoğraf silindi",
+    "deleteConfirm": "Fotoğrafı silmek istediğinizden emin misiniz?",
+    "uploadError": "Fotoğraf yüklenemedi",
+    "deleteError": "Fotoğraf silinemedi",
+    "invalidType": "Lütfen bir resim seçin",
+    "tooLarge": "Dosya boyutu 2MB'ı aşmamalıdır"
+  },
+  "form": {
+    "title": "Temel Bilgiler",
+    "fullName": {
+      "label": "Tam Ad",
+      "placeholder": "Tam adınızı girin"
+    },
+    "phone": {
+      "label": "Telefon Numarası"
+    },
+    "email": {
+      "label": "E-posta",
+      "helperText": "E-posta değiştirilemez"
+    },
+    "save": "Kaydet",
+    "updateSuccess": "Profil başarıyla güncellendi!",
+    "updateError": "Bir hata oluştu",
+    "loadError": "Profil yüklenemedi",
+    "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var"
+  },
+  "password": {
+    "title": "Şifre Değiştir",
+    "newPassword": {
+      "label": "Yeni Şifre",
+      "placeholder": "Yeni şifre girin"
+    },
+    "confirmPassword": {
+      "label": "Yeni Şifreyi Onayla",
+      "placeholder": "Yeni şifreyi onayla"
+    },
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "changeSuccess": "Şifre başarıyla değiştirildi!",
+    "changeError": "Şifre değiştirilemedi"
+  }
+}

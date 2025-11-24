@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 import RatingDisplay from '@/components/rating/RatingDisplay';
 import RatingInput from '@/components/rating/RatingInput';
 import RatingModal from '@/components/rating/RatingModal';
@@ -114,6 +115,7 @@ const SectionTitle = ({ icon: Icon, title }: { icon: any; title: string }) => (
 );
 
 export default function LocationPage({ countrySlug, locationSlug, locale }: LocationPageProps) {
+  const { t } = useTranslation('locationpage');
   const [location, setLocation] = useState<Location | null>(null);
   const [locationPage, setLocationPage] = useState<LocationPageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -328,12 +330,12 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   if (!location || !locationPage) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-zinc-50 dark:bg-black">
-        <h1 className="text-xl font-medium text-foreground/80">ლოკაცია ვერ მოიძებნა</h1>
+        <h1 className="text-xl font-medium text-foreground/80">{t('error.notFound')}</h1>
         <Link 
           href={`/${locale}/locations/${countrySlug}`}
           className="px-4 py-2 text-sm font-medium backdrop-blur-lg bg-white/70 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/50 border border-white/50 dark:border-white/20 rounded-full transition-all shadow-lg"
         >
-          უკან დაბრუნება
+          {t('error.backButton')}
         </Link>
       </div>
     );
@@ -366,19 +368,6 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   const currentBackgroundUrl = backgroundImages.length > 0 
     ? backgroundImages[currentBgIndex]?.url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070'
     : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070';
-
-  // Labels
-  const labels = {
-    bookNow: locale === 'ka' ? 'დაჯავშნე ახლავე' : locale === 'ru' ? 'Забронировать' : 'Book Now',
-    contact: locale === 'ka' ? 'კონტაქტი' : locale === 'ru' ? 'Контакты' : 'Contact',
-    readMore: locale === 'ka' ? 'მეტის ნახვა' : locale === 'ru' ? 'Читать далее' : 'Read More',
-    showLess: locale === 'ka' ? 'აკეცვა' : locale === 'ru' ? 'Свернуть' : 'Show Less',
-    gallery: locale === 'ka' ? 'გალერეა' : locale === 'ru' ? 'Галерея' : 'Gallery',
-    videos: locale === 'ka' ? 'ვიდეოები' : locale === 'ru' ? 'Видео' : 'Videos',
-    map: locale === 'ka' ? 'რუკა' : locale === 'ru' ? 'Карта' : 'Map',
-    packages: locale === 'ka' ? 'პაკეტები' : locale === 'ru' ? 'Пакеты' : 'Packages',
-    startFrom: locale === 'ka' ? 'ფასი' : locale === 'ru' ? 'От' : 'Starts from',
-  };
 
   return (
     <div className="min-h-screen relative selection:bg-blue-500/30">
@@ -554,7 +543,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span>{userRating ? (locale === 'ka' ? 'შეცვალეთ' : locale === 'ru' ? 'Изменить' : 'Change') : (locale === 'ka' ? 'შეაფასეთ' : locale === 'ru' ? 'Оценить' : 'Rate')}</span>
+                  <span>{userRating ? t('hero.changeRating') : t('hero.rate')}</span>
                 </div>
                 
                 {/* Hover shine */}
@@ -571,7 +560,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                 <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span>{locale === 'en' ? 'Contact Us' : locale === 'ru' ? 'Связаться' : 'დაკავშირება'}</span>
+                <span>{t('hero.contact')}</span>
               </Link>
               
               <button
@@ -586,7 +575,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                 <svg className="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <span>{locale === 'en' ? 'Book a Flight' : locale === 'ru' ? 'Забронировать полёт' : 'დაჯავშნე ფრენა'}</span>
+                <span>{t('hero.bookFlight')}</span>
               </button>
             </div>
           </div>
@@ -612,7 +601,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0 mt-0.5">
                       <Info className="w-4 h-4 text-foreground" />
                     </div>
-                    <h2 className="text-sm lg:text-lg font-bold text-foreground text-left">{h2History || 'About Location'}</h2>
+                    <h2 className="text-sm lg:text-lg font-bold text-foreground text-left">{h2History || t('content.aboutLocation')}</h2>
                   </button>
                   
                   {/* Mobile: Dropdown Arrow */}
@@ -631,7 +620,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md backdrop-blur-lg bg-white/70 dark:bg-black/40 hover:bg-white/80 dark:hover:bg-black/50 border border-white/50 dark:border-white/20 transition-all text-[11px] font-medium text-foreground shadow-lg whitespace-nowrap"
                   >
                     <span>
-                      {isHistoryExpanded ? labels.showLess : labels.readMore}
+                      {isHistoryExpanded ? t('content.showLess') : t('content.readMore')}
                     </span>
                     <ChevronDown 
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
@@ -673,7 +662,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             {/* Flight Packages */}
             {flightTypes.length > 0 && (
               <section id="flight-types-section" className="scroll-mt-20">
-                <SectionTitle icon={Wind} title={h3FlightTypes || labels.packages} />
+                <SectionTitle icon={Wind} title={h3FlightTypes || t('flightTypes.title')} />
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                   {flightTypes.map((pkg, idx) => {
                     // Try to find shared flight type by ID (handle both string and number types)
@@ -759,7 +748,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                                 }))}
                                 className="ml-auto px-3 py-1.5 text-[11px] font-semibold backdrop-blur-md bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-700 dark:text-yellow-400 rounded-lg border-2 border-yellow-400/40 hover:border-yellow-400/60 shadow-lg hover:shadow-yellow-400/20 transition-all hover:scale-105"
                               >
-                                {flightTypeRatings[pkg.shared_id].userRating ? 'შეცვლა' : 'შეფასება'}
+                                {flightTypeRatings[pkg.shared_id].userRating ? t('flightTypes.changeButton') : t('flightTypes.rateButton')}
                               </button>
                             </div>
 
@@ -848,7 +837,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                           href={`/${locale}/bookings?locationId=${location.id}&flightTypeId=${pkg.shared_id}`}
                           className="w-full py-3 px-4 bg-foreground text-background rounded-lg font-semibold text-sm text-center hover:opacity-90 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 shadow-md"
                         >
-                          {labels.bookNow}
+                          {t('sidebar.bookNow')}
                         </Link>
                       </div>
                     );
@@ -866,7 +855,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                 <div className="flex items-center justify-between px-4 py-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <ImageIcon className="w-4 h-4 text-foreground" />
-                    {galleryDescription || labels.gallery}
+                    {galleryDescription || t('gallery.title')}
                   </h3>
                   <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
                 </div>
@@ -911,7 +900,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
             {/* Videos */}
             {videos.length > 0 && (
               <section className="space-y-4">
-                <SectionTitle icon={Video} title={labels.videos} />
+                <SectionTitle icon={Video} title={t('gallery.videos')} />
                 
                 {/* YouTube Style Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -1045,7 +1034,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                 <div className="flex items-center justify-between px-1">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-foreground" />
-                    {labels.map}
+                    {t('map.title')}
                   </h3>
                 </div>
                 <div className="rounded-lg border border-foreground/10 bg-foreground/[0.02] overflow-hidden h-[400px]">
@@ -1076,7 +1065,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     </svg>
                   </div>
                   <h3 className="text-sm font-bold text-foreground">
-                    კონტაქტი და ინფორმაცია
+                    {t('contact.title')}
                   </h3>
                 </div>
               </div>
@@ -1088,27 +1077,27 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     <svg className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
-                    <span>ჩვენს პლატფორმაზე განთავსებულ ყველა ლოკაციას აქვს განსხვავებული ფრენის ღირებულება, პაკეტები და პირობები.</span>
+                    <span>{t('contact.description')}</span>
                   </p>
                   <p className="pl-5">
-                    ეწვიეთ{' '}
+                    {t('contact.visitText')}{' '}
                     <Link 
                       href={`/${locale}/locations`}
                       className="font-semibold text-foreground hover:text-foreground/80 underline decoration-foreground/30 hover:decoration-foreground/60 transition-colors inline-flex items-center gap-1"
                     >
-                      ლოკაციების გვერდს
+                      {t('contact.locationsPage')}
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </Link>
-                    , სადაც ყველა ლოკაცია დეტალურადაა განხილული, ან დაგვიკავშირდით პირდაპირ:
+                    {t('contact.detailsText')}
                   </p>
                 </div>
 
                 {/* Divider */}
                 <div className="flex items-center gap-2">
                   <div className="h-px flex-1 bg-foreground/10"></div>
-                  <span className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider">მესენჯერები</span>
+                  <span className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider">{t('contact.messengers')}</span>
                   <div className="h-px flex-1 bg-foreground/10"></div>
                 </div>
 
@@ -1171,7 +1160,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                       <Calendar className="w-4 h-4" />
                     </div>
                     <h3 className="text-sm font-bold uppercase tracking-wide">
-                      {labels.bookNow}
+                      {t('sidebar.bookNow')}
                     </h3>
                   </div>
                 </div>
@@ -1187,11 +1176,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     </div>
                     
                     <div className="space-y-2">
-                      <h4 className="text-sm font-bold text-foreground">
-                        მზად ხართ თავგადასავლისთვის?
-                      </h4>
                       <p className="text-[11px] text-foreground/90 leading-relaxed">
-                        განიცადეთ ფრენის შეუდარებელი გამოცდილება {locationName}-ში. დაჯავშნეთ ახლავე!
+                        {t('sidebar.experienceText').replace('{locationName}', locationName)}
                       </p>
                     </div>
                   </div>
@@ -1208,7 +1194,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-foreground text-background hover:bg-foreground/90 rounded-lg font-semibold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
                     >
                       <Calendar className="w-4 h-4" />
-                      {labels.bookNow}
+                      {t('sidebar.bookNow')}
                     </button>
                     
                     <Link
@@ -1216,18 +1202,18 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-background border border-foreground/10 text-foreground hover:bg-foreground/5 rounded-lg font-semibold text-sm transition-all"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      {labels.contact}
+                      {t('hero.contact')}
                     </Link>
                   </div>
 
                   {/* Stats */}
                   <div className="pt-4 border-t border-foreground/10 grid grid-cols-2 gap-4">
                     <div className="text-center">
-                      <p className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold mb-1">ფრენები</p>
+                      <p className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold mb-1">{t('sidebar.flights')}</p>
                       <p className="text-sm font-bold">{flightTypes.length}</p>
                     </div>
                     <div className="text-center border-l border-foreground/10">
-                      <p className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold mb-1">ფოტოები</p>
+                      <p className="text-[10px] text-foreground/40 uppercase tracking-wider font-semibold mb-1">{t('sidebar.photos')}</p>
                       <p className="text-sm font-bold">{gallery.length}</p>
                     </div>
                   </div>
@@ -1241,8 +1227,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-foreground/50">საუკეთესო სეზონი</p>
-                    <p className="text-sm font-semibold">მთელი წელი</p>
+                    <p className="text-xs font-medium text-foreground/50">{t('quickInfo.bestSeason')}</p>
+                    <p className="text-sm font-semibold">{t('quickInfo.yearRound')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -1250,8 +1236,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                     <Wind className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-foreground/50">ფრენის პირობები</p>
-                    <p className="text-sm font-semibold">თერმული და დინამიური</p>
+                    <p className="text-xs font-medium text-foreground/50">{t('quickInfo.flightConditions')}</p>
+                    <p className="text-sm font-semibold">{t('quickInfo.thermalAndDynamic')}</p>
                   </div>
                 </div>
               </div>
@@ -1332,8 +1318,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
         onRatingChange={(newRating) => {
           handleRatingChange(newRating);
         }}
-        title={locale === 'ka' ? 'შეაფასეთ ლოკაცია' : locale === 'ru' ? 'Оцените локацию' : 'Rate Location'}
-        subtitle={locale === 'ka' ? 'თქვენი აზრი ძალიან მნიშვნელოვანია' : locale === 'ru' ? 'Ваше мнение очень важно' : 'Your opinion matters'}
+        title={t('ratingModal.title')}
       />
 
     </div>

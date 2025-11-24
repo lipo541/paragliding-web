@@ -9,6 +9,7 @@ import RatingInput from '@/components/rating/RatingInput';
 import RatingModal from '@/components/rating/RatingModal';
 import CommentsList from '@/components/comments/CommentsList';
 import LocationInfoCard from '@/components/locationinfocard/LocationInfoCard';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface Country {
   id: string;
@@ -50,6 +51,7 @@ interface CountryPageProps {
 }
 
 export default function CountryPage({ slug, locale }: CountryPageProps) {
+  const { t } = useTranslation('countrypage');
   const [country, setCountry] = useState<Country | null>(null);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,8 +74,12 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   const imagesPerPage = 9; // Desktop: 9 (3x3), Mobile: 8 (2x4)
 
   const getLocalizedField = (obj: any, field: string, locale: string) => {
-    const suffix = locale || 'en';
-    return obj?.[`${field}_${suffix}`] || obj?.[`${field}_en`] || '';
+    // For ar, de, tr locales, fallback to English if translation is missing
+    if (['ar', 'de', 'tr'].includes(locale)) {
+      return obj?.[`${field}_${locale}`] || obj?.[`${field}_en`] || obj?.[`${field}_ka`] || '';
+    }
+    // For ka, en, ru locales, fallback to Georgian if translation is missing
+    return obj?.[`${field}_${locale}`] || obj?.[`${field}_ka`] || '';
   };
 
   useEffect(() => {
@@ -95,7 +101,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
         const { data: locationsData, error: locationsError } = await supabase
           .from('locations')
-          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, country_id, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
           .eq('country_id', countryData.id)
           .order('name_ka');
 
@@ -195,10 +201,10 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
         <h1 className="text-xl font-bold text-foreground">
-          {locale === 'en' ? 'Country not found' : locale === 'ru' ? 'Страна не найдена' : 'ქვეყანა ვერ მოიძებნა'}
+          {t('error.notFound')}
         </h1>
         <Link href={`/${locale}`} className="px-5 py-2 text-sm rounded-lg bg-foreground/10 hover:bg-foreground/20 transition-colors">
-          {locale === 'en' ? 'Back to home' : locale === 'ru' ? 'На главную' : 'მთავარზე დაბრუნება'}
+          {t('error.backToHome')}
         </Link>
       </div>
     );
@@ -325,7 +331,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span>{userRating ? (locale === 'ka' ? 'შეცვალეთ' : locale === 'ru' ? 'Изменить' : 'Change') : (locale === 'ka' ? 'შეაფასეთ' : locale === 'ru' ? 'Оценить' : 'Rate')}</span>
+                  <span>{userRating ? t('hero.changeRating') : t('hero.rate')}</span>
                 </div>
                 
                 {/* Hover shine */}
@@ -342,7 +348,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                 <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span>{locale === 'en' ? 'Contact Us' : locale === 'ru' ? 'Связаться' : 'დაკავშირება'}</span>
+                <span>{t('hero.contact')}</span>
               </Link>
               
               <Link
@@ -352,7 +358,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                 <svg className="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>
-                <span>{locale === 'en' ? 'Book a Flight' : locale === 'ru' ? 'Забронировать полёт' : 'დაჯავშნე ფრენა'}</span>
+                <span>{t('hero.bookFlight')}</span>
               </Link>
             </div>
           </div>
@@ -404,10 +410,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 hover:border-foreground/30 transition-all text-[11px] font-medium text-foreground hover:text-foreground/80 whitespace-nowrap"
                   >
                     <span>
-                      {isHistoryExpanded 
-                        ? (locale === 'en' ? 'Less' : locale === 'ru' ? 'Меньше' : 'ნაკლები')
-                        : (locale === 'en' ? 'Read More' : locale === 'ru' ? 'Читать' : 'მეტის ნახვა')
-                      }
+                      {isHistoryExpanded ? t('content.readLess') : t('content.readMore')}
                     </span>
                     <svg 
                       className={`w-3.5 h-3.5 transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
@@ -467,7 +470,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <svg className="w-4 h-4 text-foreground/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      {locale === 'en' ? 'Photos' : locale === 'ru' ? 'Фото' : 'ფოტოები'}
+                      {t('gallery.photos')}
                     </h3>
                     <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
                   </div>
@@ -607,7 +610,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   {/* Image info */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-lg">
                     <p className="text-sm text-white font-medium">
-                      {gallery[lightboxIndex][`alt_${locale}`] || `${locale === 'en' ? 'Photo' : locale === 'ru' ? 'Фото' : 'სურათი'} ${lightboxIndex + 1}`}
+                      {gallery[lightboxIndex][`alt_${locale}`] || `${t('gallery.photo')} ${lightboxIndex + 1}`}
                     </p>
                     <p className="text-xs text-white/70 mt-1">
                       {lightboxIndex + 1} / {gallery.length}
@@ -643,7 +646,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      {locale === 'en' ? 'Videos' : locale === 'ru' ? 'Видео' : 'ვიდეოები'}
+                      {t('gallery.videos')}
                     </h3>
                     <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{videos.length}</span>
                   </div>
@@ -658,7 +661,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                           <iframe
                             key={activeVideoIndex}
                             src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=0`}
-                            title={`${locale === 'en' ? 'Video' : locale === 'ru' ? 'Видео' : 'ვიდეო'} ${activeVideoIndex + 1}`}
+                            title={`${t('gallery.video')} ${activeVideoIndex + 1}`}
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                             className="absolute inset-0 w-full h-full"
@@ -671,7 +674,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <div className="flex items-center gap-2 px-2 py-1 rounded bg-red-600/10 border border-red-600/20">
                           <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
                           <span className="text-[10px] font-semibold text-red-600 uppercase tracking-wide">
-                            {locale === 'en' ? 'Now Playing' : locale === 'ru' ? 'Играет' : 'მიმდინარე'}
+                            {t('gallery.nowPlaying')}
                           </span>
                         </div>
                         <span className="text-xs text-foreground/90">
@@ -686,7 +689,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         {/* Playlist Header */}
                         <div className="px-3 py-2 bg-foreground/5 border-b border-foreground/10 flex-shrink-0">
                           <h4 className="text-[11px] font-semibold text-foreground uppercase tracking-wide">
-                            {locale === 'en' ? 'Playlist' : locale === 'ru' ? 'Плейлист' : 'პლეილისტი'}
+                            {t('gallery.playlist')}
                           </h4>
                         </div>
                         
@@ -750,13 +753,13 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                                       ? 'text-foreground font-semibold' 
                                       : 'text-foreground/90 hover:text-foreground'
                                   }`}>
-                                    {locale === 'en' ? 'Video' : locale === 'ru' ? 'Видео' : 'ვიდეო'} {index + 1}
+                                    {t('gallery.video')} {index + 1}
                                   </p>
                                   {isActive && (
                                     <div className="flex items-center gap-1 mt-1">
                                       <div className="w-1 h-1 rounded-full bg-red-600 animate-pulse"></div>
                                       <span className="text-[9px] text-red-600 font-semibold">
-                                        {locale === 'en' ? 'Now' : locale === 'ru' ? 'Сейчас' : 'ახლა'}
+                                        {t('gallery.now')}
                                       </span>
                                     </div>
                                   )}
@@ -783,7 +786,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   </svg>
                   <h2 className="text-lg font-semibold tracking-tight text-foreground">
-                    {locale === 'en' ? 'Flying Locations in Georgia' : locale === 'ru' ? 'Локации для полетов в Грузии' : 'საფრენი ლოკაციები საქართველოში'}
+                    {t('locations.title')}
                   </h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -827,7 +830,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     </svg>
                   </div>
                   <h3 className="text-sm font-bold text-foreground">
-                    {locale === 'en' ? 'Contact & Information' : locale === 'ru' ? 'Контакт и информация' : 'კონტაქტი და ინფორმაცია'}
+                    {t('contact.title')}
                   </h3>
                 </div>
               </div>
@@ -840,33 +843,21 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <span>
-                      {locale === 'en' 
-                        ? 'Each location on our platform has unique flight prices, packages, and conditions.' 
-                        : locale === 'ru' 
-                        ? 'Каждая локация на нашей платформе имеет уникальные цены, пакеты и условия полетов.' 
-                        : 'ჩვენს პლატფორმაზე განთავსებულ ყველა ლოკაციას აქვს განსხვავებული ფრენის ღირებულება, პაკეტები და პირობები.'}
+                      {t('contact.description')}
                     </span>
                   </p>
                   <p className="pl-5">
-                    {locale === 'en' 
-                      ? 'Visit ' 
-                      : locale === 'ru' 
-                      ? 'Посетите ' 
-                      : 'ეწვიეთ '}
+                    {t('contact.visitText')}
                     <Link 
                       href={`/${locale}/locations`}
                       className="font-semibold text-foreground hover:text-foreground/80 underline decoration-foreground/30 hover:decoration-foreground/60 transition-colors inline-flex items-center gap-1"
                     >
-                      {locale === 'en' ? 'Locations page' : locale === 'ru' ? 'страницу локаций' : 'ლოკაციების გვერდს'}
+                      {t('contact.locationsPage')}
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </Link>
-                    {locale === 'en' 
-                      ? ' for detailed information, or contact us directly:' 
-                      : locale === 'ru' 
-                      ? ' для подробной информации или свяжитесь с нами напрямую:' 
-                      : ', სადაც ყველა ლოკაცია დეტალურადაა განხილული, ან დაგვიკავშირდით პირდაპირ:'}
+                    {t('contact.detailsText')}
                   </p>
                 </div>
 
@@ -874,7 +865,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                 <div className="flex items-center gap-2">
                   <div className="h-px flex-1 bg-foreground/10"></div>
                   <span className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider">
-                    {locale === 'en' ? 'Messengers' : locale === 'ru' ? 'Мессенджеры' : 'მესენჯერები'}
+                    {t('contact.messengers')}
                   </span>
                   <div className="h-px flex-1 bg-foreground/10"></div>
                 </div>
@@ -962,7 +953,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       </div>
                       <div>
                         <p className="text-[10px] text-foreground/90 font-medium">
-                          {locale === 'en' ? 'Locations' : locale === 'ru' ? 'Локации' : 'ლოკაციები'}
+                          {t('sidebar.locations')}
                         </p>
                         <p className="text-sm font-bold text-foreground">{locations.length}</p>
                       </div>
@@ -979,7 +970,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       </div>
                       <div>
                         <p className="text-[10px] text-foreground/90 font-medium">
-                          {locale === 'en' ? 'Photos' : locale === 'ru' ? 'Фото' : 'ფოტოები'}
+                          {t('sidebar.photos')}
                         </p>
                         <p className="text-sm font-bold text-foreground">{gallery.length}</p>
                       </div>
@@ -995,7 +986,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
-                    {locale === 'en' ? 'Flying Spots' : locale === 'ru' ? 'Места' : 'ლოკაციები'}
+                    {t('sidebar.flyingSpots')}
                   </h3>
                   <div className="space-y-1.5">
                     {locations.map((location) => (
@@ -1034,7 +1025,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       </svg>
                     </div>
                     <h3 className="text-sm font-bold uppercase tracking-wide">
-                      {locale === 'en' ? 'Book a Flight' : locale === 'ru' ? 'Забронировать' : 'დაჯავშნე ფრენა'}
+                      {t('sidebar.bookFlight')}
                     </h3>
                   </div>
                 </div>
@@ -1053,18 +1044,10 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     
                     <div className="space-y-2">
                       <h4 className="text-sm font-bold text-foreground">
-                        {locale === 'en' 
-                          ? 'Ready for Adventure?' 
-                          : locale === 'ru' 
-                          ? 'Готовы к приключению?' 
-                          : 'მზად ხართ თავგადასავლისთვის?'}
+                        {t('sidebar.readyForAdventure')}
                       </h4>
                       <p className="text-[11px] text-foreground/90 leading-relaxed">
-                        {locale === 'en' 
-                          ? `Book your tandem paragliding flight at any of our ${locations.length} locations` 
-                          : locale === 'ru' 
-                          ? `Забронируйте тандемный полет на любой из ${locations.length} локаций` 
-                          : `დაჯავშნეთ თქვენი ფრენა ჩვენს ${locations.length} ლოკაციიდან ნებისმიერზე`}
+                        {t('sidebar.bookingDescription').replace('{count}', locations.length.toString())}
                       </p>
                     </div>
                   </div>
@@ -1076,7 +1059,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-[10px] text-foreground/90">
-                        {locale === 'en' ? 'Professional pilots' : locale === 'ru' ? 'Профессиональные пилоты' : 'პროფესიონალი პილოტები'}
+                        {t('sidebar.professionalPilots')}
                       </span>
                     </div>
                     <div className="flex items-start gap-2">
@@ -1084,7 +1067,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-[10px] text-foreground/90">
-                        {locale === 'en' ? 'Safety certified equipment' : locale === 'ru' ? 'Сертифицированное оборудование' : 'სერტიფიცირებული აღჭურვილობა'}
+                        {t('sidebar.certifiedEquipment')}
                       </span>
                     </div>
                     <div className="flex items-start gap-2">
@@ -1092,7 +1075,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-[10px] text-foreground/90">
-                        {locale === 'en' ? 'Photo & video included' : locale === 'ru' ? 'Фото и видео включены' : 'ფოტო და ვიდეო შედის'}
+                        {t('sidebar.photoVideoIncluded')}
                       </span>
                     </div>
                   </div>
@@ -1105,16 +1088,12 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                    {locale === 'en' ? 'Book Now' : locale === 'ru' ? 'Забронировать' : 'დაჯავშნე ახლავე'}
+                    {t('sidebar.bookNow')}
                   </button>
 
                   {/* Info Text */}
                   <p className="text-[9px] text-center text-foreground/50 leading-relaxed">
-                    {locale === 'en' 
-                      ? 'We will help you choose the best location and time for your flight' 
-                      : locale === 'ru' 
-                      ? 'Мы поможем выбрать лучшую локацию и время для полета' 
-                      : 'დაგეხმარებით აირჩიოთ საუკეთესო ლოკაცია და დრო'}
+                    {t('sidebar.helpText')}
                   </p>
                 </div>
               </div>
@@ -1141,8 +1120,8 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
         ratableId={String(country.id)}
         existingRating={userRating || undefined}
         onRatingChange={(newRating) => handleRatingChange(newRating)}
-        title={locale === 'ka' ? 'შეაფასეთ ქვეყანა' : locale === 'ru' ? 'Оцените страну' : 'Rate Country'}
-        subtitle={locale === 'ka' ? 'თქვენი აზრი ძალიან მნიშვნელოვანია' : locale === 'ru' ? 'Ваше мнение очень важно' : 'Your opinion matters'}
+        title={t('ratingModal.title')}
+        subtitle={t('ratingModal.subtitle')}
       />
     </div>
   );

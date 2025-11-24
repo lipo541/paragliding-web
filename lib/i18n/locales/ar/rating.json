@@ -1,0 +1,22 @@
+{
+  "modal": {
+    "defaultTitle": "قيّم",
+    "defaultSubtitle": "رأيك مهم",
+    "clickToRate": "انقر على النجوم للتقييم"
+  },
+  "input": {
+    "loginRequired": "يرجى تسجيل الدخول للتقييم",
+    "saveError": "فشل حفظ التقييم",
+    "deleteError": "فشل حذف التقييم",
+    "delete": "حذف",
+    "saved": "تم الحفظ!",
+    "saving": "جاري الحفظ...",
+    "labels": {
+      "poor": "سيء",
+      "average": "متوسط",
+      "good": "جيد",
+      "veryGood": "جيد جدا",
+      "excellent": "ممتاز"
+    }
+  }
+}

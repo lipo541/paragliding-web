@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "Все локации",
+    "subtitle": "Откройте для себя лучшие места для полетов на параплане в Грузии и за ее пределами",
+    "searchPlaceholder": "Быстрый поиск - выберите локацию...",
+    "loading": "Загрузка локаций...",
+    "locationBadge": "Локация",
+    "countryBadge": "Страна",
+    "moreFlight": "еще тип полета",
+    "notFound": "Локация не найдена"
+  },
+  "stats": {
+    "location": "Локаций",
+    "country": "Стран",
+    "rating": "Рейтинг"
+  },
+  "filters": {
+    "allCountries": "Все страны",
+    "searchPlaceholder": "Фильтр по названию...",
+    "sortByRating": "Рейтинг (Высокий-Низкий)",
+    "sortByName": "Название (А-Я)",
+    "sortByAltitude": "Высота (Высокая-Низкая)",
+    "ratingShort": "Рейтинг",
+    "nameShort": "Название",
+    "altitudeShort": "Высота",
+    "clearFilters": "Очистить фильтры",
+    "clear": "Очистить",
+    "resultsFound": "Найдено",
+    "activeFilters": "Активные:"
+  },
+  "empty": {
+    "title": "Локация не найдена",
+    "description": "Попробуйте другие критерии поиска",
+    "viewAll": "Показать все локации"
+  },
+  "country": {
+    "locations": "локаций",
+    "countryPage": "Страница страны →"
+  },
+  "difficulty": {
+    "beginner": "Начинающий",
+    "intermediate": "Средний",
+    "advanced": "Продвинутый",
+    "expert": "Эксперт"
+  },
+  "location": {
+    "bookNow": "Забронировать сейчас",
+    "book": "Забронировать"
+  },
+  "months": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+}

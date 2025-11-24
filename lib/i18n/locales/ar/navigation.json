@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "locations": "المواقع",
+    "bookings": "الحجوزات",
+    "promotions": "العروض",
+    "about": "معلومات عنا",
+    "contact": "اتصل بنا"
+  },
+  "submenu": {
+    "locations": {
+      "all": "جميع المواقع",
+      "allDescription": "مواقع الطيران الشراعي في جورجيا",
+      "popular": "الأكثر شعبية",
+      "popularDescription": "الأماكن الأكثر شعبية",
+      "beginner": "للمبتدئين",
+      "beginnerDescription": "أماكن آمنة للتعلم",
+      "advanced": "للمحترفين",
+      "advancedDescription": "أماكن صعبة ومتطرفة"
+    }
+  },
+  "footer": {
+    "followUs": "تابعنا للحصول على التحديثات",
+    "facebook": "فيسبوك",
+    "linkedin": "لينكد إن",
+    "twitter": "تويتر"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "noNew": "لا توجد إشعارات جديدة"
+  }
+}

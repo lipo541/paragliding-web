@@ -1,0 +1,38 @@
+{
+  "title": "რეგისტრაცია",
+  "fullName": {
+    "label": "სრული სახელი",
+    "placeholder": "შეიყვანეთ თქვენი სახელი და გვარი"
+  },
+  "email": {
+    "label": "ელ-ფოსტა",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "პაროლი",
+    "placeholder": "••••••••"
+  },
+  "confirmPassword": {
+    "label": "პაროლის დადასტურება",
+    "placeholder": "გაიმეორეთ პაროლი"
+  },
+  "submit": "ანგარიშის შექმნა",
+  "loading": "იტვირთება...",
+  "divider": "ან ელ-ფოსტით",
+  "social": {
+    "google": "Google-ით გაგრძელება"
+  },
+  "haveAccount": "უკვე გაქვთ ანგარიში?",
+  "signIn": "შესვლა",
+  "agreement": "ანგარიშის შექმნით თქვენ ეთანხმებით ჩვენს",
+  "terms": "მომსახურების პირობებს",
+  "and": "და",
+  "privacy": "კონფიდენციალურობის პოლიტიკას",
+  "errors": {
+    "allFields": "გთხოვთ შეავსოთ ყველა ველი",
+    "passwordMismatch": "პაროლები არ ემთხვევა",
+    "passwordLength": "პაროლი უნდა შედგებოდეს მინიმუმ 6 სიმბოლოსგან",
+    "registerFailed": "რეგისტრაცია ვერ მოხერხდა",
+    "authFailed": "ავტორიზაცია ვერ მოხერხდა"
+  }
+}

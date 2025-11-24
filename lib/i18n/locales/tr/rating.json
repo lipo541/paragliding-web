@@ -1,0 +1,22 @@
+{
+  "modal": {
+    "defaultTitle": "Değerlendirin",
+    "defaultSubtitle": "Görüşünüz önemli",
+    "clickToRate": "Değerlendirmek için yıldızlara tıklayın"
+  },
+  "input": {
+    "loginRequired": "Değerlendirmek için lütfen giriş yapın",
+    "saveError": "Değerlendirme kaydedilemedi",
+    "deleteError": "Değerlendirme silinemedi",
+    "delete": "Sil",
+    "saved": "Kaydedildi!",
+    "saving": "Kaydediliyor...",
+    "labels": {
+      "poor": "Kötü",
+      "average": "Orta",
+      "good": "İyi",
+      "veryGood": "Çok iyi",
+      "excellent": "Mükemmel"
+    }
+  }
+}

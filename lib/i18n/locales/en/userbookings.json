@@ -1,0 +1,33 @@
+{
+  "title": "My Bookings",
+  "empty": "You don't have any bookings yet",
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "cancelled": "Cancelled",
+    "completed": "Completed"
+  },
+  "fields": {
+    "date": "Date",
+    "people": "People",
+    "contact": "Contact",
+    "method": "Method",
+    "promoCode": "Promo Code",
+    "comment": "Comment"
+  },
+  "actions": {
+    "cancel": "Cancel"
+  },
+  "dialog": {
+    "title": "Cancel Booking",
+    "message": "Are you sure you want to cancel this booking?",
+    "confirm": "Yes, Cancel",
+    "cancel": "No"
+  },
+  "messages": {
+    "authRequired": "Please log in",
+    "fetchError": "Failed to load bookings",
+    "cancelSuccess": "Booking cancelled",
+    "cancelError": "Failed to cancel booking"
+  }
+}

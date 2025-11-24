@@ -1,0 +1,54 @@
+{
+  "error": {
+    "notFound": "Локация не найдена",
+    "backButton": "Назад"
+  },
+  "hero": {
+    "rate": "Оценить",
+    "changeRating": "Изменить",
+    "contact": "Связаться",
+    "bookFlight": "Забронировать полёт"
+  },
+  "content": {
+    "readMore": "Читать далее",
+    "showLess": "Свернуть",
+    "aboutLocation": "О локации"
+  },
+  "flightTypes": {
+    "title": "Пакеты",
+    "startFrom": "От",
+    "rateButton": "Оценить",
+    "changeButton": "Изменить"
+  },
+  "gallery": {
+    "title": "Галерея",
+    "photos": "Фото",
+    "videos": "Видео"
+  },
+  "map": {
+    "title": "Карта"
+  },
+  "contact": {
+    "title": "Контакт и информация",
+    "description": "У всех локаций на нашей платформе разные цены полетов, пакеты и условия.",
+    "visitText": "Посетите ",
+    "locationsPage": "страницу локаций",
+    "detailsText": " для подробной информации или свяжитесь с нами напрямую:",
+    "messengers": "Мессенджеры"
+  },
+  "sidebar": {
+    "bookNow": "Забронировать",
+    "experienceText": "Испытайте незабываемый полет в {locationName}. Забронируйте сейчас!",
+    "flights": "Полеты",
+    "photos": "Фото"
+  },
+  "quickInfo": {
+    "bestSeason": "Лучший сезон",
+    "yearRound": "Круглый год",
+    "flightConditions": "Условия полета",
+    "thermalAndDynamic": "Термические и динамические"
+  },
+  "ratingModal": {
+    "title": "Оцените локацию"
+  }
+}

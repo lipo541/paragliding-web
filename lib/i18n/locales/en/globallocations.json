@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "All Locations",
+    "subtitle": "Discover the best paragliding locations in Georgia and beyond",
+    "searchPlaceholder": "Quick search - choose a location...",
+    "loading": "Loading locations...",
+    "locationBadge": "Location",
+    "countryBadge": "Country",
+    "moreFlight": "more flight type",
+    "notFound": "Location not found"
+  },
+  "stats": {
+    "location": "Locations",
+    "country": "Countries",
+    "rating": "Rating"
+  },
+  "filters": {
+    "allCountries": "All Countries",
+    "searchPlaceholder": "Filter by name...",
+    "sortByRating": "Rating (High-Low)",
+    "sortByName": "Name (A-Z)",
+    "sortByAltitude": "Altitude (High-Low)",
+    "ratingShort": "Rating",
+    "nameShort": "Name",
+    "altitudeShort": "Altitude",
+    "clearFilters": "Clear Filters",
+    "clear": "Clear",
+    "resultsFound": "Found",
+    "activeFilters": "Active:"
+  },
+  "empty": {
+    "title": "Location not found",
+    "description": "Try different search criteria",
+    "viewAll": "View all locations"
+  },
+  "country": {
+    "locations": "locations",
+    "countryPage": "Country page →"
+  },
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert"
+  },
+  "location": {
+    "bookNow": "Book Now",
+    "book": "Book"
+  },
+  "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+}

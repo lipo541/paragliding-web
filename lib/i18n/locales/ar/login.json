@@ -1,0 +1,23 @@
+{
+  "title": "تسجيل الدخول",
+  "email": {
+    "label": "البريد الإلكتروني",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "كلمة المرور",
+    "placeholder": "••••••••"
+  },
+  "submit": "تسجيل الدخول",
+  "loading": "جاري التحميل...",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "register": "التسجيل",
+  "divider": "أو",
+  "social": {
+    "google": "تسجيل الدخول بواسطة Google"
+  },
+  "errors": {
+    "loginFailed": "فشل تسجيل الدخول",
+    "authFailed": "فشل التفويض"
+  }
+}

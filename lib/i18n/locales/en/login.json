@@ -1,0 +1,23 @@
+{
+  "title": "Sign In",
+  "email": {
+    "label": "Email",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "Password",
+    "placeholder": "••••••••"
+  },
+  "submit": "Sign In",
+  "loading": "Loading...",
+  "forgotPassword": "Forgot password?",
+  "register": "Register",
+  "divider": "or",
+  "social": {
+    "google": "Sign in with Google"
+  },
+  "errors": {
+    "loginFailed": "Sign in failed",
+    "authFailed": "Authorization failed"
+  }
+}

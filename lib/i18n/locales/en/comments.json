@@ -1,0 +1,41 @@
+{
+  "list": {
+    "title": "Comments",
+    "loadError": "Failed to load comments",
+    "noComments": "No comments yet. Be the first!"
+  },
+  "item": {
+    "user": "User",
+    "justNow": "just now",
+    "edited": "edited",
+    "awaitingModeration": "Awaiting moderation",
+    "like": "Like",
+    "dislike": "Dislike",
+    "reply": "Reply",
+    "replies": "reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "reject": "Reject",
+    "deleteConfirm": "Are you sure you want to delete this comment?",
+    "rejectConfirm": "Are you sure you want to reject this comment?",
+    "deleteError": "Failed to delete comment",
+    "updateError": "Failed to update comment",
+    "approveError": "Failed to approve",
+    "rejectError": "Failed to reject",
+    "loginRequired": "Please log in"
+  },
+  "input": {
+    "placeholder": "Write a comment...",
+    "replyPlaceholder": "Write a reply...",
+    "emptyError": "Comment cannot be empty",
+    "loginRequired": "Please log in to comment",
+    "published": "Comment published!",
+    "awaitingModeration": "Comment submitted! It will appear after moderation.",
+    "submitError": "Failed to submit comment",
+    "addEmoji": "Add emoji",
+    "send": "Send"
+  }
+}

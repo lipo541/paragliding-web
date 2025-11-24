@@ -1,6 +1,6 @@
 'use client';
 
-import { Users, Target, Plane, Globe, Heart, Award, TrendingUp, Shield } from 'lucide-react';
+import { IoRocketOutline, IoGlobeOutline, IoCardOutline, IoLocationOutline } from 'react-icons/io5';
 
 interface AboutUsProps {
   locale: string;
@@ -8,316 +8,194 @@ interface AboutUsProps {
 
 export default function AboutUs({ locale }: AboutUsProps) {
   const t = {
-    title: locale === 'ka' ? 'ჩვენს შესახებ' : locale === 'en' ? 'About Us' : 'О нас',
-    subtitle:
-      locale === 'ka'
-        ? 'პარაგლაიდინგის მსოფლიო საქართველოში - თქვენი თავგადასავალი იწყება აქ'
-        : locale === 'en'
-        ? 'The World of Paragliding in Georgia - Your Adventure Starts Here'
-        : 'Мир парапланеризма в Грузии - Ваше приключение начинается здесь',
+    title: locale === 'ka' ? 'ჩვენს შესახებ' : locale === 'en' ? 'About Us' : locale === 'ru' ? 'О нас' : locale === 'ar' ? 'معلومات عنا' : locale === 'de' ? 'Über uns' : 'Hakkımızda',
+    subtitle: locale === 'ka' ? 'პარაგლაიდინგის ციფრული პლატფორმა საქართველოში' : locale === 'en' ? 'Digital Paragliding Platform in Georgia' : locale === 'ru' ? 'Цифровая платформа парапланеризма в Грузии' : locale === 'ar' ? 'منصة رقمية للطيران الشراعي في جورجيا' : locale === 'de' ? 'Digitale Gleitschirm-Plattform in Georgien' : 'Gürcistan\'da Dijital Paraşüt Platformu',
     
-    mission: {
-      title: locale === 'ka' ? 'ჩვენი მისია' : locale === 'en' ? 'Our Mission' : 'Наша миссия',
-      description:
-        locale === 'ka'
-          ? 'ჩვენი მიზანია საქართველოში პარაგლაიდინგის განვითარება, პოპულარიზაცია და ხელმისაწვდომობის გაზრდა. ვქმნით ერთიან პლატფორმას, სადაც ყველას შეეძლება იპოვოს სრული ინფორმაცია ლოკაციების, ფასების, პილოტებისა და კომპანიების შესახებ.'
-          : locale === 'en'
-          ? 'Our goal is to develop, popularize and increase accessibility of paragliding in Georgia. We create a unified platform where everyone can find complete information about locations, prices, pilots and companies.'
-          : 'Наша цель - развитие, популяризация и повышение доступности парапланеризма в Грузии. Мы создаем единую платформу, где каждый может найти полную информацию о локациях, ценах, пилотах и компаниях.',
+    description: {
+      title: locale === 'ka' ? 'რას ვაკეთებთ' : locale === 'en' ? 'What We Do' : locale === 'ru' ? 'Что мы делаем' : locale === 'ar' ? 'ماذا نفعل' : locale === 'de' ? 'Was wir tun' : 'Ne Yapıyoruz',
+      text: locale === 'ka' 
+        ? 'ვქმნით ციფრულ პლატფორმას პარაგლაიდინგის ინდუსტრიისთვის საქართველოში. ჩვენი მიზანია მთელი სფეროს ციფრული ტრანსფორმაცია - ჯავშნებიდან დაწყებული, გლობალურ ინტეგრაციამდე.'
+        : locale === 'en'
+        ? 'We are building a digital platform for the paragliding industry in Georgia. Our goal is complete digital transformation of the sector - from bookings to global integration.'
+        : locale === 'ru'
+        ? 'Мы создаем цифровую платформу для индустрии парапланеризма в Грузии. Наша цель - полная цифровая трансформация сектора - от бронирований до глобальной интеграции.'
+        : locale === 'ar'
+        ? 'نحن نبني منصة رقمية لصناعة الطيران الشراعي في جورجيا. هدفنا هو التحول الرقمي الكامل للقطاع - من الحجوزات إلى التكامل العالمي.'
+        : locale === 'de'
+        ? 'Wir bauen eine digitale Plattform für die Gleitschirmindustrie in Georgien. Unser Ziel ist die vollständige digitale Transformation des Sektors - von Buchungen bis zur globalen Integration.'
+        : 'Gürcistan\'daki paraşüt endüstrisi için dijital bir platform oluşturuyoruz. Amacımız sektörün tam dijital dönüşümü - rezervasyonlardan küresel entegrasyona.',
     },
 
-    vision: {
-      title: locale === 'ka' ? 'ჩვენი ხედვა' : locale === 'en' ? 'Our Vision' : 'Наше видение',
-      description:
-        locale === 'ka'
-          ? 'ვხედავთ საქართველოს როგორც პარაგლაიდინგის რეგიონულ ჰაბს, სადაც ადგილობრივი და საერთაშორისო ტურისტები აღმოაჩენენ უნიკალურ ლოკაციებს, უსაფრთხო პირობებს და პროფესიონალურ სერვისს. ჩვენი პლატფორმა იქნება #1 არჩევანი ყველასთვის, ვინც პარაგლაიდინგით დაინტერესებულია.'
+    phases: {
+      title: locale === 'ka' ? 'განვითარების ეტაპები' : locale === 'en' ? 'Development Phases' : locale === 'ru' ? 'Этапы развития' : locale === 'ar' ? 'مراحل التطوير' : locale === 'de' ? 'Entwicklungsphasen' : 'Geliştirme Aşamaları',
+      
+      phase1: {
+        title: locale === 'ka' ? 'ფაზა 1 - ციფრული საფუძველი' : locale === 'en' ? 'Phase 1 - Digital Foundation' : locale === 'ru' ? 'Фаза 1 - Цифровая основа' : locale === 'ar' ? 'المرحلة 1 - الأساس الرقمي' : locale === 'de' ? 'Phase 1 - Digitale Grundlage' : 'Faz 1 - Dijital Temel',
+        status: locale === 'ka' ? '✅ დასრულებულია' : locale === 'en' ? '✅ Completed' : locale === 'ru' ? '✅ Завершено' : locale === 'ar' ? '✅ مكتمل' : locale === 'de' ? '✅ Abgeschlossen' : '✅ Tamamlandı',
+        description: locale === 'ka'
+          ? 'შეიქმნა ციფრული ინფრასტრუქტურა - ვებსაიტი ლოკაციების ინფორმაციით, ონლაინ ჯავშნის სისტემა, მრავალენოვანი მხარდაჭერა (6 ენა), პრომო კოდების სისტემა და SuperAdmin პანელი კონტენტის მართვისთვის.'
           : locale === 'en'
-          ? 'We envision Georgia as a regional paragliding hub where local and international tourists discover unique locations, safe conditions and professional service. Our platform will be the #1 choice for anyone interested in paragliding.'
-          : 'Мы видим Грузию как региональный хаб парапланеризма, где местные и международные туристы открывают уникальные локации, безопасные условия и профессиональный сервис. Наша платформа станет выбором №1 для всех интересующихся парапланеризмом.',
-    },
+          ? 'Digital infrastructure created - website with location information, online booking system, multilingual support (6 languages), promo code system, and SuperAdmin panel for content management.'
+          : locale === 'ru'
+          ? 'Создана цифровая инфраструктура - сайт с информацией о локациях, онлайн-система бронирования, многоязычная поддержка (6 языков), система промо-кодов и SuperAdmin панель для управления контентом.'
+          : locale === 'ar'
+          ? 'تم إنشاء البنية التحتية الرقمية - موقع ويب مع معلومات الموقع، نظام الحجز عبر الإنترنت، دعم متعدد اللغات (6 لغات)، نظام رمز الترويج ولوحة SuperAdmin لإدارة المحتوى.'
+          : locale === 'de'
+          ? 'Digitale Infrastruktur erstellt - Website mit Standortinformationen, Online-Buchungssystem, mehrsprachige Unterstützung (6 Sprachen), Promo-Code-System und SuperAdmin-Panel für Content-Management.'
+          : 'Dijital altyapı oluşturuldu - konum bilgileri içeren web sitesi, çevrimiçi rezervasyon sistemi, çok dilli destek (6 dil), promosyon kodu sistemi ve içerik yönetimi için SuperAdmin paneli.',
+      },
 
-    values: [
-      {
-        icon: Shield,
-        title: locale === 'ka' ? 'უსაფრთხოება' : locale === 'en' ? 'Safety' : 'Безопасность',
-        description:
-          locale === 'ka'
-            ? 'პრიორიტეტი ნომერ 1 - მხოლოდ სერტიფიცირებული პილოტები და კომპანიები, სრული ინფორმაცია უსაფრთხოების ზომების შესახებ'
-            : locale === 'en'
-            ? 'Priority #1 - only certified pilots and companies, complete safety information'
-            : 'Приоритет №1 - только сертифицированные пилоты и компании, полная информация о мерах безопасности',
-      },
-      {
-        icon: Globe,
-        title: locale === 'ka' ? 'ხელმისაწვდომობა' : locale === 'en' ? 'Accessibility' : 'Доступность',
-        description:
-          locale === 'ka'
-            ? '6 ენაზე ხელმისაწვდომი პლატფორმა, მარტივი ჯავშნის სისტემა, გამჭვირვალე ფასები და პრომო-აქციები'
-            : locale === 'en'
-            ? 'Platform available in 6 languages, simple booking system, transparent prices and promotions'
-            : 'Платформа на 6 языках, простая система бронирования, прозрачные цены и акции',
-      },
-      {
-        icon: Heart,
-        title: locale === 'ka' ? 'ხარისხი' : locale === 'en' ? 'Quality' : 'Качество',
-        description:
-          locale === 'ka'
-            ? 'მაღალი ხარისხის სერვისი, რეიტინგები, რეალური მიმოხილვები მომხმარებლებისგან'
-            : locale === 'en'
-            ? 'High quality service, ratings, real reviews from users'
-            : 'Высокое качество сервиса, рейтинги, реальные отзывы пользователей',
-      },
-      {
-        icon: TrendingUp,
-        title: locale === 'ka' ? 'განვითარება' : locale === 'en' ? 'Development' : 'Развитие',
-        description:
-          locale === 'ka'
-            ? 'ტურიზმის განვითარება რეგიონებში, ახალი სამუშაო ადგილები, საერთაშორისო ვიზიბილობა'
-            : locale === 'en'
-            ? 'Tourism development in regions, new jobs, international visibility'
-            : 'Развитие туризма в регионах, новые рабочие места, международная видимость',
-      },
-    ],
-
-    features: [
-      {
-        title: locale === 'ka' ? 'ერთიანი პლატფორმა' : locale === 'en' ? 'Unified Platform' : 'Единая платформа',
-        description:
-          locale === 'ka'
-            ? 'ყველა საჭირო ინფორმაცია ერთ ადგილას - ლოკაციები, პილოტები, კომპანიები, ფასები'
-            : locale === 'en'
-            ? 'All necessary information in one place - locations, pilots, companies, prices'
-            : 'Вся необходимая информация в одном месте - локации, пилоты, компании, цены',
-      },
-      {
-        title: locale === 'ka' ? 'სმარტ ჯავშანი' : locale === 'en' ? 'Smart Booking' : 'Умное бронирование',
-        description:
-          locale === 'ka'
-            ? 'Backend ვალიდაცია, პრომო კოდები, გასტებისთვის და რეგისტრირებულებისთვის'
-            : locale === 'en'
-            ? 'Backend validation, promo codes, for guests and registered users'
-            : 'Бэкенд валидация, промо-коды, для гостей и зарегистрированных',
-      },
-      {
-        title: locale === 'ka' ? 'მრავალენოვანი' : locale === 'en' ? 'Multilingual' : 'Многоязычность',
-        description:
-          locale === 'ka'
-            ? 'ქართული, ინგლისური, რუსული, არაბული, გერმანული, თურქული'
-            : locale === 'en'
-            ? 'Georgian, English, Russian, Arabic, German, Turkish'
-            : 'Грузинский, английский, русский, арабский, немецкий, турецкий',
-      },
-      {
-        title: locale === 'ka' ? 'CMS სისტემა' : locale === 'en' ? 'CMS System' : 'CMS система',
-        description:
-          locale === 'ka'
-            ? 'სუპერადმინი ყველა კონტენტის მართვისთვის - ქვეყნები, ლოკაციები, პრომოები'
-            : locale === 'en'
-            ? 'Super admin for managing all content - countries, locations, promos'
-            : 'Супер админ для управления контентом - страны, локации, промо',
-      },
-      {
-        title: locale === 'ka' ? 'რეიტინგები' : locale === 'en' ? 'Ratings' : 'Рейтинги',
-        description:
-          locale === 'ka'
-            ? '5-ვარსკვლავიანი რეიტინგი, კომენტარები, მოდერაცია'
-            : locale === 'en'
-            ? '5-star rating, comments, moderation'
-            : '5-звездочный рейтинг, комментарии, модерация',
-      },
-      {
-        title: locale === 'ka' ? 'მობილური' : locale === 'en' ? 'Mobile' : 'Мобильный',
-        description:
-          locale === 'ka'
-            ? 'სრულად რესპონსიული დიზაინი ყველა მოწყობილობისთვის'
-            : locale === 'en'
-            ? 'Fully responsive design for all devices'
-            : 'Полностью адаптивный дизайн для всех устройств',
-      },
-    ],
-
-    roadmap: {
-      title: locale === 'ka' ? 'ჩვენი გეგმები' : locale === 'en' ? 'Our Roadmap' : 'Наши планы',
-      phases: [
-        {
-          phase: locale === 'ka' ? 'ფაზა 1 - MVP' : locale === 'en' ? 'Phase 1 - MVP' : 'Фаза 1 - MVP',
-          status: locale === 'ka' ? '✅ დასრულებულია' : locale === 'en' ? '✅ Completed' : '✅ Завершено',
-          items:
-            locale === 'ka'
-              ? ['ლოკაციების გვერდები', 'ჯავშნის სისტემა', 'პრომო კოდები', 'SuperAdmin პანელი']
-              : locale === 'en'
-              ? ['Location pages', 'Booking system', 'Promo codes', 'SuperAdmin panel']
-              : ['Страницы локаций', 'Система бронирования', 'Промо-коды', 'SuperAdmin панель'],
-        },
-        {
-          phase: locale === 'ka' ? 'ფაზა 2 - გაფართოება' : locale === 'en' ? 'Phase 2 - Expansion' : 'Фаза 2 - Расширение',
-          status: locale === 'ka' ? '🚧 მიმდინარე' : locale === 'en' ? '🚧 In Progress' : '🚧 В процессе',
-          items:
-            locale === 'ka'
-              ? ['პილოტების პროფილები', 'კომპანიების გვერდები', 'სწავლების სექცია', 'ტურები']
-              : locale === 'en'
-              ? ['Pilot profiles', 'Company pages', 'Training section', 'Tours']
-              : ['Профили пилотов', 'Страницы компаний', 'Раздел обучения', 'Туры'],
-        },
-        {
-          phase: locale === 'ka' ? 'ფაზა 3 - სკალირება' : locale === 'en' ? 'Phase 3 - Scaling' : 'Фаза 3 - Масштабирование',
-          status: locale === 'ka' ? '📅 დაგეგმილი' : locale === 'en' ? '📅 Planned' : '📅 Запланировано',
-          items:
-            locale === 'ka'
-              ? ['მობილური აპლიკაცია', 'AI რეკომენდაციები', 'ლაივ chat support', 'სოციალური ფუნქციები']
-              : locale === 'en'
-              ? ['Mobile app', 'AI recommendations', 'Live chat support', 'Social features']
-              : ['Мобильное приложение', 'AI рекомендации', 'Живая поддержка', 'Социальные функции'],
-        },
-      ],
-    },
-
-    team: {
-      title: locale === 'ka' ? 'გუნდი' : locale === 'en' ? 'Team' : 'Команда',
-      description:
-        locale === 'ka'
-          ? 'პროფესიონალების გუნდი, რომელიც მუშაობს პარაგლაიდინგის ინდუსტრიის განვითარებაზე საქართველოში'
+      phase2: {
+        title: locale === 'ka' ? 'ფაზა 2 - ციფრული მართვა' : locale === 'en' ? 'Phase 2 - Digital Management' : locale === 'ru' ? 'Фაза 2 - Цифровое управление' : locale === 'ar' ? 'المرحلة 2 - الإدارة الرقمية' : locale === 'de' ? 'Phase 2 - Digitales Management' : 'Faz 2 - Dijital Yönetim',
+        status: locale === 'ka' ? '🚧 მიმდინარე' : locale === 'en' ? '🚧 In Progress' : locale === 'ru' ? '🚧 В процессе' : locale === 'ar' ? '🚧 قيد التنفيذ' : locale === 'de' ? '🚧 In Arbeit' : '🚧 Devam Ediyor',
+        description: locale === 'ka'
+          ? 'სრული ციფრული ტრანსფორმაცია - პილოტების, კომპანიების და ოპერატორების ციფრული პროფილები, ავტომატიზირებული ჯავშნების მართვა, რეალურ დროში ხელმისაწვდომობის ტრექინგი, ანალიტიკა და რეპორტინგი. მთელი ინდუსტრია გადადის ციფრულ მართვაზე.'
           : locale === 'en'
-          ? 'Team of professionals working on paragliding industry development in Georgia'
-          : 'Команда профессионалов, работающих над развитием парапланеризма в Грузии',
+          ? 'Complete digital transformation - digital profiles for pilots, companies and operators, automated booking management, real-time availability tracking, analytics and reporting. The entire industry transitions to digital management.'
+          : locale === 'ru'
+          ? 'Полная цифровая трансформация - цифровые профили пилотов, компаний и операторов, автоматизированное управление бронированиями, отслеживание доступности в реальном времени, аналитика и отчетность. Вся индустрия переходит на цифровое управление.'
+          : locale === 'ar'
+          ? 'التحول الرقمي الكامل - ملفات تعريف رقمية للطيارين والشركات والمشغلين، إدارة الحجز الآلي، تتبع التوفر في الوقت الفعلي، التحليلات وإعداد التقارير. تنتقل الصناعة بأكملها إلى الإدارة الرقمية.'
+          : locale === 'de'
+          ? 'Vollständige digitale Transformation - digitale Profile für Piloten, Unternehmen und Betreiber, automatisiertes Buchungsmanagement, Echtzeit-Verfügbarkeitsverfolgung, Analytik und Berichterstattung. Die gesamte Branche wechselt zur digitalen Verwaltung.'
+          : 'Tam dijital dönüşüm - pilotlar, şirketler ve operatörler için dijital profiller, otomatik rezervasyon yönetimi, gerçek zamanlı müsaitlik takibi, analitik ve raporlama. Tüm endüstri dijital yönetime geçiyor.',
+      },
+
+      phase3: {
+        title: locale === 'ka' ? 'ფაზა 3 - გლობალური ინტეგრაცია' : locale === 'en' ? 'Phase 3 - Global Integration' : locale === 'ru' ? 'Фაза 3 - Глобальная интеграция' : locale === 'ar' ? 'المرحلة 3 - التكامل العالمي' : locale === 'de' ? 'Phase 3 - Globale Integration' : 'Faz 3 - Küresel Entegrasyon',
+        status: locale === 'ka' ? '📅 დაგეგმილი' : locale === 'en' ? '📅 Planned' : locale === 'ru' ? '📅 Запланировано' : locale === 'ar' ? '📅 مخطط' : locale === 'de' ? '📅 Geplant' : '📅 Planlandı',
+        description: locale === 'ka'
+          ? 'მსოფლიო ბაზარში ინტეგრაცია - საერთაშორისო გადახდის სისტემების დანერგვა, მთელი მსოფლიოს ლოკაციების ცენტრალიზებული ბაზა, გლობალური booking პლატფორმა. საქართველო გახდება მსოფლიო პარაგლაიდინგის რუკაზე წამყვანი ციფრული ჰაბი.'
+          : locale === 'en'
+          ? 'Integration into global market - implementation of international payment systems, centralized database of worldwide locations, global booking platform. Georgia becomes a leading digital hub on the world paragliding map.'
+          : locale === 'ru'
+          ? 'Интеграция в мировой рынок - внедрение международных платежных систем, централизованная база локаций по всему миру, глобальная платформа бронирования. Грузия становится ведущим цифровым хабом на мировой карте парапланеризма.'
+          : locale === 'ar'
+          ? 'التكامل في السوق العالمية - تنفيذ أنظمة الدفع الدولية، قاعدة بيانات مركزية للمواقع في جميع أنحاء العالم، منصة حجز عالمية. تصبح جورجيا مركزًا رقميًا رائدًا على خريطة الطيران الشراعي العالمية.'
+          : locale === 'de'
+          ? 'Integration in den globalen Markt - Implementierung internationaler Zahlungssysteme, zentralisierte Datenbank weltweiter Standorte, globale Buchungsplattform. Georgien wird ein führender digitaler Hub auf der Weltgleitschirmkarte.'
+          : 'Küresel pazara entegrasyon - uluslararası ödeme sistemlerinin uygulanması, dünya çapındaki konumların merkezi veritabanı, küresel rezervasyon platformu. Gürcistan, dünya yamaç paraşütü haritasında önde gelen bir dijital merkez haline geliyor.',
+      },
     },
 
     cta: {
-      title:
-        locale === 'ka'
-          ? 'მზად ხარ პირველი ფრენისთვის?'
-          : locale === 'en'
-          ? 'Ready for Your First Flight?'
-          : 'Готовы к первому полету?',
-      description:
-        locale === 'ka'
-          ? 'აღმოაჩინე საქართველოს უნიკალური ლოკაციები და გამოსცადე პარაგლაიდინგის განუმეორებელი გამოცდილება'
-          : locale === 'en'
-          ? 'Discover unique locations in Georgia and experience unforgettable paragliding'
-          : 'Откройте уникальные локации Грузии и испытайте незабываемый парапланеризм',
-      button:
-        locale === 'ka'
-          ? 'დაათვალიერე ლოკაციები'
-          : locale === 'en'
-          ? 'Explore Locations'
-          : 'Исследовать локации',
+      title: locale === 'ka' ? 'დაიწყე შენი თავგადასავალი' : locale === 'en' ? 'Start Your Adventure' : locale === 'ru' ? 'Начни своё приключение' : locale === 'ar' ? 'ابدأ مغامرتك' : locale === 'de' ? 'Starte dein Abenteuer' : 'Macerana Başla',
+      button: locale === 'ka' ? 'იხილე ლოკაციები' : locale === 'en' ? 'View Locations' : locale === 'ru' ? 'Смотреть локации' : locale === 'ar' ? 'عرض المواقع' : locale === 'de' ? 'Standorte ansehen' : 'Konumları Görüntüle',
     },
   };
 
   return (
-    <main className="min-h-screen bg-background pt-20 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-background pt-20 pb-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Hero */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center justify-center p-3 rounded-xl bg-foreground/5 border border-foreground/10 mb-6">
-            <svg className="w-8 h-8 text-foreground" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L4 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-8-5z"/>
-            </svg>
+        <div className="mb-10 text-center">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-foreground/5 mb-4">
+            <IoRocketOutline className="w-7 h-7 text-foreground" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{t.title}</h1>
-          <p className="text-lg text-foreground/70 max-w-3xl mx-auto">{t.subtitle}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            {t.title}
+          </h1>
+          <p className="text-sm text-foreground/60 max-w-xl mx-auto">
+            {t.subtitle}
+          </p>
         </div>
 
-        {/* Mission & Vision */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          <div className="p-6 rounded-xl bg-foreground/5 border border-foreground/10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-foreground/10">
-                <svg className="w-5 h-5 text-foreground" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-foreground">{t.mission.title}</h2>
-            </div>
-            <p className="text-foreground/70 leading-relaxed">{t.mission.description}</p>
-          </div>
-
-          <div className="p-6 rounded-xl bg-foreground/5 border border-foreground/10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-foreground/10">
-                <svg className="w-5 h-5 text-foreground" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-foreground">{t.vision.title}</h2>
-            </div>
-            <p className="text-foreground/70 leading-relaxed">{t.vision.description}</p>
+        {/* Description */}
+        <div className="mb-8">
+          <div className="rounded-2xl bg-foreground/5 p-5">
+            <h2 className="text-base font-semibold text-foreground mb-2">
+              {t.description.title}
+            </h2>
+            <p className="text-sm text-foreground/70 leading-relaxed">
+              {t.description.text}
+            </p>
           </div>
         </div>
 
-        {/* Values */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-6 text-center">
-            {locale === 'ka' ? 'ჩვენი ღირებულებები' : locale === 'en' ? 'Our Values' : 'Наши ценности'}
+        {/* Development Phases */}
+        <div className="mb-8">
+          <h2 className="text-lg font-bold text-foreground mb-4 text-center">
+            {t.phases.title}
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {t.values.map((value, idx) => (
-              <div
-                key={idx}
-                className="p-5 rounded-xl bg-foreground/5 border border-foreground/10 hover:bg-foreground/10 transition-colors"
-              >
-                <div className="p-2 rounded-lg bg-foreground/10 w-fit mb-3">
-                  <value.icon className="w-5 h-5 text-foreground" />
+          <div className="space-y-3">
+            {/* Phase 1 */}
+            <div className="rounded-2xl bg-foreground/5 p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
+                  <IoRocketOutline className="w-5 h-5 text-foreground" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">{value.title}</h3>
-                <p className="text-sm text-foreground/60 leading-relaxed">{value.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-6 text-center">
-            {locale === 'ka' ? 'ფუნქციონალი' : locale === 'en' ? 'Features' : 'Функционал'}
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {t.features.map((feature, idx) => (
-              <div
-                key={idx}
-                className="p-4 rounded-xl bg-foreground/5 border border-foreground/10 hover:bg-foreground/10 transition-colors"
-              >
-                <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
-                <p className="text-sm text-foreground/60">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Roadmap */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-6 text-center">{t.roadmap.title}</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {t.roadmap.phases.map((phase, idx) => (
-              <div key={idx} className="p-6 rounded-xl bg-foreground/5 border border-foreground/10">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-foreground mb-2">{phase.phase}</h3>
-                  <span className="text-sm font-medium">{phase.status}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <h3 className="text-sm font-semibold text-foreground">
+                      {t.phases.phase1.title}
+                    </h3>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-foreground/10 text-foreground">
+                      {t.phases.phase1.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-foreground/70 leading-relaxed">
+                    {t.phases.phase1.description}
+                  </p>
                 </div>
-                <ul className="space-y-2">
-                  {phase.items.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-foreground/70">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-            ))}
+            </div>
+
+            {/* Phase 2 */}
+            <div className="rounded-2xl bg-foreground/5 p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
+                  <IoGlobeOutline className="w-5 h-5 text-foreground" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <h3 className="text-sm font-semibold text-foreground">
+                      {t.phases.phase2.title}
+                    </h3>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-foreground/10 text-foreground">
+                      {t.phases.phase2.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-foreground/70 leading-relaxed">
+                    {t.phases.phase2.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Phase 3 */}
+            <div className="rounded-2xl bg-foreground/5 p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
+                  <IoCardOutline className="w-5 h-5 text-foreground" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <h3 className="text-sm font-semibold text-foreground">
+                      {t.phases.phase3.title}
+                    </h3>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-foreground/10 text-foreground">
+                      {t.phases.phase3.status}
+                    </span>
+                  </div>
+                  <p className="text-xs text-foreground/70 leading-relaxed">
+                    {t.phases.phase3.description}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="p-8 rounded-xl bg-foreground/5 border border-foreground/10 text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-3">{t.cta.title}</h2>
-          <p className="text-foreground/70 mb-6 max-w-2xl mx-auto">{t.cta.description}</p>
+        <div className="rounded-2xl bg-foreground/5 p-6 text-center">
+          <h2 className="text-lg font-bold text-foreground mb-3">
+            {t.cta.title}
+          </h2>
           <a
             href={`/${locale}/locations`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-foreground text-background hover:bg-foreground/90 font-semibold shadow-lg transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-semibold text-sm transition-colors"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
-            </svg>
+            <IoLocationOutline className="w-4 h-4" />
             {t.cta.button}
           </a>
         </div>

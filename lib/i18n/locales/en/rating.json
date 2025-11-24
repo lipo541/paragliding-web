@@ -1,0 +1,22 @@
+{
+  "modal": {
+    "defaultTitle": "Rate",
+    "defaultSubtitle": "Your opinion matters",
+    "clickToRate": "Click on stars to rate"
+  },
+  "input": {
+    "loginRequired": "Please log in to rate",
+    "saveError": "Failed to save rating",
+    "deleteError": "Failed to delete rating",
+    "delete": "Delete",
+    "saved": "Saved!",
+    "saving": "Saving...",
+    "labels": {
+      "poor": "Poor",
+      "average": "Average",
+      "good": "Good",
+      "veryGood": "Very Good",
+      "excellent": "Excellent"
+    }
+  }
+}

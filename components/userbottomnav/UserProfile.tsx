@@ -13,6 +13,7 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import PasswordStrength from '@/components/ui/PasswordStrength';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface ProfileData {
   full_name: string | null;
@@ -21,6 +22,7 @@ interface ProfileData {
 }
 
 export default function UserProfile() {
+  const { t } = useTranslation('userprofile');
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<ProfileData>({ full_name: '', phone: '', avatar_url: '' });
   const [loading, setLoading] = useState(true);
@@ -98,7 +100,7 @@ export default function UserProfile() {
       }
     } catch (error) {
       console.error('Error loading profile:', error);
-      toast.error('პროფილის ჩატვირთვა ვერ მოხერხდა');
+      toast.error(t('form.loadError'));
     } finally {
       setLoading(false);
     }
@@ -119,9 +121,9 @@ export default function UserProfile() {
       if (error) throw error;
 
       setProfile(prev => ({ ...prev, full_name: data.full_name, phone: data.phone || null }));
-      toast.success('პროფილი წარმატებით განახლდა!');
+      toast.success(t('form.updateSuccess'));
     } catch (error: any) {
-      toast.error(error.message || 'დაფიქსირდა შეცდომა');
+      toast.error(error.message || t('form.updateError'));
     }
   };
 
@@ -134,12 +136,12 @@ export default function UserProfile() {
 
       if (error) throw error;
 
-      toast.success('პაროლი წარმატებით შეიცვალა!');
+      toast.success(t('password.changeSuccess'));
       resetPasswordForm();
       setShowPasswordChange(false);
     } catch (error: any) {
       console.error('Password change error:', error);
-      toast.error(error.message || 'პაროლის შეცვლა ვერ მოხერხდა');
+      toast.error(error.message || t('password.changeError'));
     }
   };
 
@@ -148,12 +150,12 @@ export default function UserProfile() {
 
     // Validate file
     if (!file.type.startsWith('image/')) {
-      toast.error('გთხოვთ აირჩიოთ სურათი');
+      toast.error(t('avatar.invalidType'));
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('ფაილის ზომა არ უნდა აღემატებოდეს 2MB-ს');
+      toast.error(t('avatar.tooLarge'));
       return;
     }
 
@@ -195,9 +197,9 @@ export default function UserProfile() {
       if (updateError) throw updateError;
 
       setProfile(prev => ({ ...prev, avatar_url: publicUrl }));
-      toast.success('ფოტო წარმატებით აიტვირთა!');
+      toast.success(t('avatar.uploadSuccess'));
     } catch (error: any) {
-      toast.error(error.message || 'ფოტოს ატვირთვა ვერ მოხერხდა');
+      toast.error(error.message || t('avatar.uploadError'));
     } finally {
       setUploadingAvatar(false);
     }
@@ -206,7 +208,7 @@ export default function UserProfile() {
   const handleDeleteAvatar = async () => {
     if (!user || !profile.avatar_url) return;
 
-    if (!confirm('დარწმუნებული ხართ რომ გსურთ ფოტოს წაშლა?')) return;
+    if (!confirm(t('avatar.deleteConfirm'))) return;
 
     try {
       // Extract the path from URL
@@ -224,9 +226,9 @@ export default function UserProfile() {
       if (error) throw error;
 
       setProfile(prev => ({ ...prev, avatar_url: null }));
-      toast.success('ფოტო წაიშალა');
+      toast.success(t('avatar.deleteSuccess'));
     } catch (error: any) {
-      toast.error(error.message || 'ფოტოს წაშლა ვერ მოხერხდა');
+      toast.error(error.message || t('avatar.deleteError'));
     }
   };
 
@@ -261,8 +263,8 @@ export default function UserProfile() {
         
         {/* Compact Header */}
         <div className="animate-fadeIn">
-          <h1 className="text-lg lg:text-xl font-bold text-foreground mb-1">პროფილი</h1>
-          <p className="text-xs text-foreground/50">განაახლეთ თქვენი პირადი ინფორმაცია</p>
+          <h1 className="text-lg lg:text-xl font-bold text-foreground mb-1">{t('title')}</h1>
+          <p className="text-xs text-foreground/50">{t('subtitle')}</p>
         </div>
 
         {/* Avatar Upload Section - Glass Card */}
@@ -273,7 +275,7 @@ export default function UserProfile() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <h2 className="text-sm font-bold text-foreground">პროფილის ფოტო</h2>
+            <h2 className="text-sm font-bold text-foreground">{t('avatar.title')}</h2>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -301,7 +303,7 @@ export default function UserProfile() {
                 <button
                   onClick={handleDeleteAvatar}
                   className="absolute -top-1 -right-1 bg-foreground text-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                  aria-label="წაშალეთ ფოტო"
+                  aria-label={t('avatar.delete')}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -335,9 +337,9 @@ export default function UserProfile() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
                 <p className="text-xs text-foreground/60">
-                  <span className="text-foreground font-medium">აირჩიეთ ფაილი</span> ან გადმოიტანეთ
+                  <span className="text-foreground font-medium">{t('avatar.choose')}</span> {t('avatar.or')}
                 </p>
-                <p className="text-[10px] text-foreground/40">მაქს. 2MB</p>
+                <p className="text-[10px] text-foreground/40">{t('avatar.maxSize')}</p>
               </div>
             </div>
           </div>
@@ -351,20 +353,20 @@ export default function UserProfile() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h2 className="text-sm font-bold text-foreground">ძირითადი ინფორმაცია</h2>
+            <h2 className="text-sm font-bold text-foreground">{t('form.title')}</h2>
           </div>
 
           <Input
             {...registerProfile('full_name')}
-            label="სრული სახელი"
-            placeholder="შეიყვანეთ სახელი და გვარი"
+            label={t('form.fullName.label')}
+            placeholder={t('form.fullName.placeholder')}
             error={profileErrors.full_name?.message}
             required
           />
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground">
-              ტელეფონის ნომერი
+              {t('form.phone.label')}
             </label>
             <PhoneInput
               international
@@ -385,10 +387,10 @@ export default function UserProfile() {
 
           <Input
             type="email"
-            label="ელ. ფოსტა"
+            label={t('form.email.label')}
             value={user?.email || ''}
             disabled
-            helperText="ელ. ფოსტის შეცვლა შეუძლებელია"
+            helperText={t('form.email.helperText')}
           />
 
           <Button
@@ -399,7 +401,7 @@ export default function UserProfile() {
             disabled={!isProfileDirty}
             fullWidth
           >
-            შენახვა
+            {t('form.save')}
           </Button>
         </form>
 
@@ -415,7 +417,7 @@ export default function UserProfile() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h2 className="text-sm font-bold text-foreground">პაროლის შეცვლა</h2>
+              <h2 className="text-sm font-bold text-foreground">{t('password.title')}</h2>
             </div>
             <svg className={`w-5 h-5 text-foreground/60 transition-transform ${showPasswordChange ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -427,8 +429,8 @@ export default function UserProfile() {
               <Input
                 {...registerPassword('newPassword')}
                 type="password"
-                label="ახალი პაროლი"
-                placeholder="შეიყვანეთ ახალი პაროლი"
+                label={t('password.newPassword.label')}
+                placeholder={t('password.newPassword.placeholder')}
                 error={passwordErrors.newPassword?.message}
                 required
                 autoComplete="new-password"
@@ -440,8 +442,8 @@ export default function UserProfile() {
               <Input
                 {...registerPassword('confirmPassword')}
                 type="password"
-                label="გაიმეორეთ ახალი პაროლი"
-                placeholder="გაიმეორეთ ახალი პაროლი"
+                label={t('password.confirmPassword.label')}
+                placeholder={t('password.confirmPassword.placeholder')}
                 error={passwordErrors.confirmPassword?.message}
                 required
                 autoComplete="new-password"
@@ -457,7 +459,7 @@ export default function UserProfile() {
                     setShowPasswordChange(false);
                   }}
                 >
-                  გაუქმება
+                  {t('password.cancel')}
                 </Button>
                 <Button
                   type="submit"
@@ -466,7 +468,7 @@ export default function UserProfile() {
                   isLoading={isPasswordSubmitting}
                   fullWidth
                 >
-                  შენახვა
+                  {t('password.save')}
                 </Button>
               </div>
             </form>

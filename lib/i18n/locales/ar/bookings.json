@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "احجز رحلتك",
+    "subtitle": "املأ النموذج وسنتواصل معك قريبًا",
+    "backToHome": "العودة إلى الصفحة الرئيسية"
+  },
+  "steps": {
+    "selectLocation": "اختر الموقع",
+    "bookingDetails": "تفاصيل الحجز",
+    "confirmation": "التأكيد"
+  },
+  "form": {
+    "selectCountry": "اختر الدولة",
+    "selectLocation": "اختر الموقع",
+    "selectFlightType": "اختر نوع الرحلة",
+    "loading": "جاري التحميل...",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "أدخل اسمك الكامل",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "+995 XXX XXX XXX",
+    "flightDate": "تاريخ الرحلة",
+    "numberOfPeople": "عدد الأشخاص",
+    "contactMethod": "طريقة الاتصال",
+    "selectContactMethod": "اختر طريقة الاتصال",
+    "whatsapp": "واتساب",
+    "telegram": "تيليجرام",
+    "viber": "فايبر",
+    "promoCode": "رمز الترويج",
+    "promoCodePlaceholder": "أدخل رمز الترويج",
+    "applyPromo": "تطبيق",
+    "promoApplied": "✓ تم تطبيق خصم {discount}٪!",
+    "specialRequests": "طلبات خاصة",
+    "specialRequestsPlaceholder": "هل لديك أي متطلبات أو طلبات خاصة؟",
+    "required": "مطلوب",
+    "weatherNoticeTitle": "معلومات هامة",
+    "weatherNoticeText": "رحلات الطيران الشراعي تعتمد بشكل مباشر على الظروف الجوية ومعايير السلامة.",
+    "weatherNoticeConfirm": "بعد تأكيد الحجز، سيتواصل معك المشغل وسيتفق معك على الوقت الدقيق وفقًا لتوقعات الطقس."
+  },
+  "summary": {
+    "bookingSummary": "ملخص الحجز",
+    "location": "الموقع",
+    "flightType": "نوع الرحلة",
+    "date": "التاريخ",
+    "people": "شخص",
+    "duration": "المدة",
+    "features": "المميزات"
+  },
+  "pricing": {
+    "priceSummary": "ملخص السعر",
+    "basePrice": "السعر الأساسي",
+    "discount": "الخصم",
+    "total": "المجموع",
+    "perPerson": "للشخص الواحد",
+    "currency": "₾"
+  },
+  "errors": {
+    "fillAllFields": "يرجى ملء جميع الحقول المطلوبة",
+    "selectCountry": "يرجى اختيار دولة",
+    "selectLocation": "يرجى اختيار موقع",
+    "selectFlightType": "يرجى اختيار نوع الرحلة",
+    "selectContactMethod": "يرجى اختيار طريقة الاتصال",
+    "invalidPromo": "رمز ترويج غير صالح",
+    "promoNotActive": "رمز الترويج غير نشط بعد",
+    "promoExpired": "انتهت صلاحية رمز الترويج",
+    "promoLimitReached": "تم الوصول إلى حد استخدام رمز الترويج",
+    "promoRequiresAuth": "التفويض مطلوب لاستخدام رمز الترويج",
+    "promoAuthConfirm": "يرجى تسجيل الدخول أو التسجيل لاستخدام رمز الترويج. هل تريد الانتقال إلى صفحة تسجيل الدخول؟",
+    "enterPromoCode": "يرجى إدخال رمز الترويج",
+    "bookingFailed": "فشل إنشاء الحجز. يرجى المحاولة مرة أخرى.",
+    "promoValidationFailed": "فشل التحقق من رمز الترويج"
+  },
+  "success": {
+    "bookingCreated": "تم إنشاء الحجز بنجاح!",
+    "thankYou": "شكرًا لك!",
+    "willContactSoon": "سنتواصل معك قريبًا",
+    "bookingNumber": "رقم الحجز",
+    "checkEmail": "تحقق من بريدك الإلكتروني للتأكيد"
+  },
+  "actions": {
+    "confirmBooking": "تأكيد الحجز",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "continue": "متابعة",
+    "submitting": "جاري الإرسال..."
+  }
+}

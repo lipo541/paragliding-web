@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "locations": "Locations",
+    "bookings": "Bookings",
+    "promotions": "Promotions",
+    "about": "About Us",
+    "contact": "Contact"
+  },
+  "submenu": {
+    "locations": {
+      "all": "All Locations",
+      "allDescription": "Paragliding locations in Georgia",
+      "popular": "Popular",
+      "popularDescription": "Most popular spots",
+      "beginner": "For Beginners",
+      "beginnerDescription": "Safe places to learn",
+      "advanced": "For Experienced",
+      "advancedDescription": "Challenging and extreme spots"
+    }
+  },
+  "footer": {
+    "followUs": "Follow us for updates",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "noNew": "No new notifications"
+  }
+}

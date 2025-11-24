@@ -1,57 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 export default function Footer() {
-  const pathname = usePathname();
-  const locale = pathname.split('/')[1] || 'ka';
-
-  const translations = {
-    ka: {
-      locations: 'ლოკაციები',
-      promotions: 'აქციები',
-      about: 'ჩვენს შესახებ',
-      contact: 'კონტაქტი',
-      login: 'შესვლა',
-      register: 'რეგისტრაცია',
-      rights: '© 2025 Paragliding Georgia. ყველა უფლება დაცულია.',
-      followUs: 'გამოგვყევით',
-    },
-    en: {
-      locations: 'Locations',
-      promotions: 'Promotions',
-      about: 'About Us',
-      contact: 'Contact',
-      login: 'Login',
-      register: 'Register',
-      rights: '© 2025 Paragliding Georgia. All rights reserved.',
-      followUs: 'Follow Us',
-    },
-    ru: {
-      locations: 'Локации',
-      promotions: 'Акции',
-      about: 'О нас',
-      contact: 'Контакты',
-      login: 'Войти',
-      register: 'Регистрация',
-      rights: '© 2025 Paragliding Georgia. Все права защищены.',
-      followUs: 'Следите за нами',
-    },
-  };
-
-  const t = translations[locale as keyof typeof translations] || translations.ka;
+  const { t, locale } = useTranslation('footer');
 
   const quickLinks = [
-    { href: '/locations', label: t.locations },
-    { href: '/promotions', label: t.promotions },
-    { href: '/about', label: t.about },
-    { href: '/contact', label: t.contact },
+    { href: '/locations', label: t('locations') },
+    { href: '/promotions', label: t('promotions') },
+    { href: '/about', label: t('about') },
+    { href: '/contact', label: t('contact') },
   ];
 
   const authLinks = [
-    { href: '/login', label: t.login },
-    { href: '/register', label: t.register },
+    { href: '/login', label: t('login') },
+    { href: '/register', label: t('register') },
   ];
 
   const socialLinks = [
@@ -101,7 +65,7 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-3">
-              {locale === 'ka' ? 'სწრაფი ბმულები' : locale === 'en' ? 'Quick Links' : 'Быстрые ссылки'}
+              {t('quickLinks')}
             </h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
@@ -120,7 +84,7 @@ export default function Footer() {
           {/* Auth Links */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-3">
-              {locale === 'ka' ? 'ანგარიში' : locale === 'en' ? 'Account' : 'Аккаунт'}
+              {t('account')}
             </h3>
             <ul className="space-y-2">
               {authLinks.map((link) => (
@@ -138,7 +102,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">{t.followUs}</h3>
+            <h3 className="text-sm font-semibold text-foreground mb-3">{t('followUs')}</h3>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
                 <a
@@ -159,13 +123,13 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-4 border-t border-foreground/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-foreground/50">{t.rights}</p>
+            <p className="text-xs text-foreground/50">{t('rights')}</p>
             <div className="flex items-center gap-4 text-xs text-foreground/50">
               <Link href={`/${locale}/privacy`} className="hover:text-foreground transition-colors">
-                {locale === 'ka' ? 'კონფიდენციალურობა' : locale === 'en' ? 'Privacy' : 'Конфиденциальность'}
+                {t('privacy')}
               </Link>
               <Link href={`/${locale}/terms`} className="hover:text-foreground transition-colors">
-                {locale === 'ka' ? 'წესები' : locale === 'en' ? 'Terms' : 'Условия'}
+                {t('terms')}
               </Link>
             </div>
           </div>

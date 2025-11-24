@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "ყველა ლოკაცია",
+    "subtitle": "აღმოაჩინე პარაპლანერიზმის საუკეთესო ლოკაციები საქართველოში და მის ფარგლებს გარეთ",
+    "searchPlaceholder": "სწრაფი ძებნა - აირჩიე ლოკაცია...",
+    "loading": "იტვირთება ლოკაციები...",
+    "locationBadge": "ლოკაცია",
+    "countryBadge": "ქვეყანა",
+    "moreFlight": "სხვა ფრენის ტიპი",
+    "notFound": "ვერ მოიძებნა ლოკაცია"
+  },
+  "stats": {
+    "location": "ლოკაცია",
+    "country": "ქვეყანა",
+    "rating": "რეიტინგი"
+  },
+  "filters": {
+    "allCountries": "ყველა ქვეყანა",
+    "searchPlaceholder": "ფილტრაცია სახელით...",
+    "sortByRating": "რეიტინგი (მაღალი-დაბალი)",
+    "sortByName": "სახელი (ა-ჰ)",
+    "sortByAltitude": "სიმაღლე (მაღალი-დაბალი)",
+    "ratingShort": "რეიტინგი",
+    "nameShort": "სახელი",
+    "altitudeShort": "სიმაღლე",
+    "clearFilters": "გასუფთავება",
+    "clear": "Clear",
+    "resultsFound": "ნაპოვნია",
+    "activeFilters": "აქტიური:"
+  },
+  "empty": {
+    "title": "ლოკაცია ვერ მოიძებნა",
+    "description": "სცადეთ სხვა ძიების კრიტერიუმები",
+    "viewAll": "ყველა ლოკაციის ნახვა"
+  },
+  "country": {
+    "locations": "ლოკაცია",
+    "countryPage": "ქვეყნის გვერდი →"
+  },
+  "difficulty": {
+    "beginner": "დამწყები",
+    "intermediate": "საშუალო",
+    "advanced": "პროფი",
+    "expert": "ექსპერტი"
+  },
+  "location": {
+    "bookNow": "დაჯავშნე ახლავე",
+    "book": "დაჯავშნე"
+  },
+  "months": ["იან", "თებ", "მარ", "აპრ", "მაი", "ივნ", "ივლ", "აგვ", "სექ", "ოქტ", "ნოე", "დეკ"]
+}

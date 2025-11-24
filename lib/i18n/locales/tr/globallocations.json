@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "Tüm Lokasyonlar",
+    "subtitle": "Gürcistan'daki ve ötesindeki en iyi yamaç paraşütü lokasyonlarını keşfedin",
+    "searchPlaceholder": "Hızlı arama - lokasyon seç...",
+    "loading": "Lokasyonlar yükleniyor...",
+    "locationBadge": "Lokasyon",
+    "countryBadge": "Ülke",
+    "moreFlight": "başka uçuş tipi",
+    "notFound": "Lokasyon bulunamadı"
+  },
+  "stats": {
+    "location": "Lokasyon",
+    "country": "Ülke",
+    "rating": "Değerlendirme"
+  },
+  "filters": {
+    "allCountries": "Tüm Ülkeler",
+    "searchPlaceholder": "İsme göre filtrele...",
+    "sortByRating": "Değerlendirme (Yüksek-Düşük)",
+    "sortByName": "İsim (A-Z)",
+    "sortByAltitude": "Yükseklik (Yüksek-Düşük)",
+    "ratingShort": "Değerlendirme",
+    "nameShort": "İsim",
+    "altitudeShort": "Yükseklik",
+    "clearFilters": "Filtreleri temizle",
+    "clear": "Temizle",
+    "resultsFound": "Bulundu",
+    "activeFilters": "Aktif:"
+  },
+  "empty": {
+    "title": "Lokasyon bulunamadı",
+    "description": "Farklı arama kriterleri deneyin",
+    "viewAll": "Tüm lokasyonları görüntüle"
+  },
+  "country": {
+    "locations": "lokasyon",
+    "countryPage": "Ülke sayfası →"
+  },
+  "difficulty": {
+    "beginner": "Başlangıç",
+    "intermediate": "Orta",
+    "advanced": "İleri",
+    "expert": "Uzman"
+  },
+  "location": {
+    "bookNow": "Şimdi rezervasyon yap",
+    "book": "Rezervasyon yap"
+  },
+  "months": ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"]
+}

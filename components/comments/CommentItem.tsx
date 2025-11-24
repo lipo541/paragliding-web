@@ -5,7 +5,9 @@ import { createClient } from '@/lib/supabase/client';
 import { ThumbsUp, ThumbsDown, Reply, Trash2, Edit2, MessageSquare } from 'lucide-react';
 import CommentInput from './CommentInput';
 import { formatDistanceToNow } from 'date-fns';
-import { ka } from 'date-fns/locale';
+import { ka, enUS, ru, ar, de, tr, type Locale } from 'date-fns/locale';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import { useParams } from 'next/navigation';
 
 interface Comment {
   id: string;
@@ -39,6 +41,9 @@ export default function CommentItem({
   onCommentAdded,
   isReply = false,
 }: CommentItemProps) {
+  const { t } = useTranslation('comments');
+  const params = useParams();
+  const locale = (params?.locale as string) || 'ka';
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
@@ -52,6 +57,18 @@ export default function CommentItem({
   const [isHovered, setIsHovered] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const supabase = createClient();
+  
+  // Map locale to date-fns locale
+  const dateLocaleMap: Record<string, Locale> = {
+    ka: ka,
+    en: enUS,
+    ru: ru,
+    ar: ar,
+    de: de,
+    tr: tr,
+  };
+  
+  const dateLocale = dateLocaleMap[locale] || ka;
   
   // Recursively count all nested replies
   const getTotalRepliesCount = (comment: Comment): number => {
@@ -74,8 +91,8 @@ export default function CommentItem({
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-    if (seconds < 10) return 'ახლახანს';
-    return formatDistanceToNow(date, { addSuffix: true, locale: ka });
+    if (seconds < 10) return t('item.justNow');
+    return formatDistanceToNow(date, { addSuffix: true, locale: dateLocale });
   };
 
   useEffect(() => {
@@ -115,7 +132,7 @@ export default function CommentItem({
 
   const handleReaction = async (reactionType: 'like' | 'dislike') => {
     if (!currentUserId) {
-      alert('გთხოვთ შეხვიდეთ სისტემაში');
+      alert(t('item.loginRequired'));
       return;
     }
     
@@ -190,7 +207,7 @@ export default function CommentItem({
   };
 
   const handleDelete = async () => {
-    if (!confirm('დარწმუნებული ხართ რომ გსურთ კომენტარის წაშლა?')) return;
+    if (!confirm(t('item.deleteConfirm'))) return;
 
     try {
       const { error } = await supabase
@@ -202,7 +219,7 @@ export default function CommentItem({
       onCommentAdded();
     } catch (error) {
       console.error('Error deleting comment:', error);
-      alert('კომენტარის წაშლა ვერ მოხერხდა');
+      alert(t('item.deleteError'));
     }
   };
 
@@ -218,7 +235,7 @@ export default function CommentItem({
       onCommentAdded();
     } catch (error) {
       console.error('Error updating comment:', error);
-      alert('კომენტარის განახლება ვერ მოხერხდა');
+      alert(t('item.updateError'));
     }
   };
   
@@ -240,14 +257,14 @@ export default function CommentItem({
       onCommentAdded();
     } catch (error) {
       console.error('Error approving comment:', error);
-      alert('დადასტურება ვერ მოხერხდა');
+      alert(t('item.approveError'));
     } finally {
       setIsApproving(false);
     }
   };
   
   const handleReject = async () => {
-    if (!confirm('დარწმუნებული ხართ რომ გსურთ კომენტარის უარყოფა?')) return;
+    if (!confirm(t('item.rejectConfirm'))) return;
     setIsApproving(true);
     
     try {
@@ -260,7 +277,7 @@ export default function CommentItem({
       onCommentAdded();
     } catch (error) {
       console.error('Error rejecting comment:', error);
-      alert('უარყოფა ვერ მოხერხდა');
+      alert(t('item.rejectError'));
     } finally {
       setIsApproving(false);
     }
@@ -283,13 +300,13 @@ export default function CommentItem({
           </div>
         </div>
         <p className="font-semibold text-[10px] sm:text-sm">
-          {comment.profiles.full_name || 'მომხმარებელი'}
+          {comment.profiles.full_name || t('item.user')}
         </p>
         <span className="text-[8px] sm:text-[11px] text-foreground/40 flex items-center gap-1">
           {formatTime(comment.created_at)}
           {isEdited && (
-            <span className="text-[8px] text-foreground/30" title="რედაქტირებული">
-              (რედ.)
+            <span className="text-[8px] text-foreground/30" title={t('item.edited')}>
+              ({t('item.edited')})
             </span>
           )}
         </span>
@@ -310,7 +327,7 @@ export default function CommentItem({
                 onClick={handleEdit}
                 className="px-3 py-1.5 text-xs font-medium bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
               >
-                შენახვა
+                {t('item.save')}
               </button>
               <button
                 onClick={() => {
@@ -319,7 +336,7 @@ export default function CommentItem({
                 }}
                 className="px-3 py-1.5 text-xs font-medium bg-foreground/10 rounded-full hover:bg-foreground/20 transition-colors"
               >
-                გაუქმება
+                {t('item.cancel')}
               </button>
             </div>
           </div>
@@ -329,7 +346,7 @@ export default function CommentItem({
             {!comment.is_approved && (
               <p className="text-[9px] text-yellow-600 dark:text-yellow-500 mt-1 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
-                მოდერაციის მოლოდინში
+                {t('item.awaitingModeration')}
               </p>
             )}
             
@@ -343,8 +360,8 @@ export default function CommentItem({
                       ? 'text-blue-500 scale-110'
                       : 'text-foreground/50 hover:text-blue-500 hover:scale-110'
                   }`}
-                  title="მოწონება"
-                  aria-label="მოწონება"
+                  title={t('item.like')}
+                  aria-label={t('item.like')}
                 >
                   <span className="flex items-center gap-0.5 sm:gap-1">
                     <ThumbsUp className="w-2 h-2 sm:w-3.5 sm:h-3.5" />
@@ -360,8 +377,8 @@ export default function CommentItem({
                       ? 'text-red-500 scale-110'
                       : 'text-foreground/50 hover:text-red-500 hover:scale-110'
                   }`}
-                  title="არ მოწონება"
-                  aria-label="არ მოწონება"
+                  title={t('item.dislike')}
+                  aria-label={t('item.dislike')}
                 >
                   <span className="flex items-center gap-0.5 sm:gap-1">
                     <ThumbsDown className="w-2 h-2 sm:w-3.5 sm:h-3.5" />
@@ -372,10 +389,10 @@ export default function CommentItem({
                 <button
                   onClick={() => setShowReplyInput(!showReplyInput)}
                   className="text-[9px] sm:text-xs font-medium text-foreground/50 hover:text-foreground/80 hover:scale-110 transition-all"
-                  title="პასუხის დაწერა"
-                  aria-label="პასუხის დაწერა"
+                  title={t('item.reply')}
+                  aria-label={t('item.reply')}
                 >
-                  პასუხი
+                  {t('item.reply')}
                 </button>
                 
                 {repliesCount > 0 && (
@@ -384,7 +401,7 @@ export default function CommentItem({
                     className="text-[9px] sm:text-xs font-medium text-blue-500/80 hover:text-blue-500 transition-colors flex items-center gap-0.5 sm:gap-1.5"
                   >
                     <MessageSquare className="w-2 h-2 sm:w-3.5 sm:h-3.5" />
-                    {repliesCount} პასუხი
+                    {repliesCount} {t('item.replies')}
                   </button>
                 )}
                 
@@ -394,13 +411,13 @@ export default function CommentItem({
                       onClick={() => setIsEditing(true)}
                       className="text-[9px] sm:text-xs font-medium text-foreground/50 hover:text-foreground/80 transition-colors"
                     >
-                      რედაქტირება
+                      {t('item.edit')}
                     </button>
                     <button
                       onClick={handleDelete}
                       className="text-[9px] sm:text-xs font-medium text-red-500/70 hover:text-red-500 transition-colors"
                     >
-                      წაშლა
+                      {t('item.delete')}
                     </button>
                   </>
                 )}
@@ -412,17 +429,17 @@ export default function CommentItem({
                       onClick={handleApprove}
                       disabled={isApproving}
                       className="text-[9px] sm:text-xs font-medium text-green-600 hover:text-green-700 disabled:opacity-50 transition-colors flex items-center gap-1"
-                      title="დადასტურება"
+                      title={t('item.approve')}
                     >
-                      ✓ დადასტურება
+                      ✓ {t('item.approve')}
                     </button>
                     <button
                       onClick={handleReject}
                       disabled={isApproving}
                       className="text-[9px] sm:text-xs font-medium text-red-500/70 hover:text-red-500 disabled:opacity-50 transition-colors flex items-center gap-1"
-                      title="უარყოფა"
+                      title={t('item.reject')}
                     >
-                      ✕ უარყოფა
+                      ✕ {t('item.reject')}
                     </button>
                   </>
                 )}

@@ -9,9 +9,15 @@ interface Location {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string | null;
+  name_de: string | null;
+  name_tr: string | null;
   slug_ka: string;
   slug_en: string;
   slug_ru: string;
+  slug_ar: string | null;
+  slug_de: string | null;
+  slug_tr: string | null;
   country_id: string;
   cached_rating?: number;
   cached_rating_count?: number;
@@ -34,9 +40,15 @@ interface Country {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string | null;
+  name_de: string | null;
+  name_tr: string | null;
   slug_ka: string;
   slug_en: string;
   slug_ru: string;
+  slug_ar: string | null;
+  slug_de: string | null;
+  slug_tr: string | null;
   cached_rating?: number;
   cached_rating_count?: number;
   content?: {
@@ -71,7 +83,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
         // Fetch active countries with ratings and images
         const { data: countries, error: countriesError } = await supabase
           .from('countries')
-          .select('id, name_ka, name_en, name_ru, slug_ka, slug_en, slug_ru, cached_rating, cached_rating_count, content, og_image_url')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, cached_rating, cached_rating_count, content, og_image_url')
           .eq('is_active', true)
           .order('name_ka');
 
@@ -87,10 +99,16 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
             id, 
             name_ka, 
             name_en, 
-            name_ru, 
+            name_ru,
+            name_ar,
+            name_de,
+            name_tr,
             slug_ka, 
             slug_en, 
-            slug_ru, 
+            slug_ru,
+            slug_ar,
+            slug_de,
+            slug_tr,
             country_id, 
             cached_rating, 
             cached_rating_count,
@@ -129,12 +147,18 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
   const getLocalizedName = (item: Country | Location, lang: string) => {
     if (lang === 'en') return item.name_en;
     if (lang === 'ru') return item.name_ru;
+    if (lang === 'ar') return item.name_ar || item.name_en;
+    if (lang === 'de') return item.name_de || item.name_en;
+    if (lang === 'tr') return item.name_tr || item.name_en;
     return item.name_ka;
   };
 
   const getLocalizedSlug = (item: Country | Location, lang: string) => {
     if (lang === 'en') return item.slug_en;
     if (lang === 'ru') return item.slug_ru;
+    if (lang === 'ar') return item.slug_ar || item.slug_en;
+    if (lang === 'de') return item.slug_de || item.slug_en;
+    if (lang === 'tr') return item.slug_tr || item.slug_en;
     return item.slug_ka;
   };
 
@@ -182,11 +206,11 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                       {getLocalizedName(country, locale)}
                     </h3>
                     <div className="flex items-center gap-2.5 text-xs flex-wrap">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-foreground/5 text-foreground/60 font-medium">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-foreground/5 text-foreground/60 font-medium">
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
-                        {country.locations.length} {locale === 'en' ? 'locations' : locale === 'ru' ? 'локаций' : 'ლოკაცია'}
+                        {country.locations.length} {locale === 'en' ? 'locations' : locale === 'ru' ? 'локаций' : locale === 'ar' ? 'مواقع' : locale === 'de' ? 'Standorte' : locale === 'tr' ? 'konum' : 'ლოკაცია'}
                       </span>
                       {country.cached_rating && country.cached_rating > 0 && (
                         <>
@@ -241,7 +265,13 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                   {locale === 'en' 
                     ? 'Explore paragliding locations and discover breathtaking flying spots' 
                     : locale === 'ru' 
-                    ? 'Изучите места для полетов на параплане и откройте захватывающие дух точки' 
+                    ? 'Изучите места для полетов на параплане и откройте захватывающие дух точки'
+                    : locale === 'ar'
+                    ? 'استكشف مواقع الطيران الشراعي واكتشف أماكن طيران خلابة'
+                    : locale === 'de'
+                    ? 'Erkunden Sie Gleitschirm-Standorte und entdecken Sie atemberaubende Flugplätze'
+                    : locale === 'tr'
+                    ? 'Yamaç paraşütü lokasyonlarını keşfedin ve nefes kesici uçuş noktalarını bulun'
                     : 'გაეცანით პარაგლაიდინგის ლოკაციებს და აღმოაჩინეთ უნიკალური ფრენის ადგილები'
                   }
                 </p>
@@ -317,7 +347,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                             </div>
                           ) : (
                             <p className="text-xs text-foreground/50 group-hover/location:text-foreground/60 transition-colors">
-                              {locale === 'en' ? 'View details' : locale === 'ru' ? 'Подробнее' : 'დეტალურად →'}
+                              {locale === 'en' ? 'View details' : locale === 'ru' ? 'Подробнее' : locale === 'ar' ? 'عرض التفاصيل' : locale === 'de' ? 'Details anzeigen' : locale === 'tr' ? 'Detayları görüntüle' : 'დეტალურად →'}
                             </p>
                           )}
                         </div>
@@ -335,7 +365,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
                     <p className="text-xs text-foreground/40">
-                      {locale === 'en' ? 'No locations yet' : locale === 'ru' ? 'Пока нет локаций' : 'ლოკაციები არ არის'}
+                      {locale === 'en' ? 'No locations yet' : locale === 'ru' ? 'Пока нет локаций' : locale === 'ar' ? 'لا توجد مواقع بعد' : locale === 'de' ? 'Noch keine Standorte' : locale === 'tr' ? 'Henüz konum yok' : 'ლოკაციები არ არის'}
                     </p>
                   </div>
                 )}
@@ -351,7 +381,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-sm">
-            {locale === 'en' ? 'No countries available' : locale === 'ru' ? 'Страны не найдены' : 'ქვეყნები არ მოიძებნა'}
+            {locale === 'en' ? 'No countries available' : locale === 'ru' ? 'Страны не найдены' : locale === 'ar' ? 'لا توجد دول متاحة' : locale === 'de' ? 'Keine Länder verfügbar' : locale === 'tr' ? 'Ülke bulunamadı' : 'ქვეყნები არ მოიძებნა'}
           </p>
         </div>
       )}

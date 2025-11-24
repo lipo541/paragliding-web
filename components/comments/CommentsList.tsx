@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import CommentItem from './CommentItem';
 import CommentInput from './CommentInput';
 import { MessageSquare } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface Comment {
   id: string;
@@ -36,6 +37,7 @@ export default function CommentsList({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
+  const { t } = useTranslation('comments');
 
   const fetchComments = async () => {
     setIsLoading(true);
@@ -101,7 +103,7 @@ export default function CommentsList({
       setComments(commentsWithReplies);
     } catch (err) {
       console.error('Error fetching comments:', err);
-      setError('კომენტარების ჩატვირთვა ვერ მოხერხდა');
+      setError(t('list.loadError'));
     } finally {
       setIsLoading(false);
     }
@@ -128,7 +130,7 @@ export default function CommentsList({
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base font-semibold flex items-center gap-2">
           <MessageSquare className="w-4 h-4" />
-          კომენტარები <span className="text-foreground/50 text-sm font-normal">({comments.length})</span>
+          {t('list.title')} <span className="text-foreground/50 text-sm font-normal">({comments.length})</span>
         </h3>
       </div>
 
@@ -144,7 +146,7 @@ export default function CommentsList({
 
       {comments.length === 0 ? (
         <p className="text-foreground/40 text-center py-6 text-sm">
-          კომენტარები ჯერ არ არის. იყავი პირველი!
+          {t('list.noComments')}
         </p>
       ) : (
         <div className="space-y-3 mt-6">

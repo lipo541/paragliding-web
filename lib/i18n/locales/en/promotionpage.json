@@ -1,0 +1,50 @@
+{
+  "page": {
+    "title": "Promotions",
+    "subtitle": "Active promotions and discounts",
+    "active": "active",
+    "loading": "Loading promotions..."
+  },
+  "filters": {
+    "title": "Filters",
+    "search": "Search",
+    "searchPlaceholder": "Search...",
+    "location": "Location",
+    "allLocations": "All",
+    "sort": "Sort",
+    "sortBy": "Sort",
+    "newest": "Newest",
+    "highestDiscount": "Discount",
+    "expiringSoon": "Expiring",
+    "clearFilters": "Clear",
+    "found": "Found"
+  },
+  "card": {
+    "code": "Code",
+    "discount": "Discount",
+    "expiringSoon": "Expiring soon",
+    "soon": "Soon",
+    "timeLeft": "Time Left",
+    "daysLeft": "{days}d left",
+    "hoursLeft": "{hours}h left",
+    "minutesLeft": "Expiring",
+    "days": "days",
+    "hours": "hrs",
+    "minutes": "min",
+    "usage": "Usage",
+    "copy": "Copy",
+    "copied": "✓",
+    "book": "Book",
+    "expired": "Expired"
+  },
+  "empty": {
+    "title": "Not found",
+    "message": "No promo codes found with these criteria",
+    "clearButton": "Clear"
+  },
+  "stats": {
+    "active": "active",
+    "avgDiscount": "Avg discount",
+    "maxDiscount": "Max discount"
+  }
+}

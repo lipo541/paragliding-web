@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Star } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface LocationInfoCardProps {
   id: string;
@@ -35,19 +36,15 @@ export default function LocationInfoCard({
   locationUrl,
   locale = 'ka'
 }: LocationInfoCardProps) {
+  const { t } = useTranslation('locationinfocard');
+
   const getMonthName = (month: number) => {
-    const months = ['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'];
-    return months[month - 1] || '';
+    const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    return t(`months.${monthKeys[month - 1]}`) || '';
   };
 
   const getDifficultyLabel = (level: string) => {
-    const labels: { [key: string]: string } = {
-      beginner: 'დამწყები',
-      intermediate: 'საშუალო',
-      advanced: 'პროფი',
-      expert: 'ექსპერტი'
-    };
-    return labels[level] || level;
+    return t(`difficulty.${level}`) || level;
   };
 
   const getDifficultyColor = (level: string) => {
@@ -130,7 +127,7 @@ export default function LocationInfoCard({
               <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
               </svg>
-              <span>{altitude}მ</span>
+              <span>{altitude}{t('altitude')}</span>
             </div>
           )}
           
@@ -150,7 +147,7 @@ export default function LocationInfoCard({
               <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>{minPrice}₾-დან</span>
+              <span>{minPrice}₾ {t('priceFrom')}</span>
             </div>
           )}
         </div>
@@ -163,7 +160,7 @@ export default function LocationInfoCard({
           }}
           className="w-full mt-2 lg:mt-3 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] z-10 relative"
         >
-          დაჯავშნე ახლავე
+          {t('bookNow')}
         </button>
       </div>
       

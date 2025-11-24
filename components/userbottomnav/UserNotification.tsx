@@ -6,6 +6,7 @@ import Spinner from '@/components/ui/Spinner';
 import Button from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface Message {
   id: string;
@@ -42,6 +43,7 @@ export default function UserNotification() {
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<MessageWithDetails | null>(null);
   const [userLocale, setUserLocale] = useState<'ka' | 'en' | 'ru' | 'ar' | 'de' | 'tr'>('ka');
+  const { t } = useTranslation('usernotification');
   const supabase = createClient();
 
   // Detect user locale from browser/pathname
@@ -75,7 +77,7 @@ export default function UserNotification() {
         (payload: any) => {
           console.log('New message received:', payload);
           fetchMessages();
-          toast.success('ახალი შეტყობინება მოგივიდათ!');
+          toast.success(t('newMessage'));
         }
       )
       .subscribe();
@@ -88,7 +90,7 @@ export default function UserNotification() {
   const fetchMessages = async () => {
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) throw new Error('არ ხართ ავტორიზებული');
+      if (userError || !user) throw new Error(t('notAuthorized'));
 
       // Get message recipients
       const { data: recipients, error: recipientsError } = await supabase
@@ -129,7 +131,7 @@ export default function UserNotification() {
       setMessages(combined);
     } catch (error: any) {
       console.error('Fetch messages error:', error);
-      toast.error(error.message || 'შეტყობინებების ჩატვირთვა ვერ მოხერხდა');
+      toast.error(error.message || t('fetchFailed'));
     } finally {
       setLoading(false);
     }
@@ -155,12 +157,12 @@ export default function UserNotification() {
       ));
     } catch (error: any) {
       console.error('Mark as read error:', error);
-      toast.error('შეცდომა მოხდა');
+      toast.error(t('markAsReadFailed'));
     }
   };
 
   const handleDeleteMessage = async (messageRecipientId: string) => {
-    if (!confirm('დარწმუნებული ხართ რომ გსურთ შეტყობინების წაშლა?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
 
     try {
       const { error } = await supabase
@@ -170,14 +172,14 @@ export default function UserNotification() {
 
       if (error) throw error;
 
-      toast.success('შეტყობინება წაიშალა');
+      toast.success(t('deleteSuccess'));
       setMessages(messages.filter(msg => msg.id !== messageRecipientId));
       if (selectedMessage?.id === messageRecipientId) {
         setSelectedMessage(null);
       }
     } catch (error: any) {
       console.error('Delete message error:', error);
-      toast.error('წაშლა ვერ მოხერხდა');
+      toast.error(t('deleteFailed'));
     }
   };
 
@@ -196,8 +198,8 @@ export default function UserNotification() {
           <svg className="w-16 h-16 mx-auto text-foreground/20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
           </svg>
-          <h3 className="text-lg font-bold text-foreground mb-2">შეტყობინებები არ არის</h3>
-          <p className="text-sm text-foreground/60">თქვენ ჯერ არ გაქვთ არცერთი შეტყობინება</p>
+          <h3 className="text-lg font-bold text-foreground mb-2">{t('empty.title')}</h3>
+          <p className="text-sm text-foreground/60">{t('empty.description')}</p>
         </div>
       </div>
     );
@@ -266,7 +268,7 @@ export default function UserNotification() {
                   size="sm"
                   onClick={() => handleDeleteMessage(selectedMessage.id)}
                 >
-                  წაშლა
+                  {t('delete')}
                 </Button>
               </div>
 
@@ -279,7 +281,7 @@ export default function UserNotification() {
               {/* Read status */}
               {selectedMessage.read_at && (
                 <div className="text-xs text-foreground/40 pt-3 border-t border-foreground/10">
-                  წაკითხული: {new Date(selectedMessage.read_at).toLocaleString('ka-GE')}
+                  {t('readAt')}: {new Date(selectedMessage.read_at).toLocaleString('ka-GE')}
                 </div>
               )}
             </div>
@@ -288,7 +290,7 @@ export default function UserNotification() {
               <svg className="w-12 h-12 mx-auto text-foreground/20 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <p className="text-sm text-foreground/60">აირჩიეთ შეტყობინება სანახავად</p>
+              <p className="text-sm text-foreground/60">{t('selectMessage')}</p>
             </div>
           )}
         </div>

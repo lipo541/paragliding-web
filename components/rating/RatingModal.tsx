@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import RatingInput from './RatingInput';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface RatingModalProps {
   isOpen: boolean;
@@ -22,9 +23,15 @@ export default function RatingModal({
   ratableId,
   existingRating,
   onRatingChange,
-  title = 'შეაფასეთ',
-  subtitle = 'თქვენი აზრი ძალიან მნიშვნელოვანია',
+  title,
+  subtitle,
 }: RatingModalProps) {
+  const { t } = useTranslation('rating');
+  
+  // Use translations as default if not provided
+  const displayTitle = title || t('modal.defaultTitle');
+  const displaySubtitle = subtitle || t('modal.defaultSubtitle');
+
   // Close on ESC key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -92,10 +99,10 @@ export default function RatingModal({
 
             {/* Title */}
             <h2 className="text-2xl font-bold text-foreground mb-2">
-              {title}
+              {displayTitle}
             </h2>
             <p className="text-sm text-foreground/90">
-              {subtitle}
+              {displaySubtitle}
             </p>
           </div>
 
@@ -111,7 +118,7 @@ export default function RatingModal({
 
           {/* Footer Note */}
           <p className="text-center text-xs text-foreground/80 mt-4">
-            დააჭირეთ ვარსკვლავებს შესაფასებლად
+            {t('modal.clickToRate')}
           </p>
         </div>
       </div>

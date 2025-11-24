@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import PromoCard from '@/components/promotions/PromoCard';
 import { Search, Tag, TrendingUp, Filter, ChevronDown, X } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface PromoCode {
   id: string;
@@ -30,6 +31,9 @@ interface PromoCode {
       name_ka: string;
       name_en: string;
       name_ru: string;
+      name_ar: string;
+      name_de: string;
+      name_tr: string;
     };
   }>;
 }
@@ -39,10 +43,14 @@ interface Location {
   name_ka: string;
   name_en: string;
   name_ru: string;
+  name_ar: string;
+  name_de: string;
+  name_tr: string;
 }
 
 export default function PromotionPage({ locale }: { locale: string }) {
   const supabase = createClient();
+  const { t } = useTranslation('promotionpage');
   const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,6 +59,12 @@ export default function PromotionPage({ locale }: { locale: string }) {
   const [sortBy, setSortBy] = useState<'newest' | 'discount' | 'expiring'>('newest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
+  
+  // Helper function to get localized name
+  const getLocalizedName = (item: any) => {
+    const nameKey = `name_${locale}` as keyof typeof item;
+    return item[nameKey] || item.name_ka || '';
+  };
 
   // Fetch data
   useEffect(() => {
@@ -67,7 +81,10 @@ export default function PromotionPage({ locale }: { locale: string }) {
                 id,
                 name_ka,
                 name_en,
-                name_ru
+                name_ru,
+                name_ar,
+                name_de,
+                name_tr
               )
             )
           `)
@@ -77,7 +94,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
 
         const { data: locs } = await supabase
           .from('locations')
-          .select('id, name_ka, name_en, name_ru')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr')
           .order('name_ka');
 
         setPromoCodes(promos || []);
@@ -92,12 +109,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
     fetchData();
   }, [supabase]);
 
-  // Helper functions
-  const getLocationName = (location: Location) => {
-    if (locale === 'en') return location.name_en || location.name_ka;
-    if (locale === 'ru') return location.name_ru || location.name_ka;
-    return location.name_ka;
-  };
+
 
   // Filtering & Sorting
   const filteredPromos = promoCodes.filter((promo) => {
@@ -147,20 +159,6 @@ export default function PromotionPage({ locale }: { locale: string }) {
     return { active, avgDiscount, maxDiscount };
   }, [sortedPromos]);
 
-  // Translations
-  const t = {
-    title: locale === 'ka' ? 'აქციები' : locale === 'en' ? 'Promotions' : 'Акции',
-    search: locale === 'ka' ? 'ძებნა...' : locale === 'en' ? 'Search...' : 'Поиск...',
-    allLocations: locale === 'ka' ? 'ყველა' : locale === 'en' ? 'All' : 'Все',
-    sortBy: locale === 'ka' ? 'სორტირება' : locale === 'en' ? 'Sort' : 'Сортировка',
-    newest: locale === 'ka' ? 'ახალი' : locale === 'en' ? 'Newest' : 'Новые',
-    highestDiscount: locale === 'ka' ? 'ფასდაკლება' : locale === 'en' ? 'Discount' : 'Скидка',
-    expiringSoon: locale === 'ka' ? 'იწურება' : locale === 'en' ? 'Expiring' : 'Истекает',
-    noPromos: locale === 'ka' ? 'არ მოიძებნა' : locale === 'en' ? 'Not found' : 'Не найдено',
-    clearFilters: locale === 'ka' ? 'გასუფთავება' : locale === 'en' ? 'Clear' : 'Очистить',
-    found: locale === 'ka' ? 'ნაპოვნია' : locale === 'en' ? 'Found' : 'Найдено',
-  };
-
   const hasActiveFilters = selectedLocation !== 'all' || searchQuery !== '';
 
   const clearFilters = () => {
@@ -175,7 +173,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-3 border-foreground/20 border-t-foreground rounded-full animate-spin" />
-          <p className="text-sm text-foreground/60 animate-pulse">იტვირთება პრომოები...</p>
+          <p className="text-sm text-foreground/60 animate-pulse">{t('page.loading')}</p>
         </div>
       </div>
     );
@@ -191,8 +189,8 @@ export default function PromotionPage({ locale }: { locale: string }) {
               <Tag className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-foreground" />
             </div>
             <div>
-              <h1 className="text-sm lg:text-base font-bold text-foreground">{t.title}</h1>
-              <p className="text-[10px] text-foreground/60">{sortedPromos.length} აქტიური</p>
+              <h1 className="text-sm lg:text-base font-bold text-foreground">{t('page.title')}</h1>
+              <p className="text-[10px] text-foreground/60">{sortedPromos.length} {t('page.active')}</p>
             </div>
           </div>
         </div>
@@ -208,20 +206,20 @@ export default function PromotionPage({ locale }: { locale: string }) {
             <div className="bg-white/95 dark:bg-black/90 rounded-lg border border-white/20 p-3 shadow-lg sticky top-[50px]">
               <h2 className="text-xs lg:text-sm font-bold text-foreground mb-2 flex items-center gap-1.5">
                 <Filter className="w-3.5 h-3.5" />
-                ფილტრები
+                {t('filters.title')}
               </h2>
 
               <div className="space-y-2">
                 {/* Search */}
                 <div>
-                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">ძებნა</label>
+                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">{t('filters.search')}</label>
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-foreground/40" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={t.search}
+                      placeholder={t('filters.searchPlaceholder')}
                       className="w-full pl-7 pr-7 py-1.5 text-[10px] rounded-md bg-foreground/5 border border-foreground/10 focus:border-blue-500 focus:bg-foreground/10 outline-none transition-colors"
                     />
                     {searchQuery && (
@@ -234,14 +232,14 @@ export default function PromotionPage({ locale }: { locale: string }) {
 
                 {/* Location Filter */}
                 <div>
-                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">ლოკაცია</label>
+                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">{t('filters.location')}</label>
                   <div className="relative">
                     <button
                       onClick={() => setIsFilterOpen(!isFilterOpen)}
                       className="w-full px-2 py-1.5 text-[10px] text-left rounded-md bg-foreground/5 hover:bg-foreground/10 text-foreground border border-foreground/10 flex items-center justify-between"
                     >
                       <span className="truncate">
-                        {selectedLocation === 'all' ? t.allLocations : getLocationName(locations.find(l => l.id === selectedLocation)!)}
+                        {selectedLocation === 'all' ? t('filters.allLocations') : getLocalizedName(locations.find(l => l.id === selectedLocation)!)}
                       </span>
                       <ChevronDown className={`w-3 h-3 flex-shrink-0 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -254,7 +252,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
                             selectedLocation === 'all' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium' : 'text-foreground'
                           }`}
                         >
-                          {t.allLocations}
+                          {t('filters.allLocations')}
                         </button>
                         {locations.map((location) => (
                           <button
@@ -264,7 +262,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
                               selectedLocation === location.id ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium' : 'text-foreground'
                             }`}
                           >
-                            {getLocationName(location)}
+                            {getLocalizedName(location)}
                           </button>
                         ))}
                       </div>
@@ -274,7 +272,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
 
                 {/* Sort */}
                 <div>
-                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">სორტირება</label>
+                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">{t('filters.sort')}</label>
                   <div className="space-y-1">
                     <button
                       onClick={() => setSortBy('newest')}
@@ -285,7 +283,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
                       }`}
                     >
                       <TrendingUp className="w-3 h-3" />
-                      {t.newest}
+                      {t('filters.newest')}
                     </button>
                     <button
                       onClick={() => setSortBy('discount')}
@@ -296,7 +294,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
                       }`}
                     >
                       <Tag className="w-3 h-3" />
-                      {t.highestDiscount}
+                      {t('filters.highestDiscount')}
                     </button>
                     <button
                       onClick={() => setSortBy('expiring')}
@@ -307,7 +305,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
                       }`}
                     >
                       <Filter className="w-3 h-3" />
-                      {t.expiringSoon}
+                      {t('filters.expiringSoon')}
                     </button>
                   </div>
                 </div>
@@ -319,7 +317,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
                     className="w-full px-2 py-1.5 text-[10px] rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-medium transition-all flex items-center justify-center gap-1.5"
                   >
                     <X className="w-3 h-3" />
-                    {t.clearFilters}
+                    {t('filters.clearFilters')}
                   </button>
                 )}
               </div>
@@ -331,9 +329,9 @@ export default function PromotionPage({ locale }: { locale: string }) {
             {sortedPromos.length === 0 ? (
               <div className="text-center py-8 bg-white/95 dark:bg-black/90 rounded-lg border border-white/20">
                 <Tag className="w-8 h-8 mx-auto mb-2 text-foreground/30" />
-                <p className="text-xs text-foreground/60 font-medium">{t.noPromos}</p>
+                <p className="text-xs text-foreground/60 font-medium">{t('empty.title')}</p>
                 <button onClick={clearFilters} className="mt-3 px-4 py-1.5 text-[10px] rounded-md bg-blue-500 hover:bg-blue-600 text-white transition-colors font-medium">
-                  {t.clearFilters}
+                  {t('empty.clearButton')}
                 </button>
               </div>
             ) : (

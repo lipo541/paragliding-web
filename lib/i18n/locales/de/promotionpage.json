@@ -1,0 +1,50 @@
+{
+  "page": {
+    "title": "Aktionen",
+    "subtitle": "Aktive Aktionen und Rabatte",
+    "active": "aktiv",
+    "loading": "Aktionen werden geladen..."
+  },
+  "filters": {
+    "title": "Filter",
+    "search": "Suche",
+    "searchPlaceholder": "Suche...",
+    "location": "Standort",
+    "allLocations": "Alle",
+    "sort": "Sortieren",
+    "sortBy": "Sortieren",
+    "newest": "Neueste",
+    "highestDiscount": "Rabatt",
+    "expiringSoon": "Läuft ab",
+    "clearFilters": "Löschen",
+    "found": "Gefunden"
+  },
+  "card": {
+    "code": "Code",
+    "discount": "Rabatt",
+    "expiringSoon": "Läuft bald ab",
+    "soon": "Bald",
+    "timeLeft": "Verbleibende Zeit",
+    "daysLeft": "{days}T übrig",
+    "hoursLeft": "{hours}Std übrig",
+    "minutesLeft": "Läuft ab",
+    "days": "Tage",
+    "hours": "Std",
+    "minutes": "Min",
+    "usage": "Nutzung",
+    "copy": "Kopieren",
+    "copied": "✓",
+    "book": "Buchen",
+    "expired": "Abgelaufen"
+  },
+  "empty": {
+    "title": "Nicht gefunden",
+    "message": "Keine Promo-Codes mit diesen Kriterien gefunden",
+    "clearButton": "Löschen"
+  },
+  "stats": {
+    "active": "aktiv",
+    "avgDiscount": "Durchschn. Rabatt",
+    "maxDiscount": "Max. Rabatt"
+  }
+}

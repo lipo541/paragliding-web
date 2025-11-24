@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "locations": "Standorte",
+    "bookings": "Buchungen",
+    "promotions": "Angebote",
+    "about": "Über uns",
+    "contact": "Kontakt"
+  },
+  "submenu": {
+    "locations": {
+      "all": "Alle Standorte",
+      "allDescription": "Gleitschirm-Standorte in Georgien",
+      "popular": "Beliebt",
+      "popularDescription": "Die beliebtesten Orte",
+      "beginner": "Für Anfänger",
+      "beginnerDescription": "Sichere Orte zum Lernen",
+      "advanced": "Für Erfahrene",
+      "advancedDescription": "Anspruchsvolle und extreme Orte"
+    }
+  },
+  "footer": {
+    "followUs": "Folgen Sie uns für Updates",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "noNew": "Keine neuen Benachrichtigungen"
+  }
+}

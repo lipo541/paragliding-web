@@ -2,48 +2,66 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface NavigationProps {
   activeMenu: string | null;
   setActiveMenu: (menu: string | null) => void;
 }
 
-export const navItemsData = [
-  {
-    href: '/locations',
-    label: 'ლოკაციები',
-    submenu: [
-      { href: '/locations/all', label: 'ყველა ლოკაცია', description: 'პარაგლაიდინგის ლოკაციები საქართველოში' },
-      { href: '/locations/popular', label: 'პოპულარული', description: 'ყველაზე პოპულარული ადგილები' },
-      { href: '/locations/beginner', label: 'დამწყებთათვის', description: 'უსაფრთხო ადგილები სწავლისთვის' },
-      { href: '/locations/advanced', label: 'გამოცდილებისთვის', description: 'რთული და ექსტრემალური ადგილები' },
-    ],
-  },
-  {
-    href: '/bookings',
-    label: 'ჯავშნები',
-    submenu: undefined,
-  },
-  {
-    href: '/promotions',
-    label: 'პრომო-აქციები',
-    submenu: undefined,
-  },
-  {
-    href: '/about',
-    label: 'ჩვენს შესახებ',
-    submenu: undefined,
-  },
-  {
-    href: '/contact',
-    label: 'კონტაქტი',
-    submenu: undefined,
-  },
-];
-
 export default function Navigation({ activeMenu, setActiveMenu }: NavigationProps) {
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'ka';
+  const { t } = useTranslation('navigation');
+
+  const navItemsData = [
+    {
+      href: '/locations',
+      label: t('menu.locations'),
+      submenu: [
+        { 
+          href: '/locations/all', 
+          label: t('submenu.locations.all'), 
+          description: t('submenu.locations.allDescription')
+        },
+        { 
+          href: '/locations/popular', 
+          label: t('submenu.locations.popular'), 
+          description: t('submenu.locations.popularDescription')
+        },
+        { 
+          href: '/locations/beginner', 
+          label: t('submenu.locations.beginner'), 
+          description: t('submenu.locations.beginnerDescription')
+        },
+        { 
+          href: '/locations/advanced', 
+          label: t('submenu.locations.advanced'), 
+          description: t('submenu.locations.advancedDescription')
+        },
+      ],
+    },
+    {
+      href: '/bookings',
+      label: t('menu.bookings'),
+      submenu: undefined,
+    },
+    {
+      href: '/promotions',
+      label: t('menu.promotions'),
+      submenu: undefined,
+    },
+    {
+      href: '/about',
+      label: t('menu.about'),
+      submenu: undefined,
+    },
+    {
+      href: '/contact',
+      label: t('menu.contact'),
+      submenu: undefined,
+    },
+  ];
 
   return (
     <nav className="hidden md:flex items-center gap-6">

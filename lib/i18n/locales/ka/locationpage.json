@@ -1,0 +1,54 @@
+{
+  "error": {
+    "notFound": "ლოკაცია ვერ მოიძებნა",
+    "backButton": "უკან დაბრუნება"
+  },
+  "hero": {
+    "rate": "შეაფასეთ",
+    "changeRating": "შეცვალეთ",
+    "contact": "დაკავშირება",
+    "bookFlight": "დაჯავშნე ფრენა"
+  },
+  "content": {
+    "readMore": "მეტის ნახვა",
+    "showLess": "აკეცვა",
+    "aboutLocation": "ლოკაციის შესახებ"
+  },
+  "flightTypes": {
+    "title": "პაკეტები",
+    "startFrom": "ფასი",
+    "rateButton": "შეფასება",
+    "changeButton": "შეცვლა"
+  },
+  "gallery": {
+    "title": "გალერეა",
+    "photos": "ფოტოები",
+    "videos": "ვიდეოები"
+  },
+  "map": {
+    "title": "რუკა"
+  },
+  "contact": {
+    "title": "კონტაქტი და ინფორმაცია",
+    "description": "ჩვენს პლატფორმაზე განთავსებულ ყველა ლოკაციას აქვს განსხვავებული ფრენის ღირებულება, პაკეტები და პირობები.",
+    "visitText": "ეწვიეთ",
+    "locationsPage": "ლოკაციების გვერდს",
+    "detailsText": ", სადაც ყველა ლოკაცია დეტალურადაა განხილული, ან დაგვიკავშირდით პირდაპირ:",
+    "messengers": "მესენჯერები"
+  },
+  "sidebar": {
+    "bookNow": "დაჯავშნე ახლავე",
+    "experienceText": "განიცადეთ ფრენის შეუდარებელი გამოცდილება {locationName}-ში. დაჯავშნეთ ახლავე!",
+    "flights": "ფრენები",
+    "photos": "ფოტოები"
+  },
+  "quickInfo": {
+    "bestSeason": "საუკეთესო სეზონი",
+    "yearRound": "მთელი წელი",
+    "flightConditions": "ფრენის პირობები",
+    "thermalAndDynamic": "თერმული და დინამიური"
+  },
+  "ratingModal": {
+    "title": "შეაფასეთ ლოკაცია"
+  }
+}

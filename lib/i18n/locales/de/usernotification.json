@@ -1,0 +1,18 @@
+{
+  "title": "Benachrichtigungen",
+  "loading": "Lädt...",
+  "empty": {
+    "title": "Keine Benachrichtigungen",
+    "description": "Sie haben noch keine Nachrichten"
+  },
+  "newMessage": "Sie haben eine neue Nachricht!",
+  "selectMessage": "Wählen Sie eine Nachricht zum Anzeigen",
+  "delete": "Löschen",
+  "deleteConfirm": "Sind Sie sicher, dass Sie diese Nachricht löschen möchten?",
+  "deleteSuccess": "Nachricht gelöscht",
+  "deleteFailed": "Löschen fehlgeschlagen",
+  "readAt": "Gelesen",
+  "markAsReadFailed": "Ein Fehler ist aufgetreten",
+  "fetchFailed": "Nachrichten konnten nicht geladen werden",
+  "notAuthorized": "Nicht autorisiert"
+}

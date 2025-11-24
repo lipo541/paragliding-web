@@ -1,0 +1,33 @@
+{
+  "title": "Meine Buchungen",
+  "empty": "Sie haben noch keine Buchungen",
+  "status": {
+    "pending": "In Bearbeitung",
+    "confirmed": "Bestätigt",
+    "cancelled": "Storniert",
+    "completed": "Abgeschlossen"
+  },
+  "fields": {
+    "date": "Datum",
+    "people": "Personen",
+    "contact": "Kontakt",
+    "method": "Methode",
+    "promoCode": "Promocode",
+    "comment": "Kommentar"
+  },
+  "actions": {
+    "cancel": "Stornieren"
+  },
+  "dialog": {
+    "title": "Buchung stornieren",
+    "message": "Sind Sie sicher, dass Sie diese Buchung stornieren möchten?",
+    "confirm": "Ja, stornieren",
+    "cancel": "Nein"
+  },
+  "messages": {
+    "authRequired": "Bitte melden Sie sich an",
+    "fetchError": "Buchungen konnten nicht geladen werden",
+    "cancelSuccess": "Buchung storniert",
+    "cancelError": "Buchung konnte nicht storniert werden"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "title": "შესვლა",
+  "email": {
+    "label": "ელფოსტა",
+    "placeholder": "name@example.com"
+  },
+  "password": {
+    "label": "პაროლი",
+    "placeholder": "••••••••"
+  },
+  "submit": "შესვლა",
+  "loading": "იტვირთება...",
+  "forgotPassword": "დაგავიწყდა პაროლი?",
+  "register": "რეგისტრაცია",
+  "divider": "ან",
+  "social": {
+    "google": "Google-ით შესვლა"
+  },
+  "errors": {
+    "loginFailed": "შესვლა ვერ მოხერხდა",
+    "authFailed": "ავტორიზაცია ვერ მოხერხდა"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "ფრენის დაჯავშნა",
+    "subtitle": "შეავსეთ ფორმა და ჩვენ მალე დაგიკავშირდებით",
+    "backToHome": "მთავარზე დაბრუნება"
+  },
+  "steps": {
+    "selectLocation": "ლოკაციის არჩევა",
+    "bookingDetails": "დაჯავშნის დეტალები",
+    "confirmation": "დადასტურება"
+  },
+  "form": {
+    "selectCountry": "აირჩიეთ ქვეყანა",
+    "selectLocation": "აირჩიეთ ლოკაცია",
+    "selectFlightType": "აირჩიეთ ფრენის ტიპი",
+    "loading": "იტვირთება...",
+    "fullName": "სახელი და გვარი",
+    "fullNamePlaceholder": "შეიყვანეთ თქვენი სახელი და გვარი",
+    "phone": "ტელეფონის ნომერი",
+    "phonePlaceholder": "+995 XXX XXX XXX",
+    "flightDate": "ფრენის თარიღი",
+    "numberOfPeople": "ადამიანების რაოდენობა",
+    "contactMethod": "კონტაქტის მეთოდი",
+    "selectContactMethod": "აირჩიეთ კონტაქტის მეთოდი",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram",
+    "viber": "Viber",
+    "promoCode": "პრომო კოდი",
+    "promoCodePlaceholder": "შეიყვანეთ პრომო კოდი",
+    "applyPromo": "გამოყენება",
+    "promoApplied": "✓ {discount}% ფასდაკლება გამოყენებულია!",
+    "specialRequests": "სპეციალური მოთხოვნები",
+    "specialRequestsPlaceholder": "გაქვთ რაიმე სპეციალური მოთხოვნა?",
+    "required": "სავალდებულო",
+    "weatherNoticeTitle": "მნიშვნელოვანი ინფორმაცია",
+    "weatherNoticeText": "პარაპლანით ფრენა პირდაპირ დამოკიდებულია ამინდის პირობებსა და უსაფრთხოების სტანდარტებზე.",
+    "weatherNoticeConfirm": "ჯავშნის დადასტურების შემდეგ ოპერატორი დაგიკავშირდებათ და შეუთანხმებთ ზუსტ დროს ამინდის პროგნოზის შესაბამისად."
+  },
+  "summary": {
+    "bookingSummary": "დაჯავშნის შეჯამება",
+    "location": "ლოკაცია",
+    "flightType": "ფრენის ტიპი",
+    "date": "თარიღი",
+    "people": "ადამიანი",
+    "duration": "ხანგრძლივობა",
+    "features": "მახასიათებლები"
+  },
+  "pricing": {
+    "priceSummary": "ფასების შეჯამება",
+    "basePrice": "საბაზისო ფასი",
+    "discount": "ფასდაკლება",
+    "total": "სულ",
+    "perPerson": "თითო პირზე",
+    "currency": "₾"
+  },
+  "errors": {
+    "fillAllFields": "გთხოვთ შეავსოთ ყველა სავალდებულო ველი",
+    "selectCountry": "გთხოვთ აირჩიოთ ქვეყანა",
+    "selectLocation": "გთხოვთ აირჩიოთ ლოკაცია",
+    "selectFlightType": "გთხოვთ აირჩიოთ ფრენის ტიპი",
+    "selectContactMethod": "გთხოვთ აირჩიოთ კონტაქტის მეთოდი",
+    "invalidPromo": "არასწორი პრომო კოდი",
+    "promoNotActive": "პრომო კოდი ჯერ არ გააქტიურებულა",
+    "promoExpired": "პრომო კოდის ვადა ამოიწურა",
+    "promoLimitReached": "პრომო კოდის გამოყენების ლიმიტი ამოიწურა",
+    "promoRequiresAuth": "პრომო კოდის გამოსაყენებლად საჭიროა ავტორიზაცია",
+    "promoAuthConfirm": "პრომო კოდის გამოსაყენებლად გთხოვთ შეხვიდეთ ან დარეგისტრირდეთ. გსურთ გადასვლა ავტორიზაციის გვერდზე?",
+    "enterPromoCode": "გთხოვთ შეიყვანოთ პრომო კოდი",
+    "bookingFailed": "დაჯავშნა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.",
+    "promoValidationFailed": "პრომო კოდის შემოწმება ვერ მოხერხდა"
+  },
+  "success": {
+    "bookingCreated": "დაჯავშნა წარმატებით შეიქმნა!",
+    "thankYou": "გმადლობთ!",
+    "willContactSoon": "ჩვენ მალე დაგიკავშირდებით",
+    "bookingNumber": "დაჯავშნის ნომერი",
+    "checkEmail": "შეამოწმეთ ელ. ფოსტა დადასტურებისთვის"
+  },
+  "actions": {
+    "confirmBooking": "დაჯავშნის დადასტურება",
+    "cancel": "გაუქმება",
+    "back": "უკან",
+    "continue": "გაგრძელება",
+    "submitting": "იგზავნება..."
+  }
+}

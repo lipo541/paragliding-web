@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "locations": "ლოკაციები",
+    "bookings": "ჯავშნები",
+    "promotions": "პრომო-აქციები",
+    "about": "ჩვენს შესახებ",
+    "contact": "კონტაქტი"
+  },
+  "submenu": {
+    "locations": {
+      "all": "ყველა ლოკაცია",
+      "allDescription": "პარაგლაიდინგის ლოკაციები საქართველოში",
+      "popular": "პოპულარული",
+      "popularDescription": "ყველაზე პოპულარული ადგილები",
+      "beginner": "დამწყებთათვის",
+      "beginnerDescription": "უსაფრთხო ადგილები სწავლისთვის",
+      "advanced": "გამოცდილებისთვის",
+      "advancedDescription": "რთული და ექსტრემალური ადგილები"
+    }
+  },
+  "footer": {
+    "followUs": "გამოგვყევით განახლებებისთვის",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter"
+  },
+  "notifications": {
+    "title": "შეტყობინებები",
+    "noNew": "ახალი შეტყობინებები არ არის"
+  }
+}
