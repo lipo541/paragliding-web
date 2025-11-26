@@ -13,12 +13,16 @@ import { locales, defaultLocale, type Locale } from '@/lib/i18n/config';
 /**
  * საიტის Base URL
  * - Development: http://localhost:3000
- * - Production: https://your-domain.com (შეცვალეთ deploy-ის დროს)
+ * - Production: https://xparagliding.com
+ * 
+ * Priority:
+ * 1. NEXT_PUBLIC_SITE_URL environment variable
+ * 2. NODE_ENV based default
  */
 export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL 
-  || (process.env.NODE_ENV === 'development' 
-      ? 'http://localhost:3000' 
-      : 'https://your-domain.com');
+  || (process.env.NODE_ENV === 'production' 
+      ? 'https://xparagliding.com' 
+      : 'http://localhost:3000');
 
 // ============================================
 // 🌍 Localization
