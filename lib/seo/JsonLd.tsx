@@ -98,7 +98,7 @@ export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
 }
 
 // ============================================
-// 📍 TouristAttraction Schema (ლოკაციისთვის)
+// 📍 LocalBusiness Schema (ლოკაციისთვის - Google Rich Results მხარდაჭერილი)
 // ============================================
 
 interface LocationSchemaProps {
@@ -124,22 +124,22 @@ export function LocationJsonLd({
 }: LocationSchemaProps) {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "TouristAttraction",
-    "name": name,
+    "@type": "LocalBusiness",
+    "@id": url,
+    "name": `Paragliding ${name}`,
     "description": description,
     "url": url,
     ...(image && { "image": image }),
     "address": {
       "@type": "PostalAddress",
-      "addressCountry": {
-        "@type": "Country",
-        "name": "Georgia"
-      },
+      "addressCountry": "GE",
       "addressRegion": countryName,
       "addressLocality": name,
     },
-    // Additional type for paragliding
+    // Additional categorization
     "additionalType": "https://schema.org/SportsActivityLocation",
+    // Price range indicator
+    "priceRange": "$$",
   };
 
   // Rating - დავამატოთ მხოლოდ თუ ვალიდურია
@@ -282,13 +282,13 @@ export function ReviewJsonLd({
     "@context": "https://schema.org",
     "@type": "Review",
     "itemReviewed": {
-      "@type": "TouristAttraction",
-      "name": locationName,
+      "@type": "LocalBusiness",
+      "name": `Paragliding ${locationName}`,
     },
     "reviewRating": {
       "@type": "Rating",
       "ratingValue": rating,
-      "bestRating": "5",
+      "bestRating": 5,
     },
     "author": {
       "@type": "Person",
