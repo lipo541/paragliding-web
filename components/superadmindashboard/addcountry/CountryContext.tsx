@@ -95,6 +95,8 @@ interface CountryContextType {
   loadCountryForEdit: (countryId: string) => Promise<void>;
   saveAllLanguages: () => Promise<void>;
   resetAllFields: () => void;
+  deleteHeroImage: () => Promise<void>;
+  deleteGalleryImage: (index: number) => Promise<void>;
 }
 
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
@@ -471,6 +473,80 @@ export function CountryProvider({ children }: { children: ReactNode }) {
     setActiveLanguage('ka');
   };
 
+  // Hero სურათის წაშლა bucket-იდან და state-იდან
+  const deleteHeroImage = async () => {
+    // თუ pendingImages-ში არის ახალი hero (ჯერ არ არის შენახული bucket-ში), მხოლოდ state გავასუფთაოთ
+    if (pendingImages.heroImage) {
+      setPendingImages({ ...pendingImages, heroImage: null });
+      setImagePreviews({ ...imagePreviews, heroPreview: null });
+      return;
+    }
+    
+    // თუ sharedImages-ში არის hero (უკვე შენახული bucket-ში), წავშალოთ bucket-იდანაც
+    if (sharedImages.hero_image?.url) {
+      const supabase = createClient();
+      const url = sharedImages.hero_image.url;
+      
+      // URL-დან ვიღებთ ფაილის path-ს
+      const urlParts = url.split('/countryIMGgallery/');
+      if (urlParts.length > 1) {
+        const filePath = decodeURIComponent(urlParts[1]);
+        const { error } = await supabase.storage.from('countryIMGgallery').remove([filePath]);
+        if (error) {
+          console.error('Hero სურათის წაშლის შეცდომა:', error);
+        }
+      }
+      
+      setSharedImages({ ...sharedImages, hero_image: null });
+      setImagePreviews({ ...imagePreviews, heroPreview: null });
+    }
+  };
+
+  // Gallery სურათის წაშლა bucket-იდან და state-იდან
+  const deleteGalleryImage = async (index: number) => {
+    // ჯერ ვამოწმებთ ეს pending სურათია თუ shared
+    const totalSharedGallery = sharedImages.gallery?.length || 0;
+    
+    if (index < totalSharedGallery) {
+      // ეს shared gallery სურათია (უკვე შენახული bucket-ში)
+      const imageToDelete = sharedImages.gallery[index];
+      if (imageToDelete?.url) {
+        const supabase = createClient();
+        const url = imageToDelete.url;
+        
+        const urlParts = url.split('/countryIMGgallery/');
+        if (urlParts.length > 1) {
+          const filePath = decodeURIComponent(urlParts[1]);
+          const { error } = await supabase.storage.from('countryIMGgallery').remove([filePath]);
+          if (error) {
+            console.error('Gallery სურათის წაშლის შეცდომა:', error);
+          }
+        }
+      }
+      
+      // წავშალოთ state-იდან
+      const updatedGallery = [...sharedImages.gallery];
+      updatedGallery.splice(index, 1);
+      setSharedImages({ ...sharedImages, gallery: updatedGallery });
+      
+      // Preview-ებიც განვაახლოთ
+      const updatedPreviews = [...imagePreviews.galleryPreviews];
+      updatedPreviews.splice(index, 1);
+      setImagePreviews({ ...imagePreviews, galleryPreviews: updatedPreviews });
+    } else {
+      // ეს pending gallery სურათია (ჯერ არ არის შენახული)
+      const pendingIndex = index - totalSharedGallery;
+      const updatedPending = [...pendingImages.galleryImages];
+      updatedPending.splice(pendingIndex, 1);
+      setPendingImages({ ...pendingImages, galleryImages: updatedPending });
+      
+      // Preview-ებიც - pending-ისთვის index იგივეა რაც მთლიან სიაში
+      const updatedPreviews = [...imagePreviews.galleryPreviews];
+      updatedPreviews.splice(index, 1);
+      setImagePreviews({ ...imagePreviews, galleryPreviews: updatedPreviews });
+    }
+  };
+
   const value: CountryContextType = {
     activeLanguage,
     setActiveLanguage,
@@ -495,7 +571,9 @@ export function CountryProvider({ children }: { children: ReactNode }) {
     getSelectedCountry,
     loadCountryForEdit,
     saveAllLanguages,
-    resetAllFields
+    resetAllFields,
+    deleteHeroImage,
+    deleteGalleryImage
   };
 
   return (

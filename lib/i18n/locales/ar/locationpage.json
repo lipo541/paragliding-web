@@ -18,7 +18,8 @@
     "title": "الباقات",
     "startFrom": "من",
     "rateButton": "تقييم",
-    "changeButton": "تغيير"
+    "changeButton": "تغيير",
+    "loginToRate": "تسجيل الدخول"
   },
   "gallery": {
     "title": "المعرض",
@@ -50,5 +51,12 @@
   },
   "ratingModal": {
     "title": "قيّم الموقع"
+  },
+  "authModal": {
+    "title": "يلزم تسجيل الدخول للتقييم",
+    "description": "لتقييم نوع الرحلة هذا، يجب أن تكون مسجلاً للدخول. إذا لم يكن لديك حساب، التسجيل مجاني!",
+    "loginButton": "تسجيل الدخول",
+    "registerButton": "إنشاء حساب",
+    "footerText": "تقييمك يساعد في تحسين خدماتنا!"
   }
 }

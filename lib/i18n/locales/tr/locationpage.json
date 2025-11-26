@@ -18,7 +18,8 @@
     "title": "Paketler",
     "startFrom": "Başlangıç",
     "rateButton": "Değerlendir",
-    "changeButton": "Değiştir"
+    "changeButton": "Değiştir",
+    "loginToRate": "Giriş yap"
   },
   "gallery": {
     "title": "Galeri",
@@ -50,5 +51,12 @@
   },
   "ratingModal": {
     "title": "Lokasyonu değerlendirin"
+  },
+  "authModal": {
+    "title": "Değerlendirme için giriş gerekli",
+    "description": "Bu uçuş türünü değerlendirmek için giriş yapmanız gerekiyor. Hesabınız yoksa, kayıt ücretsiz ve kolay!",
+    "loginButton": "Giriş Yap",
+    "registerButton": "Kayıt Ol",
+    "footerText": "Değerlendirmeniz hizmetimizi geliştirmemize yardımcı oluyor!"
   }
 }

@@ -18,7 +18,8 @@
     "title": "Packages",
     "startFrom": "Starts from",
     "rateButton": "Rate",
-    "changeButton": "Change"
+    "changeButton": "Change",
+    "loginToRate": "Login"
   },
   "gallery": {
     "title": "Gallery",
@@ -50,5 +51,12 @@
   },
   "ratingModal": {
     "title": "Rate Location"
+  },
+  "authModal": {
+    "title": "Login Required for Rating",
+    "description": "To rate this flight type, you need to be logged in. If you don't have an account, registration is free and easy!",
+    "loginButton": "Login",
+    "registerButton": "Create Account",
+    "footerText": "Your rating helps improve our service!"
   }
 }

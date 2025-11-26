@@ -126,6 +126,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
   const [showRatingInput, setShowRatingInput] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [flightTypeRatings, setFlightTypeRatings] = useState<{ [key: string]: { userRating: number | null; showInput: boolean; avgRating: number; count: number } }>({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
   // Scroll-based animation states
   const [scrollY, setScrollY] = useState(0);
@@ -210,8 +212,47 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
         if (pageError && pageError.code !== 'PGRST116') throw pageError;
         setLocationPage(pageData);
 
-        // Fetch user's rating if authenticated
+        // Fetch flight type ratings for ALL users (including non-authenticated)
+        if (pageData?.content?.[locale]?.flight_types) {
+          const flightTypesData: FlightType[] = pageData.content[locale].flight_types;
+          const sharedIds = flightTypesData.map((ft: FlightType) => ft.shared_id).filter(Boolean) as string[];
+          
+          if (sharedIds.length > 0) {
+            // Fetch all ratings for these flight types
+            const { data: flightRatings } = await supabase
+              .from('ratings')
+              .select('ratable_id, rating, user_id')
+              .eq('ratable_type', 'flight_type')
+              .in('ratable_id', sharedIds);
+
+            const ratingsMap: { [key: string]: { userRating: number | null; showInput: boolean; avgRating: number; count: number } } = {};
+            
+            // Get current user (may be null for non-authenticated)
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            sharedIds.forEach((id: string) => {
+              const typeRatings = flightRatings?.filter((r: any) => r.ratable_id === id) || [];
+              const userRatingData = user ? typeRatings.find((r: any) => r.user_id === user.id) : null;
+              const avgRating = typeRatings.length > 0 
+                ? typeRatings.reduce((sum: number, r: any) => sum + r.rating, 0) / typeRatings.length 
+                : 0;
+              
+              ratingsMap[id] = {
+                userRating: userRatingData?.rating || null,
+                showInput: false,
+                avgRating: Number(avgRating.toFixed(1)),
+                count: typeRatings.length
+              };
+            });
+            
+            setFlightTypeRatings(ratingsMap);
+          }
+        }
+
+        // Fetch user's own location rating if authenticated
         const { data: { user } } = await supabase.auth.getUser();
+        setIsAuthenticated(!!user);
+        
         if (user && locationData) {
           const { data: ratingData } = await supabase
             .from('ratings')
@@ -223,40 +264,6 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
           
           if (ratingData) {
             setUserRating(ratingData.rating);
-          }
-
-          // Fetch flight type ratings
-          if (pageData?.content?.[locale]?.flight_types) {
-            const flightTypesData: FlightType[] = pageData.content[locale].flight_types;
-            const sharedIds = flightTypesData.map((ft: FlightType) => ft.shared_id).filter(Boolean) as string[];
-            
-            if (sharedIds.length > 0) {
-              // Fetch all ratings for these flight types
-              const { data: flightRatings } = await supabase
-                .from('ratings')
-                .select('ratable_id, rating, user_id')
-                .eq('ratable_type', 'flight_type')
-                .in('ratable_id', sharedIds);
-
-              const ratingsMap: { [key: string]: { userRating: number | null; showInput: boolean; avgRating: number; count: number } } = {};
-              
-              sharedIds.forEach((id: string) => {
-                const typeRatings = flightRatings?.filter((r: any) => r.ratable_id === id) || [];
-                const userRatingData = typeRatings.find((r: any) => r.user_id === user.id);
-                const avgRating = typeRatings.length > 0 
-                  ? typeRatings.reduce((sum: number, r: any) => sum + r.rating, 0) / typeRatings.length 
-                  : 0;
-                
-                ratingsMap[id] = {
-                  userRating: userRatingData?.rating || null,
-                  showInput: false,
-                  avgRating: Number(avgRating.toFixed(1)),
-                  count: typeRatings.length
-                };
-              });
-              
-              setFlightTypeRatings(ratingsMap);
-            }
           }
         }
       } catch (error) {
@@ -737,19 +744,28 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
                                 </span>
                               </div>
 
-                              {/* Rate Button */}
-                              <button
-                                onClick={() => setFlightTypeRatings(prev => ({
-                                  ...prev,
-                                  [pkg.shared_id!]: {
-                                    ...prev[pkg.shared_id!],
-                                    showInput: !prev[pkg.shared_id!].showInput
-                                  }
-                                }))}
-                                className="ml-auto px-3 py-1.5 text-[11px] font-semibold backdrop-blur-md bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-700 dark:text-yellow-400 rounded-lg border-2 border-yellow-400/40 hover:border-yellow-400/60 shadow-lg hover:shadow-yellow-400/20 transition-all hover:scale-105"
-                              >
-                                {flightTypeRatings[pkg.shared_id].userRating ? t('flightTypes.changeButton') : t('flightTypes.rateButton')}
-                              </button>
+                              {/* Rate Button - Only for authenticated users */}
+                              {isAuthenticated ? (
+                                <button
+                                  onClick={() => setFlightTypeRatings(prev => ({
+                                    ...prev,
+                                    [pkg.shared_id!]: {
+                                      ...prev[pkg.shared_id!],
+                                      showInput: !prev[pkg.shared_id!].showInput
+                                    }
+                                  }))}
+                                  className="ml-auto px-3 py-1.5 text-[11px] font-semibold backdrop-blur-md bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-700 dark:text-yellow-400 rounded-lg border-2 border-yellow-400/40 hover:border-yellow-400/60 shadow-lg hover:shadow-yellow-400/20 transition-all hover:scale-105"
+                                >
+                                  {flightTypeRatings[pkg.shared_id].userRating ? t('flightTypes.changeButton') : t('flightTypes.rateButton')}
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => setShowAuthModal(true)}
+                                  className="ml-auto px-3 py-1.5 text-[11px] font-semibold backdrop-blur-md bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-700 dark:text-yellow-400 rounded-lg border-2 border-yellow-400/40 hover:border-yellow-400/60 shadow-lg hover:shadow-yellow-400/20 transition-all hover:scale-105"
+                                >
+                                  {t('flightTypes.rateButton')}
+                                </button>
+                              )}
                             </div>
 
                             {/* Rating Input Dropdown */}
@@ -1320,6 +1336,75 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
         }}
         title={t('ratingModal.title')}
       />
+
+      {/* Auth Required Modal */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowAuthModal(false)}
+          />
+          
+          {/* Modal Content */}
+          <div className="relative w-full max-w-md rounded-2xl backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 border border-white/30 dark:border-white/10 shadow-2xl p-6 animate-in zoom-in-95 duration-200">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowAuthModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-foreground/10 transition-colors"
+            >
+              <X className="w-5 h-5 text-foreground/60" />
+            </button>
+
+            {/* Icon */}
+            <div className="flex justify-center mb-4">
+              <div className="p-4 rounded-full bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border border-yellow-400/30">
+                <svg className="w-8 h-8 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3 className="text-xl font-bold text-foreground text-center mb-2">
+              {t('authModal.title')}
+            </h3>
+
+            {/* Description */}
+            <p className="text-sm text-foreground/70 text-center mb-6">
+              {t('authModal.description')}
+            </p>
+
+            {/* Buttons */}
+            <div className="space-y-3">
+              <Link
+                href={`/${locale}/login`}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-foreground text-background rounded-xl font-semibold text-sm hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                {t('authModal.loginButton')}
+              </Link>
+              
+              <Link
+                href={`/${locale}/register`}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-foreground/10 hover:bg-foreground/20 text-foreground rounded-xl font-semibold text-sm border border-foreground/20 transition-all"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                {t('authModal.registerButton')}
+              </Link>
+            </div>
+
+            {/* Footer Text */}
+            <p className="text-xs text-foreground/50 text-center mt-4">
+              {t('authModal.footerText')}
+            </p>
+          </div>
+        </div>
+      )}
 
     </div>
   );

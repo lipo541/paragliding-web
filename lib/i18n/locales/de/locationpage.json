@@ -18,7 +18,8 @@
     "title": "Pakete",
     "startFrom": "Ab",
     "rateButton": "Bewerten",
-    "changeButton": "Ändern"
+    "changeButton": "Ändern",
+    "loginToRate": "Anmelden"
   },
   "gallery": {
     "title": "Galerie",
@@ -50,5 +51,12 @@
   },
   "ratingModal": {
     "title": "Standort bewerten"
+  },
+  "authModal": {
+    "title": "Anmeldung für Bewertung erforderlich",
+    "description": "Um diesen Flugtyp zu bewerten, müssen Sie angemeldet sein. Wenn Sie noch kein Konto haben, ist die Registrierung kostenlos!",
+    "loginButton": "Anmelden",
+    "registerButton": "Registrieren",
+    "footerText": "Ihre Bewertung hilft uns, unseren Service zu verbessern!"
   }
 }

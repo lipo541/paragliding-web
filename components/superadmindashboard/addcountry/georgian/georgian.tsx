@@ -14,7 +14,9 @@ export default function GeorgianForm() {
     imagePreviews,
     setImagePreviews,
     sharedVideos,
-    setSharedVideos
+    setSharedVideos,
+    deleteHeroImage,
+    deleteGalleryImage
   } = useCountry();
 
   const [newVideoUrl, setNewVideoUrl] = useState("");
@@ -53,10 +55,7 @@ export default function GeorgianForm() {
             <div className="relative w-full h-48 rounded-lg overflow-hidden border border-foreground/20">
               <img src={imagePreviews.heroPreview} alt="Hero" className="w-full h-full object-cover" />
               <button
-                onClick={() => {
-                  setPendingImages({ ...pendingImages, heroImage: null });
-                  setImagePreviews({ ...imagePreviews, heroPreview: null });
-                }}
+                onClick={() => deleteHeroImage()}
                 className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,14 +140,7 @@ export default function GeorgianForm() {
                 placeholder="ALT ტექსტი ქართულად"
               />
               <button
-                onClick={() => {
-                  const updatedGallery = [...pendingImages.galleryImages];
-                  updatedGallery.splice(index, 1);
-                  const updatedPreviews = [...imagePreviews.galleryPreviews];
-                  updatedPreviews.splice(index, 1);
-                  setPendingImages({ ...pendingImages, galleryImages: updatedGallery });
-                  setImagePreviews({ ...imagePreviews, galleryPreviews: updatedPreviews });
-                }}
+                onClick={() => deleteGalleryImage(index)}
                 className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
