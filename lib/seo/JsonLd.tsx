@@ -122,7 +122,7 @@ export function LocationJsonLd({
   altitude,
   url,
 }: LocationSchemaProps) {
-  const schema = {
+  const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "TouristAttraction",
     "name": name,
@@ -131,30 +131,35 @@ export function LocationJsonLd({
     ...(image && { "image": image }),
     "address": {
       "@type": "PostalAddress",
-      "addressCountry": "GE",
+      "addressCountry": {
+        "@type": "Country",
+        "name": "Georgia"
+      },
       "addressRegion": countryName,
       "addressLocality": name,
     },
-    // Rating (თუ არის)
-    ...(rating && ratingCount && ratingCount > 0 && {
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": Number(rating).toFixed(1),
-        "bestRating": "5",
-        "worstRating": "1",
-        "reviewCount": ratingCount,
-      },
-    }),
-    // Altitude (თუ არის)
-    ...(altitude && {
-      "geo": {
-        "@type": "GeoCoordinates",
-        "elevation": `${altitude}m`,
-      },
-    }),
     // Additional type for paragliding
     "additionalType": "https://schema.org/SportsActivityLocation",
   };
+
+  // Rating - დავამატოთ მხოლოდ თუ ვალიდურია
+  if (rating && ratingCount && ratingCount > 0 && rating > 0) {
+    schema["aggregateRating"] = {
+      "@type": "AggregateRating",
+      "ratingValue": rating,
+      "bestRating": 5,
+      "worstRating": 1,
+      "ratingCount": ratingCount,
+    };
+  }
+
+  // Altitude/Geo - დავამატოთ მხოლოდ თუ არის
+  if (altitude && altitude > 0) {
+    schema["geo"] = {
+      "@type": "GeoCoordinates",
+      "elevation": `${altitude}m`,
+    };
+  }
 
   return (
     <script
