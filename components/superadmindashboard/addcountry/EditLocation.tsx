@@ -42,6 +42,7 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
   const [isSaving, setIsSaving] = useState(false);
   const [ogImage, setOgImage] = useState<File | null>(null);
   const [ogImagePreview, setOgImagePreview] = useState<string | null>(null);
+  const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
   const [mapIframeUrl, setMapIframeUrl] = useState<string>("");
   const [altitude, setAltitude] = useState<string>("");
   const [bestSeasonStart, setBestSeasonStart] = useState<string>("");
@@ -189,9 +190,58 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
     }
   };
 
-  const handleRemoveImage = () => {
-    setOgImage(null);
-    setOgImagePreview(location.og_image_url || null);
+  const handleRemoveImage = async () => {
+    // თუ ახალი სურათი იყო არჩეული (ჯერ არ ატვირთული), უბრალოდ გავასუფთავოთ
+    if (ogImage) {
+      setOgImage(null);
+      setOgImagePreview(location.og_image_url || null);
+      return;
+    }
+
+    // თუ არსებული სურათია bucket-დან, წავშალოთ
+    if (location.og_image_url) {
+      const confirmDelete = window.confirm("ნამდვილად გსურთ სურათის წაშლა?");
+      if (!confirmDelete) return;
+
+      try {
+        // Extract file path from URL - locations/id/og-image.ext
+        const urlParts = location.og_image_url.split('/countries-og-images/');
+        if (urlParts.length > 1) {
+          const filePath = urlParts[1];
+          
+          const { error } = await supabase.storage
+            .from('countries-og-images')
+            .remove([filePath]);
+
+          if (error) {
+            console.error('Error deleting image from storage:', error);
+            alert('სურათის წაშლა ვერ მოხერხდა storage-დან');
+            return;
+          }
+        }
+
+        // განვაახლოთ ბაზაში og_image_url = null
+        const { error: updateError } = await supabase
+          .from('locations')
+          .update({ og_image_url: null })
+          .eq('id', location.id);
+
+        if (updateError) {
+          console.error('Error updating database:', updateError);
+          alert('ბაზის განახლება ვერ მოხერხდა');
+          return;
+        }
+
+        // განვაახლოთ UI
+        setOgImagePreview(null);
+        setShouldDeleteImage(true);
+        alert('სურათი წარმატებით წაიშალა!');
+        
+      } catch (err) {
+        console.error('Delete error:', err);
+        alert('სურათის წაშლისას მოხდა შეცდომა');
+      }
+    }
   };
 
   // Extract iframe src URL from the full iframe code
@@ -214,7 +264,8 @@ export default function EditLocation({ location, countryName, onClose, onSuccess
         return;
       }
 
-      let ogImageUrl = location.og_image_url;
+      // თუ სურათი უკვე წაიშალა handleRemoveImage-ში, og_image_url = null
+      let ogImageUrl: string | null | undefined = shouldDeleteImage ? null : location.og_image_url;
 
       // If new image uploaded
       if (ogImage) {
