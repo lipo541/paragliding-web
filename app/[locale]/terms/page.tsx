@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import ContactPage from '@/components/contact/ContactPage';
 import { 
   getStaticPageAlternateUrls, 
   getPageSEO,
@@ -10,8 +9,8 @@ import {
   type Locale 
 } from '@/lib/seo';
 
-// ✅ ISR: Revalidate weekly (604800 seconds)
-export const revalidate = 604800;
+// ✅ ISR: Revalidate daily (86400 seconds)
+export const revalidate = 86400;
 
 // ✅ SSG: Pre-generate for all locales
 export async function generateStaticParams() {
@@ -27,8 +26,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   const safeLocale = (locale as Locale) || 'ka';
   
-  const { title, description } = getPageSEO('contact', safeLocale);
-  const alternateUrls = getStaticPageAlternateUrls('contact', safeLocale);
+  const { title, description } = getPageSEO('terms', safeLocale);
+  const alternateUrls = getStaticPageAlternateUrls('terms', safeLocale);
 
   return {
     title,
@@ -47,19 +46,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function Contact({ params }: PageProps) {
+export default async function TermsPage({ params }: PageProps) {
   const { locale } = await params;
   
   // Breadcrumb items
   const breadcrumbItems = [
     { name: 'Home', url: `${BASE_URL}/${locale}` },
-    { name: 'Contact', url: `${BASE_URL}/${locale}/contact` },
+    { name: 'Terms of Service', url: `${BASE_URL}/${locale}/terms` },
   ];
 
+  // TODO: Replace with actual terms content component
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbItems} />
-      <ContactPage locale={locale} />
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
+        <p className="text-gray-600">Terms of Service content coming soon...</p>
+      </div>
     </>
   );
 }

@@ -1,4 +1,49 @@
+import { Metadata } from 'next';
 import Image from "next/image";
+import { 
+  getStaticPageAlternateUrls, 
+  getPageSEO,
+  SITE_NAME,
+  generateLocaleParams,
+  type Locale 
+} from '@/lib/seo';
+
+// ✅ ISR: Revalidate hourly (3600 seconds)
+export const revalidate = 3600;
+
+// ✅ SSG: Pre-generate for all locales
+export async function generateStaticParams() {
+  return generateLocaleParams();
+}
+
+interface PageProps {
+  params: Promise<{ locale: string }>;
+}
+
+// SEO Metadata for Home Page
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const safeLocale = (locale as Locale) || 'ka';
+  
+  const { title, description } = getPageSEO('home', safeLocale);
+  const alternateUrls = getStaticPageAlternateUrls('', safeLocale);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: alternateUrls.canonical,
+      languages: alternateUrls.languages,
+    },
+    openGraph: {
+      title: `${title} | ${SITE_NAME}`,
+      description,
+      type: 'website',
+      locale: safeLocale,
+      url: alternateUrls.canonical,
+    },
+  };
+}
 
 export default function Home() {
   return (

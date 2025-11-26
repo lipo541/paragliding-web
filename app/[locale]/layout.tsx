@@ -1,62 +1,68 @@
-'use client';
+import type { Metadata } from 'next';
+import LocaleLayoutClient from "@/components/layout/LocaleLayoutClient";
+import { 
+  SITE_NAME, 
+  DEFAULT_DESCRIPTIONS, 
+  TITLE_TEMPLATES,
+  DEFAULT_OG_IMAGE,
+  BASE_URL,
+  OrganizationJsonLd,
+  WebSiteJsonLd,
+  type Locale 
+} from '@/lib/seo';
 
-import { useEffect, useState } from "react";
-import Header from "@/components/header/Header";
-import Footer from "@/components/footer/Footer";
-import UserBottomNav from "@/components/userbottomnav/UserBottomNav";
-import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
-import { createClient } from "@/lib/supabase/client";
-
-export default function LocaleLayout({
-  children,
-  params,
-}: Readonly<{
+interface LocaleLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-}>) {
-  const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
+}
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      await supabase.auth.getSession();
-      setIsLoading(false);
-    };
-    
-    checkAuth();
-  }, [supabase.auth]);
+/**
+ * Generate metadata for locale layout
+ * ეს მუშაობს მხოლოდ Server Component-ში!
+ */
+export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
+  const { locale } = await params;
+  const safeLocale = (locale as Locale) || 'ka';
+  
+  return {
+    title: {
+      default: SITE_NAME,
+      template: TITLE_TEMPLATES[safeLocale] || TITLE_TEMPLATES.ka,
+    },
+    description: DEFAULT_DESCRIPTIONS[safeLocale] || DEFAULT_DESCRIPTIONS.ka,
+    metadataBase: new URL(BASE_URL),
+    openGraph: {
+      type: 'website',
+      locale: safeLocale,
+      siteName: SITE_NAME,
+      images: [{ url: DEFAULT_OG_IMAGE }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
-  if (isLoading) {
-    return (
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <div className="flex min-h-screen items-center justify-center bg-background">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-foreground/20 border-t-foreground"></div>
-            <p className="text-sm text-foreground/60">იტვირთება...</p>
-          </div>
-        </div>
-      </ThemeProvider>
-    );
-  }
-
+export default async function LocaleLayout({
+  children,
+  params,
+}: LocaleLayoutProps) {
+  // params-ის await არის საჭირო Next.js 15+-ში
+  const { locale } = await params;
+  
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Header />
-      <div className="pb-20">
+    <>
+      {/* Global JSON-LD Schemas */}
+      <OrganizationJsonLd />
+      <WebSiteJsonLd />
+      
+      <LocaleLayoutClient>
         {children}
-      </div>
-      <Footer />
-      <UserBottomNav />
-    </ThemeProvider>
+      </LocaleLayoutClient>
+    </>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
 import { SupabaseProvider } from "@/lib/supabase/SupabaseProvider";
 import ToastProvider from "@/components/ui/Toast";
+import { BASE_URL, SITE_NAME, DEFAULT_DESCRIPTIONS } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,17 +17,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Paragliding Georgia",
-  description: "Paragliding in Georgia - Pilots, Companies, Locations, Tours",
+  title: SITE_NAME,
+  description: DEFAULT_DESCRIPTIONS.en,
+  metadataBase: new URL(BASE_URL),
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+  params?: Promise<{ locale?: string }>;
+}
+
+export default async function RootLayout({
+  children,
+  params,
+}: RootLayoutProps) {
+  // locale-ის დინამიური წამოღება URL-დან
+  // თუ params არ არის ან locale არ არის, default 'ka'
+  const resolvedParams = params ? await params : {};
+  const locale = resolvedParams.locale || 'ka';
+  
   return (
-    <html lang="ka" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
