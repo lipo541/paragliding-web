@@ -33,6 +33,7 @@
     "passwordMismatch": "Пароли не совпадают",
     "passwordLength": "Пароль должен содержать минимум 6 символов",
     "registerFailed": "Не удалось зарегистрироваться",
-    "authFailed": "Не удалось авторизоваться"
+    "authFailed": "Не удалось авторизоваться",
+    "userAlreadyRegistered": "Этот email уже зарегистрирован"
   }
 }

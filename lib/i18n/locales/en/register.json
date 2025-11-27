@@ -33,6 +33,7 @@
     "passwordMismatch": "Passwords do not match",
     "passwordLength": "Password must be at least 6 characters",
     "registerFailed": "Registration failed",
-    "authFailed": "Authorization failed"
+    "authFailed": "Authorization failed",
+    "userAlreadyRegistered": "This email is already registered"
   }
 }

@@ -33,6 +33,7 @@
     "passwordMismatch": "كلمات المرور غير متطابقة",
     "passwordLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
     "registerFailed": "فشل التسجيل",
-    "authFailed": "فشل التفويض"
+    "authFailed": "فشل التفويض",
+    "userAlreadyRegistered": "هذا البريد الإلكتروني مسجل بالفعل"
   }
 }

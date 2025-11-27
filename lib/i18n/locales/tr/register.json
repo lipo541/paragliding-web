@@ -33,6 +33,7 @@
     "passwordMismatch": "Şifreler eşleşmiyor",
     "passwordLength": "Şifre en az 6 karakter olmalıdır",
     "registerFailed": "Kayıt başarısız",
-    "authFailed": "Yetkilendirme başarısız"
+    "authFailed": "Yetkilendirme başarısız",
+    "userAlreadyRegistered": "Bu e-posta zaten kayıtlı"
   }
 }

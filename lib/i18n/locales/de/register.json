@@ -33,6 +33,7 @@
     "passwordMismatch": "Passwörter stimmen nicht überein",
     "passwordLength": "Passwort muss mindestens 6 Zeichen lang sein",
     "registerFailed": "Registrierung fehlgeschlagen",
-    "authFailed": "Autorisierung fehlgeschlagen"
+    "authFailed": "Autorisierung fehlgeschlagen",
+    "userAlreadyRegistered": "Diese E-Mail ist bereits registriert"
   }
 }

@@ -120,7 +120,13 @@ export default function RegisterForm() {
         },
       })
 
-      if (signUpError) throw signUpError
+      if (signUpError) {
+        // Check for user already registered error and show translated message
+        if (signUpError.message === 'User already registered') {
+          throw new Error(t('errors.userAlreadyRegistered'))
+        }
+        throw signUpError
+      }
 
       if (data.user) {
         // Redirect to login page
