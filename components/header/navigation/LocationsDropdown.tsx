@@ -187,10 +187,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
             <div className="lg:col-span-2">
               <Link
                 href={`/${locale}/locations/${getLocalizedSlug(country, locale)}`}
-                className="group block h-full p-6 rounded-2xl bg-background/30 border border-foreground/20 hover:bg-background/40 hover:border-foreground/30 hover:shadow-2xl shadow-lg transition-all duration-500 hover:scale-[1.02]"
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                }}
+                className="group block h-full p-6 rounded-2xl backdrop-blur-md border border-[#4697D2]/40 dark:border-white/10 hover:border-[#CAFA00]/60 dark:hover:border-white/20 hover:shadow-2xl hover:shadow-[#CAFA00]/10 shadow-lg transition-all duration-500 hover:scale-[1.02] bg-gradient-to-br from-[rgba(70,151,210,0.25)] to-[rgba(70,151,210,0.15)] dark:bg-black/20 dark:from-transparent dark:to-transparent"
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-foreground/5 flex-shrink-0 ring-1 ring-foreground/10 group-hover:ring-foreground/20 transition-all duration-300">
@@ -202,11 +199,11 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                     <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/10"></div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-foreground/80 transition-colors mb-2 tracking-tight">
+                    <h3 className="text-xl font-bold group-hover:opacity-80 transition-colors mb-2 tracking-tight text-gray-800 dark:text-white">
                       {getLocalizedName(country, locale)}
                     </h3>
                     <div className="flex items-center gap-2.5 text-xs flex-wrap">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-foreground/5 text-foreground/60 font-medium">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#4697D2]/20 dark:bg-white/10 font-medium text-[#2a5a8a] dark:text-white/80">
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
@@ -248,20 +245,20 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                                 </div>
                               );
                             })}
-                            <span className="ml-0.5 text-xs font-semibold text-foreground/70">{country.cached_rating.toFixed(1)}</span>
-                            <span className="text-[10px] font-medium text-foreground/40">({country.cached_rating_count})</span>
+                            <span className="ml-0.5 text-xs font-semibold text-gray-800 dark:text-white/90">{country.cached_rating.toFixed(1)}</span>
+                            <span className="text-[10px] font-medium text-gray-600 dark:text-white/60">({country.cached_rating_count})</span>
                           </div>
                         </>
                       )}
                     </div>
                   </div>
-                  <div className="p-2 rounded-full bg-foreground/5 group-hover:bg-foreground/10 transition-colors">
-                    <svg className="w-4 h-4 text-foreground/40 group-hover:text-foreground/70 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="p-2 rounded-full bg-[#CAFA00]/20 dark:bg-white/10 group-hover:bg-[#CAFA00]/40 dark:group-hover:bg-white/20 transition-colors">
+                    <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-all text-[#1a1a1a] dark:text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-foreground/60 leading-relaxed line-clamp-2">
+                <p className="text-sm leading-relaxed line-clamp-2 text-gray-600 dark:text-white/70">
                   {locale === 'en' 
                     ? 'Explore paragliding locations and discover breathtaking flying spots' 
                     : locale === 'ru' 
@@ -286,7 +283,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                     <Link
                       key={location.id}
                       href={`/${locale}/locations/${getLocalizedSlug(country, locale)}/${getLocalizedSlug(location, locale)}`}
-                      className="group/location block p-3 rounded-xl bg-background/30 border border-foreground/20 hover:bg-background/40 hover:border-foreground/30 hover:shadow-md transition-all duration-300 hover:scale-[1.02]"
+                      className="group/location block p-3 rounded-xl backdrop-blur-md border border-[#4697D2]/40 dark:border-white/10 hover:border-[#CAFA00]/60 dark:hover:border-white/20 hover:shadow-md hover:shadow-[#CAFA00]/10 transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-[rgba(70,151,210,0.25)] to-[rgba(70,151,210,0.15)] dark:bg-black/20 dark:from-transparent dark:to-transparent"
                     >
                       <div className="flex items-center gap-2.5">
                         {/* Location Image */}
@@ -301,7 +298,7 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                         
                         {/* Location Info */}
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-semibold text-foreground group-hover/location:text-foreground/80 transition-colors mb-1 truncate">
+                          <h4 className="text-sm font-semibold group-hover/location:opacity-80 transition-colors mb-1 truncate text-gray-800 dark:text-white">
                             {getLocalizedName(location, locale)}
                           </h4>
                           
@@ -342,29 +339,29 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
                                   );
                                 })}
                               </div>
-                              <span className="text-xs font-semibold text-foreground/70">{location.cached_rating.toFixed(1)}</span>
-                              <span className="text-[10px] font-medium text-foreground/40">({location.cached_rating_count})</span>
+                              <span className="text-xs font-semibold text-gray-800 dark:text-white/90">{location.cached_rating.toFixed(1)}</span>
+                              <span className="text-[10px] font-medium text-gray-600 dark:text-white/60">({location.cached_rating_count})</span>
                             </div>
                           ) : (
-                            <p className="text-xs text-foreground/50 group-hover/location:text-foreground/60 transition-colors">
+                            <p className="text-xs group-hover/location:opacity-80 transition-colors text-gray-500 dark:text-white/60">
                               {locale === 'en' ? 'View details' : locale === 'ru' ? 'Подробнее' : locale === 'ar' ? 'عرض التفاصيل' : locale === 'de' ? 'Details anzeigen' : locale === 'tr' ? 'Detayları görüntüle' : 'დეტალურად →'}
                             </p>
                           )}
                         </div>
                         
                         {/* Arrow Icon */}
-                        <svg className="w-4 h-4 text-foreground/30 group-hover/location:text-foreground/50 group-hover/location:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 group-hover/location:translate-x-0.5 transition-all flex-shrink-0 text-[#CAFA00] dark:text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </div>
                     </Link>
                   ))
                 ) : (
-                  <div className="col-span-2 p-6 rounded-lg border border-dashed border-foreground/10 text-center">
-                    <svg className="w-8 h-8 mx-auto mb-2 text-foreground/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="col-span-2 p-6 rounded-lg border border-dashed border-white/20 text-center">
+                    <svg className="w-8 h-8 mx-auto mb-2 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
-                    <p className="text-xs text-foreground/40">
+                    <p className="text-xs text-white/50">
                       {locale === 'en' ? 'No locations yet' : locale === 'ru' ? 'Пока нет локаций' : locale === 'ar' ? 'لا توجد مواقع بعد' : locale === 'de' ? 'Noch keine Standorte' : locale === 'tr' ? 'Henüz konum yok' : 'ლოკაციები არ არის'}
                     </p>
                   </div>
@@ -376,8 +373,8 @@ export default function LocationsDropdown({ locale }: LocationsDropdownProps) {
       ))}
 
       {countriesWithLocations.length === 0 && !isLoading && (
-        <div className="col-span-full text-center py-12 text-foreground/40">
-          <svg className="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="col-span-full text-center py-12 text-white/50">
+          <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-sm">

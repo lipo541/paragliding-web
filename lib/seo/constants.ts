@@ -97,7 +97,7 @@ export const TITLE_TEMPLATES: Record<Locale, string> = {
 /**
  * Default OG Image
  */
-export const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.jpg`;
+export const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
 
 // ============================================
 // 🚫 Routes Configuration

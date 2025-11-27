@@ -128,9 +128,9 @@ export default function CommentsList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-semibold flex items-center gap-2">
+        <h3 className="text-base font-semibold flex items-center gap-2 text-[#1a1a1a] dark:text-white">
           <MessageSquare className="w-4 h-4" />
-          {t('list.title')} <span className="text-foreground/50 text-sm font-normal">({comments.length})</span>
+          {t('list.title')} <span className="text-[#1a1a1a]/50 dark:text-white/50 text-sm font-normal">({comments.length})</span>
         </h3>
       </div>
 
@@ -145,7 +145,7 @@ export default function CommentsList({
       )}
 
       {comments.length === 0 ? (
-        <p className="text-foreground/40 text-center py-6 text-sm">
+        <p className="text-[#1a1a1a]/50 dark:text-white/50 text-center py-6 text-sm">
           {t('list.noComments')}
         </p>
       ) : (

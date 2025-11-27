@@ -288,7 +288,7 @@ export default function CommentItem({
 
   return (
     <div 
-      className={`${isReply ? 'ml-6 sm:ml-8' : ''} rounded-lg transition-colors duration-200 ${isHovered ? 'bg-foreground/[0.02]' : ''} p-2 -m-2`}
+      className={`${isReply ? 'ml-6 sm:ml-8' : ''} rounded-lg transition-colors duration-200 ${isHovered ? 'bg-[#4697D2]/5 dark:bg-white/5' : ''} p-2 -m-2`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -299,13 +299,13 @@ export default function CommentItem({
             {comment.profiles.full_name?.[0]?.toUpperCase() || 'U'}
           </div>
         </div>
-        <p className="font-semibold text-[10px] sm:text-sm">
+        <p className="font-semibold text-[10px] sm:text-sm text-[#1a1a1a] dark:text-white">
           {comment.profiles.full_name || t('item.user')}
         </p>
-        <span className="text-[8px] sm:text-[11px] text-foreground/40 flex items-center gap-1">
+        <span className="text-[8px] sm:text-[11px] text-[#1a1a1a]/40 dark:text-white/40 flex items-center gap-1">
           {formatTime(comment.created_at)}
           {isEdited && (
-            <span className="text-[8px] text-foreground/30" title={t('item.edited')}>
+            <span className="text-[8px] text-[#1a1a1a]/30 dark:text-white/30" title={t('item.edited')}>
               ({t('item.edited')})
             </span>
           )}
@@ -319,7 +319,7 @@ export default function CommentItem({
             <textarea
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-foreground/10 rounded-2xl bg-foreground/[0.03] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full px-3 py-2 text-sm border border-[#4697D2]/30 dark:border-white/20 rounded-2xl bg-[#4697D2]/10 dark:bg-white/10 text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
               rows={2}
             />
             <div className="flex gap-2">
@@ -334,7 +334,7 @@ export default function CommentItem({
                   setIsEditing(false);
                   setEditedContent(comment.content);
                 }}
-                className="px-3 py-1.5 text-xs font-medium bg-foreground/10 rounded-full hover:bg-foreground/20 transition-colors"
+                className="px-3 py-1.5 text-xs font-medium bg-[#4697D2]/10 dark:bg-white/10 text-[#1a1a1a] dark:text-white rounded-full hover:bg-[#4697D2]/20 dark:hover:bg-white/20 transition-colors"
               >
                 {t('item.cancel')}
               </button>
@@ -342,7 +342,7 @@ export default function CommentItem({
           </div>
         ) : (
           <>
-            <p className="text-foreground/90 text-[11px] sm:text-sm leading-relaxed break-words">{comment.content}</p>
+            <p className="text-[#1a1a1a]/90 dark:text-white/90 text-[11px] sm:text-sm leading-relaxed break-words">{comment.content}</p>
             {!comment.is_approved && (
               <p className="text-[9px] text-yellow-600 dark:text-yellow-500 mt-1 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
@@ -357,8 +357,8 @@ export default function CommentItem({
                   disabled={isReacting}
                   className={`text-[9px] sm:text-xs font-medium transition-all disabled:opacity-50 ${
                     userReaction === 'like'
-                      ? 'text-blue-500 scale-110'
-                      : 'text-foreground/50 hover:text-blue-500 hover:scale-110'
+                      ? 'text-blue-400 scale-110'
+                      : 'text-[#1a1a1a]/50 dark:text-white/50 hover:text-blue-400 hover:scale-110'
                   }`}
                   title={t('item.like')}
                   aria-label={t('item.like')}
@@ -374,8 +374,8 @@ export default function CommentItem({
                   disabled={isReacting}
                   className={`text-[9px] sm:text-xs font-medium transition-all disabled:opacity-50 ${
                     userReaction === 'dislike'
-                      ? 'text-red-500 scale-110'
-                      : 'text-foreground/50 hover:text-red-500 hover:scale-110'
+                      ? 'text-red-400 scale-110'
+                      : 'text-[#1a1a1a]/50 dark:text-white/50 hover:text-red-400 hover:scale-110'
                   }`}
                   title={t('item.dislike')}
                   aria-label={t('item.dislike')}
@@ -388,7 +388,7 @@ export default function CommentItem({
 
                 <button
                   onClick={() => setShowReplyInput(!showReplyInput)}
-                  className="text-[9px] sm:text-xs font-medium text-foreground/50 hover:text-foreground/80 hover:scale-110 transition-all"
+                  className="text-[9px] sm:text-xs font-medium text-[#1a1a1a]/50 dark:text-white/50 hover:text-[#1a1a1a]/80 dark:hover:text-white/80 hover:scale-110 transition-all"
                   title={t('item.reply')}
                   aria-label={t('item.reply')}
                 >
@@ -409,13 +409,13 @@ export default function CommentItem({
                   <>
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="text-[9px] sm:text-xs font-medium text-foreground/50 hover:text-foreground/80 transition-colors"
+                      className="text-[9px] sm:text-xs font-medium text-[#1a1a1a]/50 dark:text-white/50 hover:text-[#1a1a1a]/80 dark:hover:text-white/80 transition-colors"
                     >
                       {t('item.edit')}
                     </button>
                     <button
                       onClick={handleDelete}
-                      className="text-[9px] sm:text-xs font-medium text-red-500/70 hover:text-red-500 transition-colors"
+                      className="text-[9px] sm:text-xs font-medium text-red-400/70 hover:text-red-400 transition-colors"
                     >
                       {t('item.delete')}
                     </button>
@@ -428,7 +428,7 @@ export default function CommentItem({
                     <button
                       onClick={handleApprove}
                       disabled={isApproving}
-                      className="text-[9px] sm:text-xs font-medium text-green-600 hover:text-green-700 disabled:opacity-50 transition-colors flex items-center gap-1"
+                      className="text-[9px] sm:text-xs font-medium text-green-400 hover:text-green-300 disabled:opacity-50 transition-colors flex items-center gap-1"
                       title={t('item.approve')}
                     >
                       ✓ {t('item.approve')}
@@ -436,7 +436,7 @@ export default function CommentItem({
                     <button
                       onClick={handleReject}
                       disabled={isApproving}
-                      className="text-[9px] sm:text-xs font-medium text-red-500/70 hover:text-red-500 disabled:opacity-50 transition-colors flex items-center gap-1"
+                      className="text-[9px] sm:text-xs font-medium text-red-400/70 hover:text-red-400 disabled:opacity-50 transition-colors flex items-center gap-1"
                       title={t('item.reject')}
                     >
                       ✕ {t('item.reject')}

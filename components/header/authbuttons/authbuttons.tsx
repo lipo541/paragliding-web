@@ -55,19 +55,20 @@ export default function AuthButtons() {
     
     const isSuperAdmin = userProfile?.role === 'SUPER_ADMIN';
 
-    // SUPER_ADMIN gets CMS button (traditional style)
+    // SUPER_ADMIN gets CMS button
     if (isSuperAdmin) {
       return (
         <div className="flex items-center gap-2">
           <Link
             href={`/${locale}/cms`}
-            className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-md transition-colors"
+            style={{ backgroundColor: '#CAFA00', color: '#1a1a1a' }}
           >
             CMS
           </Link>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+            className="px-4 py-2 text-sm font-medium text-[#1a1a1a] dark:text-white border border-[#4697D2]/30 dark:border-white/30 rounded-md hover:border-[#4697D2]/50 dark:hover:border-white/50 hover:bg-[#4697D2]/10 dark:hover:bg-white/10 transition-all"
           >
             {t('logout')}
           </button>
@@ -84,13 +85,13 @@ export default function AuthButtons() {
     <div className="flex items-center gap-2">
       <Link 
         href={`/${locale}/login`}
-        className="px-4 py-2 text-sm font-medium text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all"
+        className="px-4 py-2 text-sm font-medium backdrop-blur-sm rounded-md transition-all bg-white/80 text-[#1a1a1a] border border-[#4697D2]/40 hover:bg-white hover:border-[#4697D2] dark:bg-black/40 dark:text-white dark:border-white/30 dark:hover:bg-black/60 dark:hover:border-white/60"
       >
         {t('login')}
       </Link>
       <Link
         href={`/${locale}/register`}
-        className="px-4 py-2 text-sm font-medium bg-foreground text-background rounded-md hover:bg-foreground/90 transition-colors"
+        className="px-4 py-2 text-sm font-medium rounded-md transition-all bg-[#4697D2] text-[#1a1a1a] hover:bg-[#3a7bb0] dark:text-white dark:hover:bg-[#3a7bb0]"
       >
         {t('register')}
       </Link>

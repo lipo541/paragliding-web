@@ -85,28 +85,28 @@ export default function AboutUs({ locale }: AboutUsProps) {
   };
 
   return (
-    <main className="min-h-screen bg-background pt-20 pb-12">
+    <main className="min-h-screen pt-20 pb-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Hero */}
         <div className="mb-10 text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-foreground/5 mb-4">
-            <IoRocketOutline className="w-7 h-7 text-foreground" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.2)] dark:bg-[#4697D2]/30 mb-4">
+            <IoRocketOutline className="w-7 h-7 text-[#4697D2]" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] dark:text-white mb-2">
             {t.title}
           </h1>
-          <p className="text-sm text-foreground/60 max-w-xl mx-auto">
+          <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60 max-w-xl mx-auto">
             {t.subtitle}
           </p>
         </div>
 
         {/* Description */}
         <div className="mb-8">
-          <div className="rounded-2xl bg-foreground/5 p-5">
-            <h2 className="text-base font-semibold text-foreground mb-2">
+          <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-5 shadow-xl">
+            <h2 className="text-base font-semibold text-[#1a1a1a] dark:text-white mb-2">
               {t.description.title}
             </h2>
-            <p className="text-sm text-foreground/70 leading-relaxed">
+            <p className="text-sm text-[#1a1a1a]/70 dark:text-white/70 leading-relaxed">
               {t.description.text}
             </p>
           </div>
@@ -114,26 +114,26 @@ export default function AboutUs({ locale }: AboutUsProps) {
 
         {/* Development Phases */}
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-foreground mb-4 text-center">
+          <h2 className="text-lg font-bold text-[#1a1a1a] dark:text-white mb-4 text-center">
             {t.phases.title}
           </h2>
           <div className="space-y-3">
             {/* Phase 1 */}
-            <div className="rounded-2xl bg-foreground/5 p-4">
+            <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-4 shadow-lg">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
-                  <IoRocketOutline className="w-5 h-5 text-foreground" />
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#4697D2]/20 dark:bg-[#4697D2]/30 flex items-center justify-center">
+                  <IoRocketOutline className="w-5 h-5 text-[#4697D2]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <h3 className="text-sm font-semibold text-foreground">
+                    <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white">
                       {t.phases.phase1.title}
                     </h3>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-foreground/10 text-foreground">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-500/20 text-green-600 dark:text-green-400">
                       {t.phases.phase1.status}
                     </span>
                   </div>
-                  <p className="text-xs text-foreground/70 leading-relaxed">
+                  <p className="text-xs text-[#1a1a1a]/70 dark:text-white/70 leading-relaxed">
                     {t.phases.phase1.description}
                   </p>
                 </div>
@@ -141,21 +141,21 @@ export default function AboutUs({ locale }: AboutUsProps) {
             </div>
 
             {/* Phase 2 */}
-            <div className="rounded-2xl bg-foreground/5 p-4">
+            <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-4 shadow-lg">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
-                  <IoGlobeOutline className="w-5 h-5 text-foreground" />
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#4697D2]/20 dark:bg-[#4697D2]/30 flex items-center justify-center">
+                  <IoGlobeOutline className="w-5 h-5 text-[#4697D2]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <h3 className="text-sm font-semibold text-foreground">
+                    <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white">
                       {t.phases.phase2.title}
                     </h3>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-foreground/10 text-foreground">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400">
                       {t.phases.phase2.status}
                     </span>
                   </div>
-                  <p className="text-xs text-foreground/70 leading-relaxed">
+                  <p className="text-xs text-[#1a1a1a]/70 dark:text-white/70 leading-relaxed">
                     {t.phases.phase2.description}
                   </p>
                 </div>
@@ -163,21 +163,21 @@ export default function AboutUs({ locale }: AboutUsProps) {
             </div>
 
             {/* Phase 3 */}
-            <div className="rounded-2xl bg-foreground/5 p-4">
+            <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-4 shadow-lg">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center">
-                  <IoCardOutline className="w-5 h-5 text-foreground" />
+                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#4697D2]/20 dark:bg-[#4697D2]/30 flex items-center justify-center">
+                  <IoCardOutline className="w-5 h-5 text-[#4697D2]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <h3 className="text-sm font-semibold text-foreground">
+                    <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white">
                       {t.phases.phase3.title}
                     </h3>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-foreground/10 text-foreground">
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-[#4697D2]/20 text-[#4697D2]">
                       {t.phases.phase3.status}
                     </span>
                   </div>
-                  <p className="text-xs text-foreground/70 leading-relaxed">
+                  <p className="text-xs text-[#1a1a1a]/70 dark:text-white/70 leading-relaxed">
                     {t.phases.phase3.description}
                   </p>
                 </div>
@@ -187,13 +187,13 @@ export default function AboutUs({ locale }: AboutUsProps) {
         </div>
 
         {/* CTA */}
-        <div className="rounded-2xl bg-foreground/5 p-6 text-center">
-          <h2 className="text-lg font-bold text-foreground mb-3">
+        <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-6 text-center shadow-xl">
+          <h2 className="text-lg font-bold text-[#1a1a1a] dark:text-white mb-3">
             {t.cta.title}
           </h2>
           <a
             href={`/${locale}/locations`}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-foreground text-background hover:bg-foreground/90 font-semibold text-sm transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4697D2] text-white hover:bg-[#3a7bb0] font-semibold text-sm transition-all"
           >
             <IoLocationOutline className="w-4 h-4" />
             {t.cta.button}

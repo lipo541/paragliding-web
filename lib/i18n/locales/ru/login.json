@@ -18,6 +18,7 @@
   },
   "errors": {
     "loginFailed": "Не удалось войти",
-    "authFailed": "Не удалось авторизоваться"
+    "authFailed": "Не удалось авторизоваться",
+    "invalidCredentials": "Неверный email или пароль"
   }
 }

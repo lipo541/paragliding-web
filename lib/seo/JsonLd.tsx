@@ -19,16 +19,22 @@ export function OrganizationJsonLd() {
     "@type": "Organization",
     "name": SITE_NAME,
     "url": BASE_URL,
-    "logo": `${BASE_URL}/logo.png`,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${BASE_URL}/logo.png`,
+      "width": 512,
+      "height": 512
+    },
     "description": "Professional paragliding tandem flights in Georgia",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "GE",
+      "addressLocality": "Tbilisi"
     },
     "sameAs": [
       // TODO: დაამატეთ თქვენი social media ლინკები
-      // "https://www.facebook.com/your-page",
-      // "https://www.instagram.com/your-page",
+      // "https://www.facebook.com/xparagliding",
+      // "https://www.instagram.com/xparagliding",
     ],
   };
 

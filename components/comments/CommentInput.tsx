@@ -121,7 +121,7 @@ export default function CommentInput({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-2">
-      <div className="relative bg-foreground/[0.03] rounded-2xl border border-foreground/10 hover:border-foreground/20 transition-all">
+      <div className="relative bg-[#4697D2]/10 dark:bg-white/5 rounded-2xl border border-[#4697D2]/30 dark:border-white/20 hover:border-[#4697D2]/50 dark:hover:border-white/30 transition-all">
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -129,8 +129,8 @@ export default function CommentInput({
           rows={1}
           maxLength={5000}
           disabled={isSubmitting}
-          className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-16 sm:pr-20 text-xs sm:text-sm bg-transparent text-foreground
-                   placeholder:text-foreground/40
+          className="w-full px-3 py-2 sm:px-4 sm:py-3 pr-16 sm:pr-20 text-xs sm:text-sm bg-transparent text-[#1a1a1a] dark:text-white
+                   placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40
                    focus:outline-none
                    disabled:opacity-50 disabled:cursor-not-allowed
                    resize-none"
@@ -140,10 +140,10 @@ export default function CommentInput({
           <button
             type="button"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="p-1 sm:p-1.5 hover:bg-foreground/10 rounded-full transition-colors"
+            className="p-1 sm:p-1.5 hover:bg-[#4697D2]/10 dark:hover:bg-white/10 rounded-full transition-colors"
             title={t('input.addEmoji')}
           >
-            <Smile className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-foreground/50" />
+            <Smile className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1a1a1a]/50 dark:text-white/50" />
           </button>
           <button
             type="submit"
@@ -163,14 +163,14 @@ export default function CommentInput({
         
         {/* Emoji Picker */}
         {showEmojiPicker && (
-          <div className="absolute bottom-full mb-2 right-0 bg-background/95 backdrop-blur-xl border border-foreground/10 rounded-xl shadow-2xl p-2 sm:p-3 z-50 max-h-60 sm:max-h-72 overflow-y-auto">
+          <div className="absolute bottom-full mb-2 right-0 bg-white/95 dark:bg-black/90 backdrop-blur-xl border border-[#4697D2]/30 dark:border-white/20 rounded-xl shadow-2xl p-2 sm:p-3 z-50 max-h-60 sm:max-h-72 overflow-y-auto">
             <div className="grid grid-cols-8 sm:grid-cols-10 gap-1 sm:gap-1.5">
               {commonEmojis.map((emoji) => (
                 <button
                   key={emoji}
                   type="button"
                   onClick={() => insertEmoji(emoji)}
-                  className="text-base sm:text-xl hover:scale-110 sm:hover:scale-125 transition-transform p-0.5 sm:p-1 hover:bg-foreground/5 rounded"
+                  className="text-base sm:text-xl hover:scale-110 sm:hover:scale-125 transition-transform p-0.5 sm:p-1 hover:bg-[#4697D2]/10 dark:hover:bg-white/10 rounded"
                 >
                   {emoji}
                 </button>
@@ -185,7 +185,7 @@ export default function CommentInput({
       )}
 
       <div className="flex justify-between items-center px-2">
-        <p className="text-[10px] text-foreground/40">
+        <p className="text-[10px] text-[#1a1a1a]/40 dark:text-white/40">
           {content.length > 0 && `${content.length}/5000`}
         </p>
       </div>

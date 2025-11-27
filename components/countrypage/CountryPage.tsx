@@ -68,9 +68,6 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   const [heroVisible, setHeroVisible] = useState(true);
   const heroRef = useRef<HTMLDivElement>(null);
   
-  // Background rotation for first 3 gallery images
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
-  
   const imagesPerPage = 9; // Desktop: 9 (3x3), Mobile: 8 (2x4)
 
   const getLocalizedField = (obj: any, field: string, locale: string) => {
@@ -133,20 +130,6 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
     fetchCountryData();
   }, [slug, locale]);
 
-  // Background rotation - Modern interval (8-10s) with smooth crossfade
-  useEffect(() => {
-    if (!country?.content?.shared_images?.gallery || country.content.shared_images.gallery.length < 2) {
-      return; // Skip rotation if less than 2 images
-    }
-    
-    const maxImages = Math.min(3, country.content.shared_images.gallery.length);
-    const interval = setInterval(() => {
-      setCurrentBgIndex((prev) => (prev + 1) % maxImages);
-    }, 9000); // 9 seconds - Modern timing (Apple/Stripe standard)
-
-    return () => clearInterval(interval);
-  }, [country]);
-
   // Scroll tracking with hysteresis - complete transition once started
   useEffect(() => {
     const THRESHOLD = 300; // When to start hiding hero
@@ -200,10 +183,10 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   if (!country) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-        <h1 className="text-xl font-bold text-foreground">
+        <h1 className="text-xl font-bold text-[#1a1a1a] dark:text-white">
           {t('error.notFound')}
         </h1>
-        <Link href={`/${locale}`} className="px-5 py-2 text-sm rounded-lg bg-foreground/10 hover:bg-foreground/20 transition-colors">
+        <Link href={`/${locale}`} className="px-5 py-2 text-sm rounded-lg bg-[rgba(70,151,210,0.15)] dark:bg-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-white/20 text-[#1a1a1a] dark:text-white transition-colors">
           {t('error.backToHome')}
         </Link>
       </div>
@@ -222,58 +205,21 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
   const galleryDescription = contentData.gallery_description || '';
   const gallery = country.content?.shared_images?.gallery || [];
   const videos = country.content?.shared_videos || [];
-  
-  // Get first 3 gallery images for background rotation
-  const backgroundImages = gallery.slice(0, 3);
-  const currentBackgroundUrl = backgroundImages.length > 0 
-    ? backgroundImages[currentBgIndex]?.url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070'
-    : 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070';
 
   return (
     <div className="min-h-screen relative selection:bg-blue-500/30">
-      {/* Enhanced Background System - Triple Layer with Rotation - Always Visible */}
-      <div className="fixed inset-0 -z-10">
-        {/* Layer 1: Rotating Background Images (First 3 from Gallery) */}
-        {backgroundImages.length > 0 && backgroundImages.map((image: any, index: number) => (
-          <div
-            key={index}
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ease-in-out"
-            style={{
-              backgroundImage: `url(${image.url})`,
-              opacity: currentBgIndex === index ? 1 : 0,
-              zIndex: currentBgIndex === index ? 1 : 0,
-            }}
-          />
-        ))}
-        
-        {/* Fallback if no gallery images */}
-        {backgroundImages.length === 0 && (
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070)`,
-            }}
-          />
-        )}
-        
-        {/* Layer 2: Smart Overlay - Adaptive darkness for any image brightness */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/75 dark:from-black/80 dark:via-black/70 dark:to-black/85" style={{ zIndex: 2 }} />
-        
-        {/* Layer 3: Depth Gradient - Bottom to top for content hierarchy */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" style={{ zIndex: 3 }} />
-      </div>
-      
-      {/* Full Screen Hero - Behind Header with Hysteresis Fade */}
+      {/* Full Screen Hero - Using Global Background */}
       <div 
         ref={heroRef}
-        className="relative h-[calc(100vh+4rem)] lg:h-[calc(100vh+5rem)] w-full overflow-hidden -mt-16 lg:-mt-20 transition-all duration-500 ease-out"
+        className="relative h-[85vh] lg:h-[calc(100vh+5rem)] w-full overflow-hidden -mt-16 lg:-mt-20"
         style={{
           opacity: heroVisible ? 1 : 0,
-          transform: heroVisible ? 'translateY(0)' : `translateY(-50px)`,
+          transform: heroVisible ? 'translateY(0) scale(1)' : 'translateY(-30px) scale(0.98)',
+          transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
           pointerEvents: heroVisible ? 'auto' : 'none',
         }}
       >
-        {/* Static Background Image */}
+        {/* Hero Background Image */}
         <div className="absolute inset-0">
           <Image 
             src={heroImageUrl} 
@@ -286,86 +232,142 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
           />
         </div>
         
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-transparent"></div>
+        {/* Light Mode Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-white/20 to-transparent dark:hidden" />
         
-        <div className="absolute inset-0 flex items-start pt-48 lg:pt-64">
+        {/* Dark Mode Overlay */}
+        <div className="absolute inset-0 hidden dark:block bg-black/60" />
+        
+        {/* Hero Content */}
+        <div className="absolute inset-0 flex items-center pb-16 lg:items-center lg:pb-0 lg:pt-0">
           <div className="w-full max-w-[1280px] mx-auto px-4">
-            <h1 className="text-xl lg:text-3xl font-bold text-white mb-2 drop-shadow-2xl max-w-3xl">{h1Tag || countryName}</h1>
-            {pTag && <p className="text-xs lg:text-sm text-white/90 max-w-2xl leading-relaxed drop-shadow-lg mb-6">{pTag}</p>}
-            
-            {/* Compact Premium Rating Section */}
-            <div className="mb-5 inline-flex flex-col gap-2 animate-fade-in-up">
-              {/* Compact Rating Display Card */}
-              <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01]">
-                {/* Animated Background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-orange-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                {/* Shine Effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-                </div>
-
-                <div className="relative px-4 py-2.5 flex items-center gap-3">
-                  <RatingDisplay 
-                    averageRating={country.cached_rating || 0}
-                    ratingsCount={country.cached_rating_count || 0}
-                    size="md"
-                  />
-                  
-                  {/* Compact Decorative Icon */}
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400/20 to-orange-500/20 flex items-center justify-center backdrop-blur-sm border border-white/10">
-                    <svg className="w-4 h-4 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  </div>
-                </div>
+            {/* Top Bar: Location Badge + Rating */}
+            <div className="flex flex-wrap items-center gap-2 lg:gap-3 mb-3 lg:mb-4">
+              {/* Country Badge */}
+              <div className="inline-flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 rounded-full backdrop-blur-md bg-gradient-to-r from-[rgba(70,151,210,0.4)] to-[rgba(70,151,210,0.3)] dark:from-transparent dark:to-transparent dark:bg-black/40 border border-[#4697D2]/40 dark:border-white/10 shadow-lg shadow-[#4697D2]/10 dark:shadow-black/30">
+                <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#CAFA00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-xs lg:text-sm font-medium text-[#1a1a1a] dark:text-white">{countryName}</span>
               </div>
-
-              {/* Rate Button - Opens Modal */}
-              <button
-                onClick={() => setShowRatingModal(true)}
-                className="group relative overflow-hidden rounded-lg px-5 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-              >
-                <div className="relative flex items-center justify-center gap-2 text-sm font-semibold text-white">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  <span>{userRating ? t('hero.changeRating') : t('hero.rate')}</span>
+              
+              {/* Rating Pill with 5 Stars */}
+              <div className="inline-flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 rounded-full backdrop-blur-md bg-gradient-to-r from-[rgba(70,151,210,0.4)] to-[rgba(70,151,210,0.3)] dark:from-transparent dark:to-transparent dark:bg-black/40 border border-[#4697D2]/40 dark:border-white/10 shadow-lg shadow-[#4697D2]/10 dark:shadow-black/30">
+                <div className="flex items-center gap-0.5">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const rating = country.cached_rating || 0;
+                    const filled = star <= Math.floor(rating);
+                    const partial = star === Math.ceil(rating) && rating % 1 !== 0;
+                    const fillPercent = partial ? (rating % 1) * 100 : 0;
+                    
+                    return (
+                      <div key={star} className="relative">
+                        <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-white/30" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <div 
+                          className="absolute inset-0 overflow-hidden"
+                          style={{ width: filled ? '100%' : partial ? `${fillPercent}%` : '0%' }}
+                        >
+                          <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5" style={{ color: '#ffc107' }} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                
-                {/* Hover shine */}
-                <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-              </button>
+                <span className="text-xs lg:text-sm font-semibold text-[#1a1a1a] dark:text-white">{country.cached_rating?.toFixed(1) || '0.0'}</span>
+                <span className="text-[10px] lg:text-xs text-[#2d2d2d]/70 dark:text-white/70">({country.cached_rating_count || 0})</span>
+              </div>
             </div>
             
-            {/* CTA Buttons */}
-            <div className="flex items-center gap-3 mt-4">
+            {/* Main Title */}
+            <h1 className="text-xl lg:text-4xl font-bold text-[#1a1a1a] dark:text-white mb-2 lg:mb-3 drop-shadow-sm dark:drop-shadow-2xl max-w-4xl leading-tight">
+              {h1Tag || countryName}
+            </h1>
+            
+            {/* Subtitle/Description */}
+            {pTag && (
+              <p className="hidden lg:block text-base text-[#2d2d2d]/90 dark:text-white/85 max-w-2xl leading-relaxed drop-shadow-sm dark:drop-shadow-lg mb-6">
+                {pTag}
+              </p>
+            )}
+            
+            {/* Info Stats Row */}
+            <div className="flex flex-wrap gap-2 lg:gap-4 mb-4 lg:mb-6">
+              {/* Locations Count */}
+              {locations.length > 0 && (
+                <div className="flex items-center gap-1.5 lg:gap-2 text-[#2d2d2d]/90 dark:text-white/90">
+                  <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#4697D2] dark:text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  </svg>
+                  <span className="text-xs lg:text-sm"><strong className="text-[#1a1a1a] dark:text-white">{locations.length}</strong> {t('sidebar.locations')}</span>
+                </div>
+              )}
+              
+              {/* Photos Count */}
+              {gallery.length > 0 && (
+                <div className="flex items-center gap-1.5 lg:gap-2 text-[#2d2d2d]/90 dark:text-white/90">
+                  <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-purple-500 dark:text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-xs lg:text-sm"><strong className="text-[#1a1a1a] dark:text-white">{gallery.length}</strong> {t('sidebar.photos')}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* CTA Buttons Row */}
+            <div className="flex flex-wrap items-center gap-2 lg:gap-3">
+              {/* Primary CTA - Book Flight */}
+              <Link
+                href={`/${locale}/bookings`}
+                className="group relative flex items-center gap-1.5 lg:gap-2 px-4 lg:px-6 py-2.5 lg:py-3 rounded-xl transition-all duration-300 text-xs lg:text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] overflow-hidden"
+                style={{ 
+                  backgroundColor: '#2196f3',
+                  color: '#ffffff',
+                  boxShadow: '0 10px 15px -3px rgba(33, 150, 243, 0.3)'
+                }}
+              >
+                <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+                <svg className="relative w-4 h-4 lg:w-5 lg:h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+                <span className="relative">{t('hero.bookFlight')}</span>
+              </Link>
+              
+              {/* Secondary CTA - Contact */}
               <Link
                 href={`/${locale}/contact`}
-                className="group flex items-center gap-2 px-4 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-lg hover:bg-white/20 hover:border-white/30 transition-all duration-300 text-xs lg:text-sm font-medium shadow-lg hover:shadow-xl"
+                className="group flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2.5 lg:py-3 bg-gradient-to-r from-[rgba(70,151,210,0.4)] to-[rgba(70,151,210,0.3)] dark:from-transparent dark:to-transparent dark:bg-black/40 backdrop-blur-md border border-[#4697D2]/40 dark:border-white/10 text-[#1a1a1a] dark:text-white rounded-xl hover:from-[rgba(70,151,210,0.5)] hover:to-[rgba(70,151,210,0.4)] dark:hover:bg-black/50 hover:border-[#CAFA00]/50 dark:hover:border-white/20 transition-all duration-300 text-xs lg:text-sm font-medium shadow-lg shadow-[#4697D2]/10 dark:shadow-black/30 hover:shadow-xl"
               >
-                <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span>{t('hero.contact')}</span>
               </Link>
               
-              <Link
-                href={`/${locale}/bookings`}
-                className="group flex items-center gap-2 px-5 py-2.5 bg-background backdrop-blur-sm border border-background/20 text-foreground rounded-lg hover:bg-background/90 hover:border-background/30 transition-all duration-300 text-xs lg:text-sm font-semibold shadow-lg hover:shadow-2xl hover:scale-[1.02]"
+              {/* Rate Button - Golden Gradient */}
+              <button
+                onClick={() => setShowRatingModal(true)}
+                className="group relative flex items-center gap-1.5 lg:gap-2 px-3 lg:px-5 py-2.5 lg:py-3 text-white rounded-xl transition-all duration-300 text-xs lg:text-sm font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, #ffc107 0%, #ffa000 100%)',
+                  boxShadow: '0 10px 15px -3px rgba(255, 193, 7, 0.3)'
+                }}
               >
-                <svg className="w-4 h-4 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+                <svg className="relative w-3.5 h-3.5 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <span>{t('hero.bookFlight')}</span>
-              </Link>
+                <span className="relative">{userRating ? t('hero.changeRating') : t('hero.rate')}</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content - Super Compact */}
+      {/* Main Content */}
       <div className="w-full max-w-[1280px] mx-auto px-4 py-5 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
           
@@ -374,19 +376,23 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
             
             {/* History - Full Width, Rich HTML Support with Read More */}
             {h2History && historyText && (
-              <article className="rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl overflow-hidden">
+              <article className="group relative rounded-xl backdrop-blur-md shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-0.5 border border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40">
+                {/* Gradient Border Effect - hidden in dark mode */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 via-white/10 to-transparent dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" />
+                {/* Top Highlight Line */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent" />
                 {/* Header with Mobile Accordion and Desktop Read More */}
                 <div className="w-full p-4 lg:p-5 flex items-start justify-between gap-3">
                   <button
                     onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
                     className="flex items-start gap-2 flex-1 lg:pointer-events-none text-left"
                   >
-                    <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0 mt-0.5">
-                      <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="p-1.5 rounded bg-[rgba(70,151,210,0.3)] dark:bg-white/10 flex-shrink-0 mt-0.5">
+                      <svg className="w-4 h-4 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                       </svg>
                     </div>
-                    <h2 className="text-sm lg:text-lg font-bold text-foreground text-left">{h2History}</h2>
+                    <h2 className="text-sm lg:text-lg font-bold text-[#1a1a1a] dark:text-white text-left">{h2History}</h2>
                   </button>
                   
                   {/* Mobile: Dropdown Arrow */}
@@ -395,7 +401,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     className="lg:hidden p-1"
                   >
                     <svg 
-                      className={`w-5 h-5 text-foreground transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
+                      className={`w-5 h-5 text-[#1a1a1a] dark:text-white transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -407,7 +413,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   {/* Desktop: Read More Button */}
                   <button
                     onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
-                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 hover:border-foreground/30 transition-all text-[11px] font-medium text-foreground hover:text-foreground/80 whitespace-nowrap"
+                    className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md backdrop-blur-md bg-[rgba(70,151,210,0.2)] dark:bg-black/50 hover:bg-[rgba(70,151,210,0.3)] dark:hover:bg-black/60 border border-[#4697D2]/30 dark:border-white/10 transition-all text-[11px] font-medium text-[#1a1a1a] dark:text-white shadow-xl whitespace-nowrap"
                   >
                     <span>
                       {isHistoryExpanded ? t('content.readLess') : t('content.readMore')}
@@ -427,16 +433,16 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                 <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isHistoryExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 lg:max-h-[280px] lg:opacity-100'}`}>
                   <div className="px-4 pb-4 lg:px-5 lg:pb-5">
                     <div 
-                      className={`prose prose-sm max-w-none text-foreground transition-all duration-500 ease-in-out break-words
-                        [&>h2]:text-base [&>h2]:lg:text-lg [&>h2]:font-bold [&>h2]:text-foreground [&>h2]:mt-4 [&>h2]:mb-2 [&>h2]:break-words
-                        [&>h3]:text-sm [&>h3]:lg:text-base [&>h3]:font-semibold [&>h3]:text-foreground [&>h3]:mt-3 [&>h3]:mb-2 [&>h3]:break-words
+                      className={`prose prose-sm max-w-none text-[#2d2d2d] dark:text-white/90 transition-all duration-500 ease-in-out break-words
+                        [&>h2]:text-base [&>h2]:lg:text-lg [&>h2]:font-bold [&>h2]:text-[#1a1a1a] dark:[&>h2]:text-white [&>h2]:mt-4 [&>h2]:mb-2 [&>h2]:break-words
+                        [&>h3]:text-sm [&>h3]:lg:text-base [&>h3]:font-semibold [&>h3]:text-[#1a1a1a] dark:[&>h3]:text-white [&>h3]:mt-3 [&>h3]:mb-2 [&>h3]:break-words
                         [&>p]:mb-2 [&>p]:text-xs [&>p]:lg:text-sm [&>p]:leading-relaxed [&>p]:break-words
                         [&>ul]:my-2 [&>ul]:space-y-1 [&>ul]:pl-5
                         [&>ol]:my-2 [&>ol]:space-y-1 [&>ol]:pl-5
                         [&>li]:text-xs [&>li]:lg:text-sm [&>li]:leading-relaxed [&>li]:break-words
                         [&>li>p]:mb-1
-                        [&>hr]:my-4 [&>hr]:border-foreground/10
-                        [&_strong]:font-semibold [&_strong]:text-foreground
+                        [&>hr]:my-4 [&>hr]:border-[#4697D2]/30 dark:[&>hr]:border-white/20
+                        [&_strong]:font-semibold [&_strong]:text-[#1a1a1a] dark:[&_strong]:text-white
                         [&_em]:italic
                         ${!isHistoryExpanded ? 'lg:max-h-[280px]' : 'lg:max-h-none'}`}
                       dangerouslySetInnerHTML={{ __html: historyText }}
@@ -453,7 +459,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
             {/* Divider */}
             {gallery.length > 0 && (
-              <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
+              <div className="border-t border-[#4697D2]/30 dark:border-white/20 my-6"></div>
             )}
 
             {/* Gallery - Masonry Layout with Pagination */}
@@ -465,14 +471,18 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               
               return (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between px-4 py-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
-                    <h3 className="text-sm font-semibold text-foreground/95 flex items-center gap-2">
-                      <svg className="w-4 h-4 text-foreground/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="group relative flex items-center justify-between px-4 py-3 rounded-xl backdrop-blur-md shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden border border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40">
+                    {/* Gradient Border - hidden in dark mode */}
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/30 via-white/10 to-white/30 dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" />
+                    {/* Top Highlight */}
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent" />
+                    <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white flex items-center gap-2">
+                      <svg className="w-4 h-4 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       {t('gallery.photos')}
                     </h3>
-                    <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{gallery.length}</span>
+                    <span className="text-xs text-[#2d2d2d] dark:text-white/80 px-2 py-0.5 rounded bg-[rgba(70,151,210,0.2)] dark:bg-black/50">{gallery.length}</span>
                   </div>
                   
                   <div className="columns-2 lg:columns-3 gap-2">
@@ -482,7 +492,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                         <div key={globalIndex} className="break-inside-avoid mb-2">
                           <button
                             onClick={() => setLightboxIndex(globalIndex)}
-                            className="relative rounded-lg overflow-hidden border border-foreground/10 hover:border-foreground/20 hover:shadow-md transition-all group w-full cursor-pointer"
+                            className="relative rounded-lg overflow-hidden border border-[#4697D2]/30 dark:border-white/10 hover:border-[#4697D2]/50 dark:hover:border-white/20 hover:shadow-md transition-all group w-full cursor-pointer"
                           >
                             <Image
                               src={image.url}
@@ -496,7 +506,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                             {/* Zoom icon overlay */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
                               <div className="w-10 h-10 rounded-full bg-white/0 group-hover:bg-white/90 flex items-center justify-center transition-all scale-0 group-hover:scale-100">
-                                <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 text-[#1a1a1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
                                 </svg>
                               </div>
@@ -518,7 +528,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
-                        className="px-3 py-1.5 rounded-md backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-foreground shadow-lg"
+                        className="px-3 py-1.5 rounded-md backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-[#1a1a1a] dark:text-white shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -531,8 +541,8 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                           onClick={() => setCurrentPage(page)}
                           className={`px-3 py-1.5 rounded-md border transition-all text-xs font-medium shadow-lg ${
                             currentPage === page
-                              ? 'bg-foreground text-background border-foreground'
-                              : 'backdrop-blur-lg bg-white/70 dark:bg-black/40 border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 text-foreground'
+                              ? 'bg-[#2196f3] text-white border-[#2196f3]'
+                              : 'backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border-[#4697D2]/30 dark:border-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-black/50 text-[#1a1a1a] dark:text-white'
                           }`}
                         >
                           {page}
@@ -542,7 +552,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <button
                         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={currentPage === totalPages}
-                        className="px-3 py-1.5 rounded-md backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-foreground shadow-lg"
+                        className="px-3 py-1.5 rounded-md backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-black/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all text-xs font-medium text-[#1a1a1a] dark:text-white shadow-lg"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -622,7 +632,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
             {/* Divider */}
             {videos.length > 0 && (
-              <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
+              <div className="border-t border-[#4697D2]/30 dark:border-white/20 my-6"></div>
             )}
 
             {/* YouTube Videos Playlist - YouTube Style Layout */}
@@ -640,15 +650,19 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               return (
                 <div className="space-y-4">
                   {/* Header */}
-                  <div className="flex items-center justify-between px-4 py-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg">
-                    <h3 className="text-sm font-semibold text-foreground/95 flex items-center gap-2">
-                      <svg className="w-4 h-4 text-foreground/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="group relative flex items-center justify-between px-4 py-3 rounded-xl backdrop-blur-md shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden border border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40">
+                    {/* Gradient Border - hidden in dark mode */}
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/30 via-white/10 to-white/30 dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" />
+                    {/* Top Highlight */}
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent" />
+                    <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white flex items-center gap-2">
+                      <svg className="w-4 h-4 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       {t('gallery.videos')}
                     </h3>
-                    <span className="text-xs text-foreground/80 px-2 py-0.5 rounded bg-foreground/5">{videos.length}</span>
+                    <span className="text-xs text-[#2d2d2d] dark:text-white/80 px-2 py-0.5 rounded bg-[rgba(70,151,210,0.2)] dark:bg-black/50">{videos.length}</span>
                   </div>
 
                   {/* YouTube Style Layout */}
@@ -656,7 +670,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     
                     {/* Main Video Player - Left/Top */}
                     <div className="lg:col-span-2 space-y-2">
-                      <div id="main-video-player" className="relative rounded-lg overflow-hidden border border-white/30 dark:border-white/20 bg-black shadow-lg">
+                      <div id="main-video-player" className="relative rounded-lg overflow-hidden border border-[#4697D2]/30 dark:border-white/10 bg-black shadow-lg">
                         <div className="relative aspect-video">
                           <iframe
                             key={activeVideoIndex}
@@ -677,7 +691,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                             {t('gallery.nowPlaying')}
                           </span>
                         </div>
-                        <span className="text-xs text-foreground/90">
+                        <span className="text-xs text-[#2d2d2d] dark:text-white/90">
                           {activeVideoIndex + 1} / {videos.length}
                         </span>
                       </div>
@@ -685,16 +699,20 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
                     {/* Playlist - Right/Bottom - Height matches main video */}
                     <div className="lg:col-span-1 lg:self-start">
-                      <div className="rounded-lg backdrop-blur-md bg-white/30 dark:bg-black/20 border border-white/30 dark:border-white/20 overflow-hidden max-h-[400px] lg:max-h-[360px] flex flex-col shadow-lg">
+                      <div className="group relative rounded-xl backdrop-blur-md shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden max-h-[400px] lg:max-h-[360px] flex flex-col border border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40">
+                        {/* Gradient Border - hidden in dark mode */}
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 via-white/10 to-white/5 dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" />
+                        {/* Top Highlight */}
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent z-10" />
                         {/* Playlist Header */}
-                        <div className="px-3 py-2 bg-foreground/5 border-b border-foreground/10 flex-shrink-0">
-                          <h4 className="text-[11px] font-semibold text-foreground uppercase tracking-wide">
+                        <div className="px-3 py-2 bg-[rgba(70,151,210,0.15)] dark:bg-black/50 border-b border-[#4697D2]/30 dark:border-white/10 flex-shrink-0">
+                          <h4 className="text-[11px] font-semibold text-[#1a1a1a] dark:text-white uppercase tracking-wide">
                             {t('gallery.playlist')}
                           </h4>
                         </div>
                         
                         {/* Playlist Items - Scrollable, fills remaining height */}
-                        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-foreground/40 scrollbar-track-foreground/10 hover:scrollbar-thumb-foreground/60 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-foreground/5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-foreground/30 hover:[&::-webkit-scrollbar-thumb]:bg-foreground/50">
+                        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-[#4697D2]/40 dark:scrollbar-thumb-white/40 scrollbar-track-[#4697D2]/10 dark:scrollbar-track-white/10 hover:scrollbar-thumb-[#4697D2]/60 dark:hover:scrollbar-thumb-white/60 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-[#4697D2]/5 dark:[&::-webkit-scrollbar-track]:bg-white/5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#4697D2]/30 dark:[&::-webkit-scrollbar-thumb]:bg-white/30 hover:[&::-webkit-scrollbar-thumb]:bg-[#4697D2]/50 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/50">
                           {videos.map((videoUrl: string, index: number) => {
                             const videoId = getYouTubeID(videoUrl);
                             if (!videoId) return null;
@@ -706,14 +724,14 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                               <button
                                 key={index}
                                 onClick={() => setActiveVideoIndex(index)}
-                                className={`w-full flex items-start gap-2 p-2 transition-all hover:bg-foreground/5 border-l-2 ${
+                                className={`w-full flex items-start gap-2 p-2 transition-all hover:bg-[rgba(70,151,210,0.15)] dark:hover:bg-black/50 border-l-2 ${
                                   isActive 
-                                    ? 'bg-foreground/10 border-l-red-600' 
-                                    : 'border-l-transparent hover:border-l-foreground/20'
+                                    ? 'bg-[rgba(70,151,210,0.2)] dark:bg-black/60 border-l-red-600' 
+                                    : 'border-l-transparent hover:border-l-[#4697D2]/50 dark:hover:border-l-white/20'
                                 }`}
                               >
                                 {/* Thumbnail */}
-                                <div className="relative w-28 flex-shrink-0 rounded overflow-hidden border border-foreground/10 group-hover:border-foreground/20">
+                                <div className="relative w-28 flex-shrink-0 rounded overflow-hidden border border-[#4697D2]/30 dark:border-white/10 group-hover:border-[#4697D2]/50 dark:group-hover:border-white/20">
                                   <div className="relative aspect-video bg-black">
                                     <img 
                                       src={thumbnailUrl}
@@ -750,8 +768,8 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                                 <div className="flex-1 min-w-0 text-left">
                                   <p className={`text-[11px] leading-tight line-clamp-2 transition-colors ${
                                     isActive 
-                                      ? 'text-foreground font-semibold' 
-                                      : 'text-foreground/90 hover:text-foreground'
+                                      ? 'text-[#1a1a1a] dark:text-white font-semibold' 
+                                      : 'text-[#2d2d2d] dark:text-white/90 hover:text-[#1a1a1a] dark:hover:text-white'
                                   }`}>
                                     {t('gallery.video')} {index + 1}
                                   </p>
@@ -776,16 +794,16 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
             })()}
 
             {/* Divider */}
-            <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
+            <div className="border-t border-[#4697D2]/30 dark:border-white/20 my-6"></div>
 
             {/* Locations Grid */}
             {locations.length > 0 && (
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
-                  <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl">
+                  <svg className="w-5 h-5 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   </svg>
-                  <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                  <h2 className="text-lg font-semibold tracking-tight text-[#1a1a1a] dark:text-white">
                     {t('locations.title')}
                   </h2>
                 </div>
@@ -817,19 +835,23 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
             )}
 
             {/* Divider */}
-            <div className="border-t border-gray-200 dark:border-white/20 my-6"></div>
+            <div className="border-t border-[#4697D2]/30 dark:border-white/20 my-6"></div>
 
             {/* Contact via Messaging Apps */}
-            <div className="overflow-hidden rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
+            <div className="group relative overflow-hidden rounded-xl backdrop-blur-md shadow-xl shadow-black/5 dark:shadow-black/30 border border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40">
+              {/* Gradient Border Effect - hidden in dark mode */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/30 via-white/10 to-transparent dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" />
+              {/* Top Highlight Line */}
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent" />
               {/* Header with Icon */}
-              <div className="px-4 py-3 border-b border-foreground/10 bg-gradient-to-r from-foreground/[0.03] to-transparent">
+              <div className="px-4 py-3 border-b border-[#4697D2]/30 dark:border-white/10 bg-gradient-to-r from-[rgba(70,151,210,0.1)] dark:from-transparent to-transparent">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-foreground/10">
-                    <svg className="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="p-1.5 rounded-lg bg-[rgba(70,151,210,0.3)] dark:bg-white/10">
+                    <svg className="w-4 h-4 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-sm font-bold text-foreground">
+                  <h3 className="text-sm font-bold text-[#1a1a1a] dark:text-white">
                     {t('contact.title')}
                   </h3>
                 </div>
@@ -837,9 +859,9 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               
               <div className="p-4 space-y-4">
                 {/* Info Text */}
-                <div className="text-xs text-foreground/90 leading-relaxed space-y-2">
+                <div className="text-xs text-[#2d2d2d] dark:text-white/90 leading-relaxed space-y-2">
                   <p className="flex items-start gap-2">
-                    <svg className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3.5 h-3.5 text-[#4697D2]/60 dark:text-white/40 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <span>
@@ -850,7 +872,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                     {t('contact.visitText')}
                     <Link 
                       href={`/${locale}/locations`}
-                      className="font-semibold text-foreground hover:text-foreground/80 underline decoration-foreground/30 hover:decoration-foreground/60 transition-colors inline-flex items-center gap-1"
+                      className="font-semibold text-[#4697D2] dark:text-white hover:text-[#4697D2]/80 dark:hover:text-white/80 underline decoration-[#4697D2]/30 dark:decoration-white/30 hover:decoration-[#4697D2]/60 dark:hover:decoration-white/60 transition-colors inline-flex items-center gap-1"
                     >
                       {t('contact.locationsPage')}
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -863,11 +885,11 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
                 {/* Divider */}
                 <div className="flex items-center gap-2">
-                  <div className="h-px flex-1 bg-foreground/10"></div>
-                  <span className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider">
+                  <div className="h-px flex-1 bg-[#4697D2]/20 dark:bg-white/10"></div>
+                  <span className="text-[10px] font-semibold text-[#4697D2]/60 dark:text-white/40 uppercase tracking-wider">
                     {t('contact.messengers')}
                   </span>
-                  <div className="h-px flex-1 bg-foreground/10"></div>
+                  <div className="h-px flex-1 bg-[#4697D2]/20 dark:bg-white/10"></div>
                 </div>
 
                 {/* Messaging Apps */}
@@ -920,15 +942,15 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               if (typeof value !== 'string' || value.length === 0) return null;
               
               return (
-                <div key={key} className="p-4 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
-                  <h3 className="text-sm font-semibold text-foreground mb-2 capitalize flex items-center gap-1.5">
-                    <span className="w-0.5 h-4 bg-foreground/30 rounded-full"></span>
+                <div key={key} className="p-4 rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl">
+                  <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-2 capitalize flex items-center gap-1.5">
+                    <span className="w-0.5 h-4 bg-[#4697D2]/50 dark:bg-white/30 rounded-full"></span>
                     {key.replace(/_/g, ' ')}
                   </h3>
                   <div 
-                    className="prose prose-sm max-w-none text-foreground
+                    className="prose prose-sm max-w-none text-[#2d2d2d] dark:text-white/90
                       [&>p]:mb-1.5 [&>p]:text-xs [&>p]:leading-relaxed
-                      [&_strong]:font-semibold [&_strong]:text-foreground"
+                      [&_strong]:font-semibold [&_strong]:text-[#1a1a1a] dark:[&_strong]:text-white"
                     dangerouslySetInnerHTML={{ __html: value }}
                   />
                 </div>
@@ -944,35 +966,35 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
                 {locations.length > 0 && (
-                  <div className="p-3 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 hover:border-white/60 dark:hover:border-white/30 transition-all shadow-xl">
+                  <div className="p-3 rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-black/50 hover:border-[#4697D2]/50 dark:hover:border-white/20 transition-all shadow-xl">
                     <div className="flex items-center gap-2">
-                      <div className="p-1.5 rounded bg-foreground/10">
-                        <svg className="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="p-1.5 rounded-lg bg-[rgba(70,151,210,0.3)] dark:bg-white/10">
+                        <svg className="w-3.5 h-3.5 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-[10px] text-foreground/90 font-medium">
+                        <p className="text-[10px] text-[#2d2d2d] dark:text-white/90 font-medium">
                           {t('sidebar.locations')}
                         </p>
-                        <p className="text-sm font-bold text-foreground">{locations.length}</p>
+                        <p className="text-sm font-bold text-[#1a1a1a] dark:text-white">{locations.length}</p>
                       </div>
                     </div>
                   </div>
                 )}
                 {gallery.length > 0 && (
-                  <div className="p-3 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 hover:border-white/60 dark:hover:border-white/30 transition-all shadow-xl">
+                  <div className="p-3 rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-black/50 hover:border-[#4697D2]/50 dark:hover:border-white/20 transition-all shadow-xl">
                     <div className="flex items-center gap-2">
-                      <div className="p-1.5 rounded bg-foreground/10">
-                        <svg className="w-3.5 h-3.5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="p-1.5 rounded-lg bg-[rgba(70,151,210,0.3)] dark:bg-white/10">
+                        <svg className="w-3.5 h-3.5 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                       <div>
-                        <p className="text-[10px] text-foreground/90 font-medium">
+                        <p className="text-[10px] text-[#2d2d2d] dark:text-white/90 font-medium">
                           {t('sidebar.photos')}
                         </p>
-                        <p className="text-sm font-bold text-foreground">{gallery.length}</p>
+                        <p className="text-sm font-bold text-[#1a1a1a] dark:text-white">{gallery.length}</p>
                       </div>
                     </div>
                   </div>
@@ -981,9 +1003,9 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
               {/* Locations List */}
               {locations.length > 0 && (
-                <div className="p-4 rounded-lg backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 shadow-xl">
-                  <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="p-4 rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl">
+                  <h3 className="text-xs font-semibold text-[#1a1a1a] dark:text-white mb-3 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5 text-[#4697D2] dark:text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
                     {t('sidebar.flyingSpots')}
@@ -993,18 +1015,17 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                       <Link
                         key={location.id}
                         href={`/${locale}/locations/${slug}/${getLocalizedField(location, 'slug', locale)}`}
-                        className="group block p-2 rounded-md backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 hover:bg-white/30 dark:hover:bg-black/30 hover:border-white/40 dark:hover:border-white/30 transition-all shadow-md"
-                      >
+                        className="group block p-2 rounded-lg backdrop-blur-md bg-[rgba(70,151,210,0.1)] dark:bg-black/20 border border-[#4697D2]/20 dark:border-white/10 hover:bg-[rgba(70,151,210,0.2)] dark:hover:bg-black/30 hover:border-[#4697D2]/40 dark:hover:border-white/20 transition-all shadow-md">
                         <div className="flex items-center justify-between gap-1.5">
                           <div className="flex items-center gap-2 flex-1 min-w-0">
-                            <svg className="w-3 h-3 text-foreground/40 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3 text-[#4697D2]/60 dark:text-white/40 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            <span className="text-xs font-medium text-foreground group-hover:text-foreground/80 transition-colors truncate">
+                            <span className="text-xs font-medium text-[#1a1a1a] dark:text-white group-hover:text-[#4697D2] dark:group-hover:text-white/80 transition-colors truncate">
                               {getLocalizedField(location, 'name', locale)}
                             </span>
                           </div>
-                          <svg className="w-3 h-3 text-foreground/20 group-hover:text-foreground/40 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-3 h-3 text-[#4697D2]/30 dark:text-white/20 group-hover:text-[#4697D2]/60 dark:group-hover:text-white/40 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                           </svg>
                         </div>
@@ -1015,11 +1036,11 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
               )}
 
               {/* Booking CTA */}
-              <div className="rounded-xl backdrop-blur-lg bg-white/70 dark:bg-black/40 border-2 border-white/50 dark:border-white/20 overflow-hidden shadow-xl">
+              <div className="rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border-2 border-[#4697D2]/30 dark:border-white/10 overflow-hidden shadow-xl">
                 {/* Header */}
-                <div className="bg-foreground text-background px-4 py-3">
+                <div className="bg-gradient-to-r from-[#4697D2] to-[#3a7db3] dark:from-black/60 dark:to-black/40 text-white px-4 py-3 border-b border-[#4697D2]/30 dark:border-white/10">
                   <div className="flex items-center gap-2">
-                    <div className="p-1.5 rounded-lg bg-background/20 backdrop-blur-sm">
+                    <div className="p-1.5 rounded-lg bg-white/20 dark:bg-white/10 backdrop-blur-sm">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
@@ -1035,18 +1056,18 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   {/* Icon & Text */}
                   <div className="text-center space-y-3">
                     <div className="flex justify-center">
-                      <div className="p-3 rounded-full bg-foreground/10 border-2 border-foreground/20">
-                        <svg className="w-8 h-8 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="p-3 rounded-full bg-[rgba(70,151,210,0.2)] dark:bg-white/10 border-2 border-[#4697D2]/30 dark:border-white/20">
+                        <svg className="w-8 h-8 text-[#4697D2] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
                       </div>
                     </div>
                     
                     <div className="space-y-2">
-                      <h4 className="text-sm font-bold text-foreground">
+                      <h4 className="text-sm font-bold text-[#1a1a1a] dark:text-white">
                         {t('sidebar.readyForAdventure')}
                       </h4>
-                      <p className="text-[11px] text-foreground/90 leading-relaxed">
+                      <p className="text-[11px] text-[#2d2d2d] dark:text-white/90 leading-relaxed">
                         {t('sidebar.bookingDescription').replace('{count}', locations.length.toString())}
                       </p>
                     </div>
@@ -1055,26 +1076,26 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   {/* Features */}
                   <div className="space-y-2">
                     <div className="flex items-start gap-2">
-                      <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#4697D2] dark:text-white flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[10px] text-foreground/90">
+                      <span className="text-[10px] text-[#2d2d2d] dark:text-white/90">
                         {t('sidebar.professionalPilots')}
                       </span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#4697D2] dark:text-white flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[10px] text-foreground/90">
+                      <span className="text-[10px] text-[#2d2d2d] dark:text-white/90">
                         {t('sidebar.certifiedEquipment')}
                       </span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <svg className="w-4 h-4 text-foreground flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-[#4697D2] dark:text-white flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-[10px] text-foreground/90">
+                      <span className="text-[10px] text-[#2d2d2d] dark:text-white/90">
                         {t('sidebar.photoVideoIncluded')}
                       </span>
                     </div>
@@ -1083,7 +1104,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   {/* CTA Button */}
                   <button 
                     onClick={() => window.location.href = `/${locale}/bookings`}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-foreground text-background hover:bg-foreground/90 rounded-lg font-semibold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#2196f3] to-[#1976d2] hover:from-[#1976d2] hover:to-[#1565c0] text-white rounded-lg font-semibold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -1092,7 +1113,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
                   </button>
 
                   {/* Info Text */}
-                  <p className="text-[9px] text-center text-foreground/50 leading-relaxed">
+                  <p className="text-[9px] text-center text-[#4697D2]/60 dark:text-white/50 leading-relaxed">
                     {t('sidebar.helpText')}
                   </p>
                 </div>
@@ -1104,7 +1125,7 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
       {/* Comments Section */}
       <div className="max-w-[1280px] mx-auto px-4 py-16">
-        <div className="backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 rounded-2xl p-8 shadow-xl">
+        <div className="backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 rounded-2xl p-8 shadow-xl">
           <CommentsList
             commentableType="country"
             commentableId={String(country.id)}

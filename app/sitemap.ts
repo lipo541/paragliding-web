@@ -20,11 +20,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   for (const route of STATIC_ROUTES) {
     for (const locale of locales) {
+      // terms და privacy გვერდებს დაბალი პრიორიტეტი
+      const isLegalPage = route === '/terms' || route === '/privacy';
+      const isHomePage = route === '';
+      
       entries.push({
         url: `${BASE_URL}/${locale}${route}`,
         lastModified: new Date(),
-        changeFrequency: route === '' ? 'daily' : 'weekly',
-        priority: route === '' ? 1.0 : 0.8,
+        changeFrequency: isHomePage ? 'weekly' : (isLegalPage ? 'yearly' : 'weekly'),
+        priority: isHomePage ? 1.0 : (isLegalPage ? 0.3 : 0.8),
         alternates: {
           languages: Object.fromEntries(
             locales.map(l => [l, `${BASE_URL}/${l}${route}`])

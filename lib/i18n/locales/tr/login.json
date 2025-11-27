@@ -18,6 +18,7 @@
   },
   "errors": {
     "loginFailed": "Giriş başarısız",
-    "authFailed": "Yetkilendirme başarısız"
+    "authFailed": "Yetkilendirme başarısız",
+    "invalidCredentials": "Geçersiz e-posta veya şifre"
   }
 }

@@ -35,11 +35,11 @@ export default function Notifications() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-1.5 md:p-2 hover:bg-foreground/5 rounded-md transition-colors"
+        className="relative p-1.5 md:p-2 hover:bg-[#4697D2]/10 dark:hover:bg-white/10 rounded-md transition-colors"
         aria-label="Notifications"
       >
         <svg
-          className="w-5 h-5 md:w-6 md:h-6 text-foreground"
+          className="w-5 h-5 md:w-6 md:h-6 text-[#1a1a1a] dark:text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -59,9 +59,9 @@ export default function Notifications() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-background border border-foreground/10 rounded-lg shadow-lg p-4 z-50">
-          <h3 className="font-semibold mb-2 text-foreground">{t('notifications.title')}</h3>
-          <p className="text-sm text-foreground/60">{t('notifications.noNew')}</p>
+        <div className="absolute right-0 mt-2 w-80 backdrop-blur-xl bg-gradient-to-b from-[rgba(70,151,210,0.4)] to-[rgba(70,151,210,0.3)] dark:bg-black/25 dark:from-transparent dark:to-transparent border border-[#4697D2]/40 dark:border-white/20 rounded-lg shadow-lg shadow-[#4697D2]/10 p-4 z-50">
+          <h3 className="font-semibold mb-2 text-[#1a1a1a] dark:text-white">{t('notifications.title')}</h3>
+          <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60">{t('notifications.noNew')}</p>
         </div>
       )}
     </div>

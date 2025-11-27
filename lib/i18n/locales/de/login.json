@@ -18,6 +18,7 @@
   },
   "errors": {
     "loginFailed": "Anmeldung fehlgeschlagen",
-    "authFailed": "Autorisierung fehlgeschlagen"
+    "authFailed": "Autorisierung fehlgeschlagen",
+    "invalidCredentials": "Ungültige E-Mail oder Passwort"
   }
 }

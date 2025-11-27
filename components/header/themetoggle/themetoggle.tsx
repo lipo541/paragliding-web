@@ -13,7 +13,7 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-16 h-8 rounded-full bg-foreground/10" aria-label="Loading theme toggle">
+      <div className="w-16 h-8 rounded-full bg-[#4697D2]/20" aria-label="Loading theme toggle">
         {/* Placeholder skeleton */}
       </div>
     );
@@ -24,11 +24,12 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="relative w-16 h-8 rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-foreground/20 hover:scale-105 active:scale-95 transform"
+      className="relative w-16 h-8 rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4697D2]/30 hover:scale-105 active:scale-95 transform border"
       style={{
         background: isDark 
-          ? 'linear-gradient(to right, #1e293b, #0f172a)' 
-          : 'linear-gradient(to right, #38bdf8, #0ea5e9)',
+          ? 'linear-gradient(to right, #1a1a1a, #0a0a0a)' 
+          : 'linear-gradient(to right, rgba(70, 151, 210, 0.3), rgba(70, 151, 210, 0.5))',
+        borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(70, 151, 210, 0.4)',
       }}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
     >
@@ -39,11 +40,11 @@ export default function ThemeToggle() {
         }`}
         style={{
           background: isDark 
-            ? 'linear-gradient(135deg, #fbbf24, #f59e0b)' 
-            : 'linear-gradient(135deg, #fef3c7, #fde047)',
+            ? 'linear-gradient(135deg, #CAFA00, #a8d600)' 
+            : 'linear-gradient(135deg, #ffffff, #f0f0f0)',
           boxShadow: isDark 
-            ? '0 0 10px rgba(251, 191, 36, 0.5), inset -2px -2px 4px rgba(0,0,0,0.2)' 
-            : '0 0 15px rgba(254, 243, 199, 0.8), inset -2px -2px 4px rgba(0,0,0,0.1)',
+            ? '0 0 10px rgba(202, 250, 0, 0.5), inset -2px -2px 4px rgba(0,0,0,0.2)' 
+            : '0 0 10px rgba(70, 151, 210, 0.3), inset -2px -2px 4px rgba(0,0,0,0.1)',
         }}
       >
         {/* Sun/Moon icon inside the circle */}
@@ -51,7 +52,7 @@ export default function ThemeToggle() {
           {isDark ? (
             // Moon icon
             <svg
-              className="w-4 h-4 text-slate-800"
+              className="w-4 h-4 text-[#1a1a1a]"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -60,7 +61,7 @@ export default function ThemeToggle() {
           ) : (
             // Sun icon
             <svg
-              className="w-4 h-4 text-amber-600"
+              className="w-4 h-4 text-[#4697D2]"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -77,18 +78,18 @@ export default function ThemeToggle() {
       {/* Stars for dark mode */}
       {isDark && (
         <>
-          <div className="absolute top-2 left-3 w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
+          <div className="absolute top-2 left-3 w-1 h-1 bg-[#CAFA00] rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
           <div className="absolute top-4 left-2 w-0.5 h-0.5 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-          <div className="absolute top-5 left-4 w-0.5 h-0.5 bg-white rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-5 left-4 w-0.5 h-0.5 bg-[#CAFA00]/70 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
         </>
       )}
 
       {/* Clouds for light mode */}
       {!isDark && (
         <>
-          <div className="absolute top-2 right-3 w-2 h-1 bg-white/40 rounded-full" />
-          <div className="absolute top-3 right-2 w-2.5 h-1 bg-white/30 rounded-full" />
-          <div className="absolute top-5 right-4 w-1.5 h-0.5 bg-white/50 rounded-full" />
+          <div className="absolute top-2 right-3 w-2 h-1 bg-white/60 rounded-full" />
+          <div className="absolute top-3 right-2 w-2.5 h-1 bg-white/50 rounded-full" />
+          <div className="absolute top-5 right-4 w-1.5 h-0.5 bg-white/70 rounded-full" />
         </>
       )}
     </button>

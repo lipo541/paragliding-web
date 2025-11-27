@@ -112,9 +112,9 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
     new Date(promo.valid_until).getTime() - new Date().getTime() < 3 * 24 * 60 * 60 * 1000; // 3 days
 
   return (
-    <div className="group relative rounded-lg overflow-hidden bg-white/95 dark:bg-black/90 hover:shadow-xl transition-all border border-foreground/10 shadow-md">
+    <div className="group relative rounded-lg overflow-hidden backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 hover:shadow-xl transition-all border border-[#4697D2]/30 dark:border-white/10 shadow-lg flex flex-col h-full">
       {/* Image Section */}
-      <div className="relative h-32 lg:h-36 overflow-hidden">
+      <div className="relative h-32 lg:h-36 overflow-hidden flex-shrink-0">
         {/* Background Image */}
         <div className="absolute inset-0">
           {imageUrl ? (
@@ -155,18 +155,20 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-2.5 space-y-2">
-        {/* Description */}
-        {description && (
-          <p className="text-[10px] text-foreground/70 line-clamp-2 leading-snug">{description}</p>
-        )}
+      <div className="p-2.5 flex flex-col flex-grow">
+        {/* Description - Fixed height container */}
+        <div className="h-8 mb-2">
+          {description && (
+            <p className="text-[10px] text-[#1a1a1a]/70 dark:text-white/70 line-clamp-2 leading-snug">{description}</p>
+          )}
+        </div>
 
         {/* Detailed Timer */}
         {promo.valid_until && timeLeft && timeLeft !== 'expired' && (
-          <div className="bg-foreground/5 rounded-md p-2 border border-foreground/10">
+          <div className="bg-[#4697D2]/10 dark:bg-white/5 rounded-md p-2 border border-[#4697D2]/20 dark:border-white/10 mb-2">
             <div className="flex items-center gap-1 mb-1">
-              <Clock className="w-3 h-3 text-blue-500" />
-              <p className="text-[9px] font-medium text-foreground/60">
+              <Clock className="w-3 h-3 text-[#4697D2]" />
+              <p className="text-[9px] font-medium text-[#1a1a1a]/60 dark:text-white/60">
                 {t('card.timeLeft')}
               </p>
             </div>
@@ -182,16 +184,16 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
                 return (
                   <>
                     <div className="text-center">
-                      <p className="text-sm font-bold text-foreground">{days}</p>
-                      <p className="text-[8px] text-foreground/60">{t('card.days')}</p>
+                      <p className="text-sm font-bold text-[#1a1a1a] dark:text-white">{days}</p>
+                      <p className="text-[8px] text-[#1a1a1a]/60 dark:text-white/60">{t('card.days')}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-bold text-foreground">{hours}</p>
-                      <p className="text-[8px] text-foreground/60">{t('card.hours')}</p>
+                      <p className="text-sm font-bold text-[#1a1a1a] dark:text-white">{hours}</p>
+                      <p className="text-[8px] text-[#1a1a1a]/60 dark:text-white/60">{t('card.hours')}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-bold text-foreground">{minutes}</p>
-                      <p className="text-[8px] text-foreground/60">{t('card.minutes')}</p>
+                      <p className="text-sm font-bold text-[#1a1a1a] dark:text-white">{minutes}</p>
+                      <p className="text-[8px] text-[#1a1a1a]/60 dark:text-white/60">{t('card.minutes')}</p>
                     </div>
                   </>
                 );
@@ -202,7 +204,7 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
 
         {/* Usage Info */}
         {promo.usage_limit && (
-          <div className="flex items-center justify-between text-[9px] text-foreground/60">
+          <div className="flex items-center justify-between text-[9px] text-[#1a1a1a]/60 dark:text-white/60 mb-2">
             <span>{t('card.usage')}</span>
             <span className="font-medium">{promo.usage_count}/{promo.usage_limit}</span>
           </div>
@@ -210,20 +212,23 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
 
         {/* Locations */}
         {locations.length > 0 && (
-          <div className="flex items-center gap-1">
-            <MapPin className="w-2.5 h-2.5 text-foreground/40 flex-shrink-0" />
-            <p className="text-[9px] text-foreground/60 line-clamp-1">
+          <div className="flex items-center gap-1 mb-2">
+            <MapPin className="w-2.5 h-2.5 text-[#4697D2]/60 flex-shrink-0" />
+            <p className="text-[9px] text-[#1a1a1a]/60 dark:text-white/60 line-clamp-1">
               {locations.map((loc) => getLocalizedName(loc)).join(', ')}
             </p>
           </div>
         )}
+
+        {/* Spacer to push buttons to bottom */}
+        <div className="flex-grow"></div>
 
         {/* Actions */}
         <div className="flex gap-1.5 pt-1">
           <button
             onClick={handleCopy}
             className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-medium transition-all ${
-              copied ? 'bg-green-500 text-white' : 'bg-foreground/10 hover:bg-foreground/15 text-foreground'
+              copied ? 'bg-green-500 text-white' : 'bg-white/60 dark:bg-black/30 hover:bg-white dark:hover:bg-black/50 text-[#1a1a1a] dark:text-white border border-[#4697D2]/30 dark:border-white/20'
             }`}
           >
             {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
@@ -232,7 +237,7 @@ export default function PromoCard({ promo, locale }: PromoCardProps) {
 
           <Link
             href={`/${locale}/bookings?promo=${promo.code}`}
-            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all"
+            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-md text-[10px] font-medium bg-[#4697D2] hover:bg-[#3a7bb0] text-white transition-all"
           >
             {t('card.book')}
           </Link>

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
-import Image from 'next/image';
 import { Calendar, MapPin, Clock, CheckCircle2, User, Mail, Phone, MessageSquare, CreditCard, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import CustomSelect from '@/components/ui/CustomSelect';
 
 interface Country {
   id: string;
@@ -562,36 +562,28 @@ export default function BookingsPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background Image for entire page */}
-      <div className="fixed inset-0 z-0">
-        <Image
-          src={bookingDetails.heroImage || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop'}
-          alt={bookingDetails.locationName || 'Mountain Landscape'}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-white/90 dark:bg-black/90 backdrop-blur-sm" />
-      </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center min-h-screen relative z-10">
-          <div className="w-8 h-8 border-2 border-gray-300 dark:border-gray-700 border-t-gray-900 dark:border-t-white rounded-full animate-spin" />
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-3 border-[#1a1a1a]/20 dark:border-white/20 border-t-[#1a1a1a] dark:border-t-white rounded-full animate-spin" />
+            <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60 animate-pulse">{t('page.loading')}</p>
+          </div>
         </div>
       ) : (
         <>
           {/* Hero Section - Compact */}
           <div className="relative z-10 pt-12 pb-4 text-center px-4">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 tracking-tight">
+            <h1 className="text-xl md:text-2xl font-bold text-[#1a1a1a] dark:text-white mb-1 tracking-tight">
               {t('page.title')}
             </h1>
             {bookingDetails.locationName && bookingDetails.flightTypeName && (
-              <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-gray-600 dark:text-gray-400">
+              <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-[#1a1a1a]/70 dark:text-gray-400">
                 <div className="flex items-center gap-1">
                   <MapPin className="w-3 h-3" />
                   <span>{bookingDetails.locationName}</span>
                 </div>
-                <span className="text-gray-400 dark:text-gray-600">•</span>
+                <span className="text-[#1a1a1a]/40 dark:text-gray-600">•</span>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   <span>{bookingDetails.flightTypeName}</span>
@@ -614,114 +606,106 @@ export default function BookingsPage() {
           
           {/* Booking Form - Left Column */}
           <div className={selectedCountryId && selectedLocationId && selectedFlightTypeId ? 'lg:col-span-2' : ''}>
-            <form onSubmit={handleSubmit} className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+            <form onSubmit={handleSubmit} className="relative bg-[rgba(70,151,210,0.15)] dark:bg-black/40 backdrop-blur-md border border-[#4697D2]/30 dark:border-white/10 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/30">
+              {/* Top Highlight Line */}
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent" />
               
               <div className="p-4 space-y-3">
                 
                 {/* Country Selector */}
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
+                  <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1.5">
                     {t('form.selectCountry')} <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <CustomSelect
+                    options={countries.map((country) => ({
+                      value: country.id,
+                      label: getLocalizedName(country),
+                    }))}
                     value={selectedCountryId}
-                    onChange={(e) => setSelectedCountryId(e.target.value)}
+                    onChange={setSelectedCountryId}
+                    placeholder={t('form.selectCountry')}
                     required
-                    className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
-                  >
-                    <option value="">{t('form.selectCountry')}</option>
-                    {countries.map((country) => (
-                      <option key={country.id} value={country.id}>
-                        {getLocalizedName(country)}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
 
                 {/* Location Selector */}
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
+                  <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1.5">
                     {t('form.selectLocation')} <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <CustomSelect
+                    options={locations.map((location) => ({
+                      value: location.id,
+                      label: getLocalizedName(location),
+                    }))}
                     value={selectedLocationId}
-                    onChange={(e) => setSelectedLocationId(e.target.value)}
-                    required
+                    onChange={setSelectedLocationId}
+                    placeholder={t('form.selectLocation')}
                     disabled={!selectedCountryId}
-                    className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <option value="">{t('form.selectLocation')}</option>
-                    {locations.map((location) => (
-                      <option key={location.id} value={location.id}>
-                        {getLocalizedName(location)}
-                      </option>
-                    ))}
-                  </select>
+                    icon={<MapPin className={`w-4 h-4 ${!selectedCountryId ? 'text-gray-300' : 'text-[#4697D2]'}`} />}
+                    required
+                  />
                 </div>
 
                 {/* Flight Type Selector */}
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
+                  <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1.5">
                     {t('form.selectFlightType')} <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    value={selectedFlightTypeId}
-                    onChange={(e) => {
-                      const newFlightTypeId = e.target.value;
-                      if (process.env.NODE_ENV === 'development') {
-                        console.log('✈️ Flight type changed to:', newFlightTypeId);
-                      }
-                      setSelectedFlightTypeId(newFlightTypeId);
-                    }}
-                    required
-                    disabled={!selectedLocationId || flightTypes.length === 0}
-                    className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <option value="">
-                      {flightTypes.length === 0 && selectedLocationId ? t('form.loading') : t('form.selectFlightType')}
-                    </option>
-                    {flightTypes.map((ft) => {
+                  <CustomSelect
+                    options={flightTypes.map((ft) => {
                       const sharedType = sharedFlightTypes.find(sft => sft.id === ft.shared_id);
-                      if (!sharedType) {
-                        console.warn('⚠️ Shared type not found for:', ft.shared_id);
-                        return null;
+                      return {
+                        value: ft.shared_id,
+                        label: `${ft.name} - ${sharedType?.price_gel || 0}₾`,
+                      };
+                    }).filter(opt => opt.value)}
+                    value={selectedFlightTypeId}
+                    onChange={(value) => {
+                      if (process.env.NODE_ENV === 'development') {
+                        console.log('✈️ Flight type changed to:', value);
                       }
-                      return (
-                        <option key={ft.shared_id} value={ft.shared_id}>
-                          {ft.name} - {sharedType.price_gel}₾
-                        </option>
-                      );
-                    })}
-                  </select>
+                      setSelectedFlightTypeId(value);
+                    }}
+                    placeholder={flightTypes.length === 0 && selectedLocationId ? t('form.loading') : t('form.selectFlightType')}
+                    disabled={!selectedLocationId || flightTypes.length === 0}
+                    icon={
+                      <svg className={`w-4 h-4 ${(!selectedLocationId || flightTypes.length === 0) ? 'text-gray-300' : 'text-[#4697D2]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                    }
+                    required
+                  />
                 </div>
 
                 {selectedFlightTypeId && (
-                  <div className="border-t border-gray-200 dark:border-white/10 my-3" />
+                  <div className="border-t border-[#4697D2]/20 dark:border-white/10 my-3" />
                 )}
 
                 {/* Name & Phone */}
                 {selectedFlightTypeId && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.fullName')}</label>
+                    <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1">{t('form.fullName')}</label>
                     <input
                       type="text"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       required
-                      className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
+                      className="w-full h-9 px-3 bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg text-xs text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#4697D2]/50 dark:focus:ring-gray-600 transition-all"
                       placeholder={t('form.fullNamePlaceholder')}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.phone')}</label>
+                    <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1">{t('form.phone')}</label>
                     <input
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
-                      className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
+                      className="w-full h-9 px-3 bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg text-xs text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#4697D2]/50 dark:focus:ring-gray-600 transition-all"
                       placeholder={t('form.phonePlaceholder')}
                     />
                   </div>
@@ -732,24 +716,24 @@ export default function BookingsPage() {
                 {selectedFlightTypeId && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.flightDate')}</label>
+                    <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1">{t('form.flightDate')}</label>
                     <input
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
                       required
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all"
+                      className="w-full h-9 px-3 bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg text-xs text-[#1a1a1a] dark:text-white focus:outline-none focus:ring-1 focus:ring-[#4697D2]/50 dark:focus:ring-gray-600 transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.numberOfPeople')}</label>
+                    <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1">{t('form.numberOfPeople')}</label>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setNumberOfPeople(Math.max(1, numberOfPeople - 1))}
-                        className="w-9 h-9 flex items-center justify-center bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95 transition-all text-gray-700 dark:text-gray-300 font-semibold"
+                        className="w-9 h-9 flex items-center justify-center bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg hover:bg-[#4697D2]/10 dark:hover:bg-white/5 active:scale-95 transition-all text-[#1a1a1a] dark:text-gray-300 font-semibold"
                       >
                         −
                       </button>
@@ -758,12 +742,12 @@ export default function BookingsPage() {
                         value={numberOfPeople}
                         onChange={(e) => setNumberOfPeople(Math.max(1, parseInt(e.target.value) || 1))}
                         min="1"
-                        className="flex-1 h-9 text-center px-2 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all text-gray-900 dark:text-white text-sm font-semibold"
+                        className="flex-1 h-9 text-center px-2 bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#4697D2]/50 dark:focus:ring-gray-600 transition-all text-[#1a1a1a] dark:text-white text-sm font-semibold"
                       />
                       <button
                         type="button"
                         onClick={() => setNumberOfPeople(numberOfPeople + 1)}
-                        className="w-9 h-9 flex items-center justify-center bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95 transition-all text-gray-700 dark:text-gray-300 font-semibold"
+                        className="w-9 h-9 flex items-center justify-center bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg hover:bg-[#4697D2]/10 dark:hover:bg-white/5 active:scale-95 transition-all text-[#1a1a1a] dark:text-gray-300 font-semibold"
                       >
                         +
                       </button>
@@ -775,7 +759,7 @@ export default function BookingsPage() {
                 {/* Contact Method Preference */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1.5">{t('form.contactMethod')}</label>
+                  <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1.5">{t('form.contactMethod')}</label>
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       type="button"
@@ -783,7 +767,7 @@ export default function BookingsPage() {
                       className={`h-9 flex items-center justify-center gap-1.5 rounded-lg border transition-all ${
                         contactMethod === 'whatsapp'
                           ? 'bg-green-500 border-green-500 text-white shadow-sm'
-                          : 'bg-white dark:bg-black border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
+                          : 'bg-white dark:bg-black border-[#4697D2]/30 dark:border-white/20 text-[#1a1a1a] dark:text-gray-300 hover:bg-[#4697D2]/10 dark:hover:bg-white/5'
                       }`}
                     >
                       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -798,7 +782,7 @@ export default function BookingsPage() {
                       className={`h-9 flex items-center justify-center gap-1.5 rounded-lg border transition-all ${
                         contactMethod === 'telegram'
                           ? 'bg-blue-500 border-blue-500 text-white shadow-sm'
-                          : 'bg-white dark:bg-black border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
+                          : 'bg-white dark:bg-black border-[#4697D2]/30 dark:border-white/20 text-[#1a1a1a] dark:text-gray-300 hover:bg-[#4697D2]/10 dark:hover:bg-white/5'
                       }`}
                     >
                       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -813,7 +797,7 @@ export default function BookingsPage() {
                       className={`h-9 flex items-center justify-center gap-1.5 rounded-lg border transition-all ${
                         contactMethod === 'viber'
                           ? 'bg-purple-500 border-purple-500 text-white shadow-sm'
-                          : 'bg-white dark:bg-black border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
+                          : 'bg-white dark:bg-black border-[#4697D2]/30 dark:border-white/20 text-[#1a1a1a] dark:text-gray-300 hover:bg-[#4697D2]/10 dark:hover:bg-white/5'
                       }`}
                     >
                       <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -828,9 +812,9 @@ export default function BookingsPage() {
                 {/* Promo Code */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">
+                  <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1">
                     {t('form.promoCode')}
-                    <span className="ml-1.5 text-[9px] text-gray-500 dark:text-gray-600 font-normal">
+                    <span className="ml-1.5 text-[9px] text-[#1a1a1a]/50 dark:text-gray-600 font-normal">
                       ({t('errors.promoRequiresAuth')})
                     </span>
                   </label>
@@ -843,12 +827,12 @@ export default function BookingsPage() {
                         setPromoError('');
                       }}
                       disabled={promoDiscount > 0}
-                      className={`flex-1 h-9 px-3 bg-white dark:bg-black border rounded-lg text-xs text-gray-900 dark:text-white uppercase focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all ${
+                      className={`flex-1 h-9 px-3 bg-white dark:bg-black border rounded-lg text-xs text-[#1a1a1a] dark:text-white uppercase focus:outline-none focus:ring-1 focus:ring-[#4697D2]/50 dark:focus:ring-gray-600 transition-all ${
                         promoDiscount > 0 
                           ? 'border-green-500 bg-green-50 dark:bg-green-950/30' 
                           : promoError 
                           ? 'border-red-500' 
-                          : 'border-gray-300 dark:border-white/20'
+                          : 'border-[#4697D2]/30 dark:border-white/20'
                       }`}
                       placeholder={t('form.promoCodePlaceholder')}
                     />
@@ -856,7 +840,7 @@ export default function BookingsPage() {
                       <button
                         type="button"
                         onClick={handlePromoCodeRemove}
-                        className="h-9 px-3 bg-white dark:bg-black border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-[11px] font-medium"
+                        className="h-9 px-3 bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 text-[#1a1a1a] dark:text-gray-300 rounded-lg hover:bg-[#4697D2]/10 dark:hover:bg-white/5 transition-colors text-[11px] font-medium"
                       >
                         {t('actions.cancel')}
                       </button>
@@ -865,7 +849,7 @@ export default function BookingsPage() {
                         type="button"
                         onClick={handlePromoCodeApply}
                         disabled={!promoCode.trim()}
-                        className="h-9 px-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white rounded-lg transition-colors text-[11px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-9 px-3 bg-[#4697D2] hover:bg-[#3a7ab0] active:bg-[#2f6491] text-white rounded-lg transition-colors text-[11px] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {t('form.applyPromo')}
                       </button>
@@ -914,12 +898,12 @@ export default function BookingsPage() {
                 {/* Special Requests */}
                 {selectedFlightTypeId && (
                 <div>
-                  <label className="block text-[11px] font-medium text-gray-700 dark:text-gray-400 mb-1">{t('form.specialRequests')}</label>
+                  <label className="block text-[11px] font-medium text-[#1a1a1a] dark:text-gray-400 mb-1">{t('form.specialRequests')}</label>
                   <textarea
                     value={specialRequests}
                     onChange={(e) => setSpecialRequests(e.target.value)}
                     rows={2}
-                    className="w-full px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-white/20 rounded-lg text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all resize-none"
+                    className="w-full px-3 py-2 bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 rounded-lg text-xs text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#4697D2]/50 dark:focus:ring-gray-600 transition-all resize-none"
                     placeholder={t('form.specialRequestsPlaceholder')}
                   />
                 </div>
@@ -935,32 +919,34 @@ export default function BookingsPage() {
             <div className="sticky top-20">
               
               {/* Summary Card */}
-              <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden">
+              <div className="relative bg-[rgba(70,151,210,0.15)] dark:bg-black/40 backdrop-blur-md border border-[#4697D2]/30 dark:border-white/10 rounded-2xl shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden">
+                {/* Top Highlight Line */}
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent" />
                 
                 <div className="p-4 space-y-3">
                   
                   {/* Location Info */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                      <MapPin className="w-3.5 h-3.5 text-[#1a1a1a]/60 dark:text-gray-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
+                        <p className="text-xs font-semibold text-[#1a1a1a] dark:text-white truncate">
                           {bookingDetails.locationName}
                         </p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-500 truncate">
+                        <p className="text-[10px] text-[#1a1a1a]/60 dark:text-gray-500 truncate">
                           {bookingDetails.countryName}
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                      <Calendar className="w-3.5 h-3.5 text-[#1a1a1a]/60 dark:text-gray-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-gray-900 dark:text-white truncate">
+                        <p className="text-xs font-semibold text-[#1a1a1a] dark:text-white truncate">
                           {bookingDetails.flightTypeName}
                         </p>
                         {bookingDetails.duration && (
-                          <p className="text-[10px] text-gray-500 dark:text-gray-500">
+                          <p className="text-[10px] text-[#1a1a1a]/60 dark:text-gray-500">
                             {bookingDetails.duration}
                           </p>
                         )}
@@ -970,10 +956,10 @@ export default function BookingsPage() {
 
                   {/* Features */}
                   {bookingDetails.features && bookingDetails.features.length > 0 && (
-                    <div className="pt-3 border-t border-gray-200 dark:border-white/10">
+                    <div className="pt-3 border-t border-[#4697D2]/20 dark:border-white/10">
                       <ul className="space-y-1.5">
                         {bookingDetails.features.slice(0, 4).map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-1.5 text-[10px] text-gray-700 dark:text-gray-400">
+                          <li key={idx} className="flex items-start gap-1.5 text-[10px] text-[#1a1a1a]/80 dark:text-gray-400">
                             <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
                             <span className="leading-tight">{feature}</span>
                           </li>
@@ -983,7 +969,7 @@ export default function BookingsPage() {
                   )}
 
                   {/* Currency Selector */}
-                  <div className="pt-3 border-t border-gray-200 dark:border-white/10">
+                  <div className="pt-3 border-t border-[#4697D2]/20 dark:border-white/10">
                     <div className="flex gap-1">
                       {(['GEL', 'USD', 'EUR'] as const).map((currency) => (
                         <button
@@ -992,8 +978,8 @@ export default function BookingsPage() {
                           onClick={() => setSelectedCurrency(currency)}
                           className={`flex-1 h-7 text-[10px] font-semibold rounded-md transition-all ${
                             selectedCurrency === currency
-                              ? 'bg-gray-900 dark:bg-white text-white dark:text-black'
-                              : 'bg-white dark:bg-black border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5'
+                              ? 'bg-[#1a1a1a] dark:bg-white text-white dark:text-black'
+                              : 'bg-white dark:bg-black border border-[#4697D2]/30 dark:border-white/20 text-[#1a1a1a] dark:text-gray-300 hover:bg-[#4697D2]/10 dark:hover:bg-white/5'
                           }`}
                         >
                           {currency}
@@ -1003,10 +989,10 @@ export default function BookingsPage() {
                   </div>
 
                   {/* Price Breakdown */}
-                  <div className="pt-3 border-t border-gray-200 dark:border-white/10 space-y-1.5">
+                  <div className="pt-3 border-t border-[#4697D2]/20 dark:border-white/10 space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="text-gray-600 dark:text-gray-400">{t('pricing.basePrice')} × {numberOfPeople}</span>
-                      <span className="font-medium text-gray-900 dark:text-white">
+                      <span className="text-[#1a1a1a]/70 dark:text-gray-400">{t('pricing.basePrice')} × {numberOfPeople}</span>
+                      <span className="font-medium text-[#1a1a1a] dark:text-white">
                         {getCurrencySymbol()}{getSubtotal()}
                       </span>
                     </div>
@@ -1020,9 +1006,9 @@ export default function BookingsPage() {
                       </div>
                     )}
                     
-                    <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-white/10">
-                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{t('pricing.total')}</span>
-                      <span className="text-lg font-bold text-gray-900 dark:text-white">
+                    <div className="flex justify-between items-center pt-2 border-t border-[#4697D2]/20 dark:border-white/10">
+                      <span className="text-sm font-semibold text-[#1a1a1a] dark:text-white">{t('pricing.total')}</span>
+                      <span className="text-lg font-bold text-[#1a1a1a] dark:text-white">
                         {getCurrencySymbol()}{getTotalPrice()}
                       </span>
                     </div>
@@ -1034,17 +1020,20 @@ export default function BookingsPage() {
                       type="button"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="w-full h-10 bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] text-white dark:text-black text-sm font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
+                      className="group relative w-full h-11 bg-gradient-to-r from-[#2196f3] to-[#1976d2] hover:from-[#1e88e5] hover:to-[#1565c0] active:scale-[0.98] text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl overflow-hidden"
+                      style={{ boxShadow: '0 10px 15px -3px rgba(33, 150, 243, 0.3)' }}
                     >
+                      {/* Shine effect */}
+                      <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
                       {isSubmitting ? (
                         <>
-                          <div className="w-3.5 h-3.5 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin" />
-                          <span className="text-xs">{t('actions.submitting')}</span>
+                          <div className="relative w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <span className="relative text-xs">{t('actions.submitting')}</span>
                         </>
                       ) : (
                         <>
-                          <CreditCard className="w-3.5 h-3.5" />
-                          {t('actions.confirmBooking')}
+                          <CreditCard className="relative w-4 h-4" />
+                          <span className="relative">{t('actions.confirmBooking')}</span>
                         </>
                       )}
                     </button>

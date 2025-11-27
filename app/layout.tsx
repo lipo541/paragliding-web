@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
 import { SupabaseProvider } from "@/lib/supabase/SupabaseProvider";
 import ToastProvider from "@/components/ui/Toast";
+import GlobalBackground from "@/components/background/GlobalBackground";
 import { BASE_URL, SITE_NAME, DEFAULT_DESCRIPTIONS } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -48,6 +49,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <GlobalBackground />
             <ToastProvider />
             {children}
           </ThemeProvider>

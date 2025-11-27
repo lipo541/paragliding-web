@@ -73,7 +73,7 @@ export default function Navigation({ activeMenu, setActiveMenu }: NavigationProp
         >
           <Link
             href={`/${locale}${item.href}`}
-            className="group flex items-center gap-1 text-sm font-medium text-foreground hover:text-foreground/70 transition-colors"
+            className="group flex items-center gap-1 text-sm font-medium text-[#1a1a1a] dark:text-white hover:text-[#1a1a1a]/70 dark:hover:text-white/80 transition-colors"
           >
             <span>{item.label}</span>
             {item.submenu?.length && item.submenu.length > 0 && (

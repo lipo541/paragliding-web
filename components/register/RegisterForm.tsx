@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import type { ReactNode } from 'react'
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -161,21 +162,28 @@ export default function RegisterForm() {
       <div className="w-full max-w-md space-y-4">
         <div className="flex justify-center">
           <Link href={`/${currentLocale}`} className="hover:opacity-80 transition-opacity">
-            <div className="px-4 py-2 border-2 border-foreground rounded-md">
-              <span className="text-xl font-bold text-foreground tracking-tight">caucasus</span>
+            <div className="px-4 py-2 border-2 border-[#4697D2] dark:border-white/30 rounded-lg backdrop-blur-md bg-[rgba(70,151,210,0.1)] dark:bg-white/5">
+              <Image
+                src="/vercel.svg"
+                alt="XParagliding"
+                width={32}
+                height={8}
+                className="invert dark:invert-0"
+                priority
+              />
             </div>
           </Link>
         </div>
 
-        <div className="rounded-3xl border border-foreground/10 bg-background p-8 transition-all duration-300 sm:p-10">
+        <div className="rounded-xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl p-8 sm:p-10 transition-all duration-300">
           <div className="space-y-2 text-center">
-            <h1 className="text-[30px] font-semibold text-foreground transition-all duration-300">
+            <h1 className="text-[30px] font-semibold text-[#1a1a1a] dark:text-white transition-all duration-300">
               {t('title')}
             </h1>
           </div>
 
           {error && (
-            <div className="mt-6 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+            <div className="mt-6 rounded-lg border border-red-500/30 bg-red-500/10 backdrop-blur-sm px-4 py-3 text-sm text-red-600 dark:text-red-400">
               {error}
             </div>
           )}
@@ -186,7 +194,7 @@ export default function RegisterForm() {
               type="button"
               onClick={() => handleSocialLogin('google')}
               disabled={loading}
-              className="group flex w-full items-center justify-center gap-3 rounded-xl border border-foreground/20 bg-transparent text-foreground px-4 py-3 text-sm font-medium transition-all duration-300 hover:scale-[1.02] hover:bg-foreground hover:text-background active:scale-[0.98] focus:outline-none focus:ring-1 focus:ring-foreground disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="group flex w-full items-center justify-center gap-3 rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white px-4 py-3 text-sm font-medium transition-all duration-300 hover:scale-[1.02] hover:bg-black hover:text-white hover:border-white dark:hover:bg-black dark:hover:border-white active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#4697D2]/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               <SiGoogle className="h-5 w-5" aria-hidden="true" />
               {t('social.google')}
@@ -194,21 +202,21 @@ export default function RegisterForm() {
           </div>
 
           <div className="mt-6 space-y-4">
-            <div className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/50">
-              <span className="h-px flex-1 bg-foreground/10" />
+            <div className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#1a1a1a]/50 dark:text-white/50">
+              <span className="h-px flex-1 bg-[#4697D2]/30 dark:bg-white/10" />
               {t('divider')}
-              <span className="h-px flex-1 bg-foreground/10" />
+              <span className="h-px flex-1 bg-[#4697D2]/30 dark:bg-white/10" />
             </div>
           </div>
 
           <form onSubmit={handleRegister} className="mt-6 space-y-4" noValidate>
             {/* Full Name */}
             <div className="space-y-2">
-              <label htmlFor="fullname" className="block text-sm font-medium text-foreground">
+              <label htmlFor="fullname" className="block text-sm font-medium text-[#1a1a1a] dark:text-white">
                 {t('fullName.label')}
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-foreground/40" aria-hidden="true" />
+                <User className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1a1a1a]/40 dark:text-white/40" aria-hidden="true" />
                 <input
                   id="fullname"
                   name="fullname"
@@ -219,18 +227,18 @@ export default function RegisterForm() {
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={loading}
                   required
-                  className="w-full rounded-xl border border-foreground/10 bg-background text-foreground placeholder:text-foreground/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-foreground/30 focus:ring-2 focus:ring-foreground/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-[#4697D2] focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:border-white/50 dark:focus:ring-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
 
             {/* Email Address */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-foreground">
+              <label htmlFor="email" className="block text-sm font-medium text-[#1a1a1a] dark:text-white">
                 {t('email.label')}
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-foreground/40" aria-hidden="true" />
+                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1a1a1a]/40 dark:text-white/40" aria-hidden="true" />
                 <input
                   id="email"
                   name="email"
@@ -241,18 +249,18 @@ export default function RegisterForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
                   required
-                  className="w-full rounded-xl border border-foreground/10 bg-background text-foreground placeholder:text-foreground/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-foreground/30 focus:ring-2 focus:ring-foreground/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-[#4697D2] focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:border-white/50 dark:focus:ring-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-sm font-medium text-foreground">
+              <label htmlFor="password" className="block text-sm font-medium text-[#1a1a1a] dark:text-white">
                 {t('password.label')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-foreground/40" aria-hidden="true" />
+                <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1a1a1a]/40 dark:text-white/40" aria-hidden="true" />
                 <input
                   id="password"
                   name="password"
@@ -263,13 +271,13 @@ export default function RegisterForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
                   required
-                  className="w-full rounded-xl border border-foreground/10 bg-background text-foreground placeholder:text-foreground/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-foreground/30 focus:ring-2 focus:ring-foreground/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-[#4697D2] focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:border-white/50 dark:focus:ring-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={loading}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground/60 transition-colors duration-300 disabled:opacity-50"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a1a1a]/40 dark:text-white/40 hover:text-[#1a1a1a]/60 dark:hover:text-white/60 transition-colors duration-300 disabled:opacity-50"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -278,11 +286,11 @@ export default function RegisterForm() {
 
             {/* Confirm Password */}
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#1a1a1a] dark:text-white">
                 {t('confirmPassword.label')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-foreground/40" aria-hidden="true" />
+                <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1a1a1a]/40 dark:text-white/40" aria-hidden="true" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -293,13 +301,13 @@ export default function RegisterForm() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={loading}
                   required
-                  className="w-full rounded-xl border border-foreground/10 bg-background text-foreground placeholder:text-foreground/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-foreground/30 focus:ring-2 focus:ring-foreground/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-[#4697D2] focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:border-white/50 dark:focus:ring-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   disabled={loading}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-foreground/60 transition-colors duration-300 disabled:opacity-50"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a1a1a]/40 dark:text-white/40 hover:text-[#1a1a1a]/60 dark:hover:text-white/60 transition-colors duration-300 disabled:opacity-50"
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -310,28 +318,28 @@ export default function RegisterForm() {
             <button
               type="submit"
               disabled={loading}
-              className="group flex w-full items-center justify-center gap-2 rounded-xl border border-foreground bg-foreground text-background px-5 py-3 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-background hover:text-foreground active:scale-[0.98] focus:outline-none focus:ring-1 focus:ring-foreground mt-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="group flex w-full items-center justify-center gap-2 rounded-lg border border-[#1a1a1a] dark:border-white bg-[#1a1a1a] dark:bg-white text-white dark:text-[#1a1a1a] px-5 py-3 text-sm font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-transparent hover:text-[#1a1a1a] dark:hover:bg-transparent dark:hover:text-white active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#4697D2]/50 mt-6 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {loading ? t('loading') : t('submit')}
             </button>
           </form>
 
           {/* Already have account */}
-          <div className="mt-5 text-center text-sm text-foreground/50">
+          <div className="mt-5 text-center text-sm text-[#1a1a1a]/50 dark:text-white/50">
             {t('haveAccount')}{' '}
-            <Link href={`/${currentLocale}/login`} className="font-semibold text-foreground hover:text-foreground/80 transition-colors duration-300">
+            <Link href={`/${currentLocale}/login`} className="font-semibold text-[#1a1a1a] dark:text-white hover:text-[#4697D2] dark:hover:text-white/80 transition-colors duration-300">
               {t('signIn')}
             </Link>
           </div>
 
           {/* Terms and Privacy */}
-          <div className="mt-6 text-center text-xs text-foreground/40">
+          <div className="mt-6 text-center text-xs text-[#1a1a1a]/40 dark:text-white/40">
             {t('agreement')}{' '}
-            <Link href={`/${currentLocale}/terms`} className="font-medium text-foreground/60 hover:text-foreground transition-colors duration-300">
+            <Link href={`/${currentLocale}/terms`} className="font-medium text-[#1a1a1a]/60 dark:text-white/60 hover:text-[#4697D2] dark:hover:text-white transition-colors duration-300">
               {t('terms')}
             </Link>{' '}
             {t('and')}{' '}
-            <Link href={`/${currentLocale}/privacy`} className="font-medium text-foreground/60 hover:text-foreground transition-colors duration-300">
+            <Link href={`/${currentLocale}/privacy`} className="font-medium text-[#1a1a1a]/60 dark:text-white/60 hover:text-[#4697D2] dark:hover:text-white transition-colors duration-300">
               {t('privacy')}
             </Link>
           </div>

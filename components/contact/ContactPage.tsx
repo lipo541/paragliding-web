@@ -36,22 +36,22 @@ export default function ContactPage({ locale }: ContactPageProps) {
   ];
 
   return (
-    <main className="min-h-screen bg-background pt-20 pb-12">
+    <main className="min-h-screen pt-20 pb-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] dark:text-white mb-2">
             {t.title}
           </h1>
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60">
             {t.subtitle}
           </p>
         </div>
 
         {/* Contact Information */}
         <div className="mb-8">
-          <div className="rounded-2xl bg-foreground/5 p-5">
-            <h2 className="text-base font-semibold text-foreground mb-4">
+          <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-5 shadow-xl">
+            <h2 className="text-base font-semibold text-[#1a1a1a] dark:text-white mb-4">
               {t.contactInfo}
             </h2>
             <div className="space-y-3">
@@ -59,22 +59,22 @@ export default function ContactPage({ locale }: ContactPageProps) {
                 const Icon = item.icon;
                 return (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-foreground/10 flex-shrink-0">
-                      <Icon className="w-4 h-4 text-foreground" />
+                    <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-[#4697D2]/20 dark:bg-[#4697D2]/30 flex-shrink-0">
+                      <Icon className="w-4 h-4 text-[#4697D2]" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-foreground/60 mb-0.5">
+                      <p className="text-xs font-medium text-[#1a1a1a]/60 dark:text-white/60 mb-0.5">
                         {item.label}
                       </p>
                       {item.link ? (
                         <a
                           href={item.link}
-                          className="text-sm text-foreground hover:text-foreground/70 transition-colors"
+                          className="text-sm text-[#1a1a1a] dark:text-white hover:text-[#4697D2] transition-colors"
                         >
                           {item.value}
                         </a>
                       ) : (
-                        <p className="text-sm text-foreground">{item.value}</p>
+                        <p className="text-sm text-[#1a1a1a] dark:text-white">{item.value}</p>
                       )}
                     </div>
                   </div>
@@ -85,8 +85,8 @@ export default function ContactPage({ locale }: ContactPageProps) {
         </div>
 
         {/* Social Media */}
-        <div className="rounded-2xl bg-foreground/5 p-5">
-          <h2 className="text-base font-semibold text-foreground mb-3">
+        <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 p-5 shadow-xl">
+          <h2 className="text-base font-semibold text-[#1a1a1a] dark:text-white mb-3">
             {t.social}
           </h2>
           <div className="flex gap-2">
@@ -98,7 +98,7 @@ export default function ContactPage({ locale }: ContactPageProps) {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-xl bg-foreground/10 hover:bg-foreground/20 text-foreground transition-colors"
+                  className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#4697D2]/20 dark:bg-[#4697D2]/30 text-[#4697D2] hover:bg-black hover:text-white hover:border hover:border-white transition-all"
                   aria-label={social.name}
                 >
                   <Icon className="w-4 h-4" />

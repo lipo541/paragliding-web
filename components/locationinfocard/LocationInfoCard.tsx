@@ -58,9 +58,9 @@ export default function LocationInfoCard({
   };
 
   return (
-    <div className="group rounded-xl overflow-hidden backdrop-blur-lg bg-white/70 dark:bg-black/40 border border-white/50 dark:border-white/20 hover:bg-white/80 dark:hover:bg-black/50 hover:shadow-2xl transition-all duration-300 shadow-xl relative">
+    <div className="group rounded-xl overflow-hidden backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-black/50 hover:border-[#4697D2]/50 dark:hover:border-white/20 hover:shadow-2xl transition-all duration-300 shadow-xl relative">
       {/* Image */}
-      <div className="relative aspect-video overflow-hidden bg-foreground/5">
+      <div className="relative aspect-video overflow-hidden bg-[#4697D2]/5 dark:bg-white/5">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -71,7 +71,7 @@ export default function LocationInfoCard({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <MapPin className="w-12 h-12 text-foreground/20" />
+            <MapPin className="w-12 h-12 text-[#4697D2]/30 dark:text-white/20" />
           </div>
         )}
         
@@ -87,13 +87,13 @@ export default function LocationInfoCard({
 
       {/* Content - Compact */}
       <div className="p-3 lg:p-4">
-        <h3 className="text-sm lg:text-base font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1.5 lg:mb-2 line-clamp-1">
+        <h3 className="text-sm lg:text-base font-bold text-[#1a1a1a] dark:text-white group-hover:text-[#4697D2] dark:group-hover:text-[#4697D2] transition-colors mb-1.5 lg:mb-2 line-clamp-1">
           {name}
         </h3>
         
         {/* Country Name */}
         {countryName && (
-          <p className="text-xs text-foreground/60 mb-2">{countryName}</p>
+          <p className="text-xs text-[#4697D2]/70 dark:text-white/60 mb-2">{countryName}</p>
         )}
         
         {/* Rating */}
@@ -104,16 +104,16 @@ export default function LocationInfoCard({
                 key={star}
                 className={`w-3 h-3 lg:w-3.5 lg:h-3.5 ${
                   star <= Math.round(rating)
-                    ? 'text-yellow-500 fill-yellow-500'
-                    : 'text-foreground/20 fill-foreground/20'
+                    ? 'text-[#ffc107] fill-[#ffc107]'
+                    : 'text-[#4697D2]/20 dark:text-white/20 fill-[#4697D2]/20 dark:fill-white/20'
                 }`}
               />
             ))}
-            <span className="text-[11px] lg:text-xs font-semibold text-foreground ml-1">
+            <span className="text-[11px] lg:text-xs font-semibold text-[#1a1a1a] dark:text-white ml-1">
               {rating.toFixed(1)}
             </span>
             {ratingCount && (
-              <span className="text-[9px] lg:text-[10px] text-foreground/60">
+              <span className="text-[9px] lg:text-[10px] text-[#4697D2]/60 dark:text-white/60">
                 ({ratingCount})
               </span>
             )}
@@ -123,8 +123,8 @@ export default function LocationInfoCard({
         {/* Info Tags */}
         <div className="space-y-1 lg:space-y-1.5">
           {altitude && (
-            <div className="flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs text-foreground/70">
-              <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs text-[#2d2d2d] dark:text-white/70">
+              <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-[#4697D2] dark:text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
               </svg>
               <span>{altitude}{t('altitude')}</span>
@@ -132,8 +132,8 @@ export default function LocationInfoCard({
           )}
           
           {bestSeasonStart && bestSeasonEnd && (
-            <div className="flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs text-foreground/70">
-              <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs text-[#2d2d2d] dark:text-white/70">
+              <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-[#4697D2] dark:text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span>
@@ -143,7 +143,7 @@ export default function LocationInfoCard({
           )}
           
           {minPrice && (
-            <div className="flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs text-green-600 dark:text-green-400 font-semibold">
+            <div className="flex items-center gap-1 lg:gap-1.5 text-[11px] lg:text-xs text-[#CAFA00] dark:text-[#CAFA00] font-semibold">
               <svg className="w-3 h-3 lg:w-3.5 lg:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -158,7 +158,7 @@ export default function LocationInfoCard({
             e.stopPropagation();
             window.location.href = `${locationUrl}#flight-types-section`;
           }}
-          className="w-full mt-2 lg:mt-3 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] z-10 relative"
+          className="w-full mt-2 lg:mt-3 px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold rounded-lg bg-gradient-to-r from-[#2196f3] to-[#1976d2] hover:from-[#1976d2] hover:to-[#1565c0] text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] z-10 relative"
         >
           {t('bookNow')}
         </button>

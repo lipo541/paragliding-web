@@ -58,13 +58,16 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="border-t border-foreground/10 bg-background">
-      <div className="mx-auto max-w-[1280px] px-4 py-6">
+    <footer className="relative border-t border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40 backdrop-blur-md">
+      {/* Gradient Border Effect - hidden in dark mode */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-transparent dark:from-transparent dark:via-transparent dark:to-transparent pointer-events-none" />
+      
+      <div className="relative mx-auto max-w-[1280px] px-4 py-6">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">
+            <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
               {t('quickLinks')}
             </h3>
             <ul className="space-y-2">
@@ -72,7 +75,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={`/${locale}${link.href}`}
-                    className="text-sm text-foreground/60 hover:text-foreground transition-colors"
+                    className="text-sm text-[#2d2d2d]/70 dark:text-white/60 hover:text-[#1a1a1a] dark:hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -83,7 +86,7 @@ export default function Footer() {
 
           {/* Auth Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">
+            <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
               {t('account')}
             </h3>
             <ul className="space-y-2">
@@ -91,7 +94,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={`/${locale}${link.href}`}
-                    className="text-sm text-foreground/60 hover:text-foreground transition-colors"
+                    className="text-sm text-[#2d2d2d]/70 dark:text-white/60 hover:text-[#1a1a1a] dark:hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -102,18 +105,19 @@ export default function Footer() {
 
           {/* Social Links */}
           <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">{t('followUs')}</h3>
-            <div className="flex gap-3">
+            <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">{t('followUs')}</h3>
+            <div className="flex flex-wrap gap-2">
               {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-full bg-foreground/10 hover:bg-foreground/20 text-foreground transition-all duration-200"
+                  className="group flex items-center gap-1.5 px-3 py-1.5 bg-[#4697D2]/20 hover:bg-black dark:bg-white/10 dark:hover:bg-black text-[#1a1a1a] hover:text-white dark:text-white dark:hover:text-white rounded-md transition-all duration-200 text-xs font-medium shadow-sm border border-[#4697D2]/30 hover:border-white dark:border-white/20 dark:hover:border-white"
                   aria-label={social.name}
                 >
                   {social.icon}
+                  <span>{social.name}</span>
                 </a>
               ))}
             </div>
@@ -121,14 +125,14 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-4 border-t border-foreground/10">
+        <div className="pt-4 border-t border-[#4697D2]/30 dark:border-white/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-foreground/50">{t('rights')}</p>
-            <div className="flex items-center gap-4 text-xs text-foreground/50">
-              <Link href={`/${locale}/privacy`} className="hover:text-foreground transition-colors">
+            <p className="text-xs text-[#2d2d2d]/70 dark:text-white/70">{t('rights')}</p>
+            <div className="flex items-center gap-4 text-xs text-[#2d2d2d]/70 dark:text-white/70">
+              <Link href={`/${locale}/privacy`} className="hover:text-[#1a1a1a] dark:hover:text-white transition-colors">
                 {t('privacy')}
               </Link>
-              <Link href={`/${locale}/terms`} className="hover:text-foreground transition-colors">
+              <Link href={`/${locale}/terms`} className="hover:text-[#1a1a1a] dark:hover:text-white transition-colors">
                 {t('terms')}
               </Link>
             </div>

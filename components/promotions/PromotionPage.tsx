@@ -170,61 +170,61 @@ export default function PromotionPage({ locale }: { locale: string }) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-3 border-foreground/20 border-t-foreground rounded-full animate-spin" />
-          <p className="text-sm text-foreground/60 animate-pulse">{t('page.loading')}</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 rounded-2xl p-8 border border-[#4697D2]/30 dark:border-white/10 shadow-xl">
+          <div className="w-12 h-12 border-3 border-[#4697D2]/20 border-t-[#4697D2] rounded-full animate-spin" />
+          <p className="text-sm text-[#1a1a1a] dark:text-white/60 animate-pulse">{t('page.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="py-2 lg:py-3 border-b border-foreground/10">
+      <div className="py-2 lg:py-3 border-b border-[#4697D2]/20 dark:border-white/10 backdrop-blur-md bg-[rgba(70,151,210,0.1)] dark:bg-black/20">
         <div className="max-w-[1280px] mx-auto px-2 lg:px-3">
           <div className="flex items-center gap-1.5">
-            <div className="p-1 rounded bg-foreground/10">
-              <Tag className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-foreground" />
+            <div className="p-1 rounded bg-[#4697D2]/20 dark:bg-[#4697D2]/30">
+              <Tag className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#4697D2]" />
             </div>
             <div>
-              <h1 className="text-sm lg:text-base font-bold text-foreground">{t('page.title')}</h1>
-              <p className="text-[10px] text-foreground/60">{sortedPromos.length} {t('page.active')}</p>
+              <h1 className="text-sm lg:text-base font-bold text-[#1a1a1a] dark:text-white">{t('page.title')}</h1>
+              <p className="text-[10px] text-[#1a1a1a]/60 dark:text-white/60">{sortedPromos.length} {t('page.active')}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content - 20/80 Split Layout */}
-      <div className="max-w-[1280px] mx-auto px-2 lg:px-3 py-2 lg:py-3">
-        <div className="flex flex-col lg:flex-row gap-2 lg:gap-3">
+      <div className="max-w-[1280px] mx-auto px-2 lg:px-4 py-3 lg:py-4">
+        <div className="flex flex-col lg:flex-row gap-3 lg:gap-4">
           
-          {/* Left Side - Filters Panel (20%) */}
-          <div className="w-full lg:w-1/5 space-y-2">
+          {/* Left Side - Filters Panel (25%) */}
+          <div className="w-full lg:w-1/4 space-y-3">
             {/* Filters Card */}
-            <div className="bg-white/95 dark:bg-black/90 rounded-lg border border-white/20 p-3 shadow-lg sticky top-[50px]">
-              <h2 className="text-xs lg:text-sm font-bold text-foreground mb-2 flex items-center gap-1.5">
-                <Filter className="w-3.5 h-3.5" />
+            <div className="backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 rounded-xl border border-[#4697D2]/30 dark:border-white/10 p-4 shadow-xl sticky top-[60px]">
+              <h2 className="text-sm lg:text-base font-bold text-[#1a1a1a] dark:text-white mb-3 flex items-center gap-2">
+                <Filter className="w-4 h-4 text-[#4697D2]" />
                 {t('filters.title')}
               </h2>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {/* Search */}
                 <div>
-                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">{t('filters.search')}</label>
+                  <label className="block text-xs font-medium text-[#1a1a1a]/80 dark:text-white/80 mb-1.5">{t('filters.search')}</label>
                   <div className="relative">
-                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-foreground/40" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#4697D2]/60" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder={t('filters.searchPlaceholder')}
-                      className="w-full pl-7 pr-7 py-1.5 text-[10px] rounded-md bg-foreground/5 border border-foreground/10 focus:border-blue-500 focus:bg-foreground/10 outline-none transition-colors"
+                      className="w-full pl-9 pr-9 py-2 text-xs rounded-lg bg-white/80 dark:bg-black/40 backdrop-blur-sm border border-[#4697D2]/30 dark:border-white/20 focus:border-[#4697D2] focus:ring-1 focus:ring-[#4697D2]/30 outline-none transition-all text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40"
                     />
                     {searchQuery && (
-                      <button onClick={() => setSearchQuery('')} className="absolute right-2 top-1/2 -translate-y-1/2">
-                        <X className="w-3 h-3 text-foreground/40 hover:text-foreground/60" />
+                      <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <X className="w-4 h-4 text-[#1a1a1a]/40 hover:text-[#1a1a1a]/60 dark:text-white/40 dark:hover:text-white/60" />
                       </button>
                     )}
                   </div>
@@ -232,24 +232,24 @@ export default function PromotionPage({ locale }: { locale: string }) {
 
                 {/* Location Filter */}
                 <div>
-                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">{t('filters.location')}</label>
+                  <label className="block text-xs font-medium text-[#1a1a1a]/80 dark:text-white/80 mb-1.5">{t('filters.location')}</label>
                   <div className="relative">
                     <button
                       onClick={() => setIsFilterOpen(!isFilterOpen)}
-                      className="w-full px-2 py-1.5 text-[10px] text-left rounded-md bg-foreground/5 hover:bg-foreground/10 text-foreground border border-foreground/10 flex items-center justify-between"
+                      className="w-full px-3 py-2 text-xs text-left rounded-lg bg-white/80 dark:bg-black/40 hover:bg-white dark:hover:bg-black/50 text-[#1a1a1a] dark:text-white border border-[#4697D2]/30 dark:border-white/20 flex items-center justify-between transition-all"
                     >
                       <span className="truncate">
                         {selectedLocation === 'all' ? t('filters.allLocations') : getLocalizedName(locations.find(l => l.id === selectedLocation)!)}
                       </span>
-                      <ChevronDown className={`w-3 h-3 flex-shrink-0 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform text-[#4697D2] ${isFilterOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {isFilterOpen && (
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-white/95 dark:bg-black/95 border border-foreground/10 rounded-md shadow-xl z-50 max-h-48 overflow-y-auto">
+                      <div className="absolute top-full left-0 right-0 mt-1 backdrop-blur-md bg-white/95 dark:bg-black/90 border border-[#4697D2]/30 dark:border-white/20 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto">
                         <button
                           onClick={() => { setSelectedLocation('all'); setIsFilterOpen(false); }}
-                          className={`w-full px-2 py-1.5 text-[10px] text-left hover:bg-foreground/10 ${
-                            selectedLocation === 'all' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium' : 'text-foreground'
+                          className={`w-full px-3 py-2 text-xs text-left hover:bg-[#4697D2]/10 ${
+                            selectedLocation === 'all' ? 'bg-[#4697D2]/20 text-[#4697D2] font-medium' : 'text-[#1a1a1a] dark:text-white'
                           }`}
                         >
                           {t('filters.allLocations')}
@@ -258,8 +258,8 @@ export default function PromotionPage({ locale }: { locale: string }) {
                           <button
                             key={location.id}
                             onClick={() => { setSelectedLocation(location.id); setIsFilterOpen(false); }}
-                            className={`w-full px-2 py-1.5 text-[10px] text-left hover:bg-foreground/10 ${
-                              selectedLocation === location.id ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium' : 'text-foreground'
+                            className={`w-full px-3 py-2 text-xs text-left hover:bg-[#4697D2]/10 ${
+                              selectedLocation === location.id ? 'bg-[#4697D2]/20 text-[#4697D2] font-medium' : 'text-[#1a1a1a] dark:text-white'
                             }`}
                           >
                             {getLocalizedName(location)}
@@ -272,39 +272,39 @@ export default function PromotionPage({ locale }: { locale: string }) {
 
                 {/* Sort */}
                 <div>
-                  <label className="block text-[10px] font-medium text-foreground/80 mb-1">{t('filters.sort')}</label>
-                  <div className="space-y-1">
+                  <label className="block text-xs font-medium text-[#1a1a1a]/80 dark:text-white/80 mb-1.5">{t('filters.sort')}</label>
+                  <div className="space-y-1.5">
                     <button
                       onClick={() => setSortBy('newest')}
-                      className={`w-full px-2 py-1.5 text-[10px] text-left rounded-md transition-all flex items-center gap-1.5 ${
+                      className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-all flex items-center gap-2 ${
                         sortBy === 'newest' 
-                          ? 'bg-blue-500 text-white font-medium' 
-                          : 'bg-foreground/5 hover:bg-foreground/10 text-foreground'
+                          ? 'bg-[#4697D2] text-white font-medium' 
+                          : 'bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/40 text-[#1a1a1a] dark:text-white border border-[#4697D2]/20 dark:border-white/10'
                       }`}
                     >
-                      <TrendingUp className="w-3 h-3" />
+                      <TrendingUp className="w-4 h-4" />
                       {t('filters.newest')}
                     </button>
                     <button
                       onClick={() => setSortBy('discount')}
-                      className={`w-full px-2 py-1.5 text-[10px] text-left rounded-md transition-all flex items-center gap-1.5 ${
+                      className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-all flex items-center gap-2 ${
                         sortBy === 'discount' 
-                          ? 'bg-blue-500 text-white font-medium' 
-                          : 'bg-foreground/5 hover:bg-foreground/10 text-foreground'
+                          ? 'bg-[#4697D2] text-white font-medium' 
+                          : 'bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/40 text-[#1a1a1a] dark:text-white border border-[#4697D2]/20 dark:border-white/10'
                       }`}
                     >
-                      <Tag className="w-3 h-3" />
+                      <Tag className="w-4 h-4" />
                       {t('filters.highestDiscount')}
                     </button>
                     <button
                       onClick={() => setSortBy('expiring')}
-                      className={`w-full px-2 py-1.5 text-[10px] text-left rounded-md transition-all flex items-center gap-1.5 ${
+                      className={`w-full px-3 py-2 text-xs text-left rounded-lg transition-all flex items-center gap-2 ${
                         sortBy === 'expiring' 
-                          ? 'bg-blue-500 text-white font-medium' 
-                          : 'bg-foreground/5 hover:bg-foreground/10 text-foreground'
+                          ? 'bg-[#4697D2] text-white font-medium' 
+                          : 'bg-white/60 dark:bg-black/30 hover:bg-white/80 dark:hover:bg-black/40 text-[#1a1a1a] dark:text-white border border-[#4697D2]/20 dark:border-white/10'
                       }`}
                     >
-                      <Filter className="w-3 h-3" />
+                      <Filter className="w-4 h-4" />
                       {t('filters.expiringSoon')}
                     </button>
                   </div>
@@ -314,9 +314,9 @@ export default function PromotionPage({ locale }: { locale: string }) {
                 {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
-                    className="w-full px-2 py-1.5 text-[10px] rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 font-medium transition-all flex items-center justify-center gap-1.5"
+                    className="w-full px-3 py-2 text-xs rounded-lg bg-red-500/20 hover:bg-red-500 hover:text-white text-red-600 dark:text-red-400 font-medium transition-all flex items-center justify-center gap-2 border border-red-500/30"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-4 h-4" />
                     {t('filters.clearFilters')}
                   </button>
                 )}
@@ -324,18 +324,18 @@ export default function PromotionPage({ locale }: { locale: string }) {
             </div>
           </div>
 
-          {/* Right Side - Promo Cards Grid (80%) */}
-          <div className="w-full lg:w-4/5">
+          {/* Right Side - Promo Cards Grid (75%) */}
+          <div className="w-full lg:w-3/4">
             {sortedPromos.length === 0 ? (
-              <div className="text-center py-8 bg-white/95 dark:bg-black/90 rounded-lg border border-white/20">
-                <Tag className="w-8 h-8 mx-auto mb-2 text-foreground/30" />
-                <p className="text-xs text-foreground/60 font-medium">{t('empty.title')}</p>
-                <button onClick={clearFilters} className="mt-3 px-4 py-1.5 text-[10px] rounded-md bg-blue-500 hover:bg-blue-600 text-white transition-colors font-medium">
+              <div className="text-center py-8 backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 rounded-lg border border-[#4697D2]/30 dark:border-white/10 shadow-xl">
+                <Tag className="w-8 h-8 mx-auto mb-2 text-[#4697D2]/50" />
+                <p className="text-xs text-[#1a1a1a]/60 dark:text-white/60 font-medium">{t('empty.title')}</p>
+                <button onClick={clearFilters} className="mt-3 px-4 py-1.5 text-[10px] rounded-md bg-[#4697D2] hover:bg-[#3a7bb0] text-white transition-colors font-medium">
                   {t('empty.clearButton')}
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 auto-rows-fr">
                 {sortedPromos.map((promo: PromoCode) => (
                   <PromoCard key={promo.id} promo={promo} locale={locale} />
                 ))}

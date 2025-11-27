@@ -18,6 +18,7 @@
   },
   "errors": {
     "loginFailed": "Sign in failed",
-    "authFailed": "Authorization failed"
+    "authFailed": "Authorization failed",
+    "invalidCredentials": "Invalid email or password"
   }
 }

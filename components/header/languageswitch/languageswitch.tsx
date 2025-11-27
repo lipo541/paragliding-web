@@ -120,7 +120,7 @@ export default function LanguageSwitch() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1 px-2 py-1.5 text-sm font-medium text-foreground bg-background border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-foreground/5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-foreground/20 w-[50px] md:w-[100px]"
+        className="flex items-center gap-1 px-2 py-1.5 text-sm font-medium text-[#1a1a1a] dark:text-white backdrop-blur-md bg-gradient-to-br from-[rgba(70,151,210,0.3)] to-[rgba(70,151,210,0.2)] dark:bg-black/20 dark:from-transparent dark:to-transparent border border-[#4697D2]/40 dark:border-white/20 rounded-md hover:from-[rgba(70,151,210,0.4)] hover:to-[rgba(70,151,210,0.3)] dark:hover:bg-black/30 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:ring-white/30 w-[50px] md:w-[100px]"
       >
         <span className="flex-1 text-left text-[10px] md:text-sm font-bold md:font-medium">
           <span className="md:hidden">{currentLanguage?.short}</span>
@@ -137,20 +137,20 @@ export default function LanguageSwitch() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-background border border-foreground/20 rounded-md shadow-lg overflow-hidden z-[120] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute right-0 mt-2 w-48 bg-[#4697D2] dark:bg-zinc-900 border border-[#4697D2] dark:border-white/20 rounded-xl shadow-xl shadow-[#4697D2]/30 dark:shadow-black/30 overflow-hidden z-[120] animate-in fade-in slide-in-from-top-2 duration-200">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
               className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
                 currentLocale === lang.code
-                  ? 'bg-foreground/10 text-foreground font-medium'
-                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+                  ? 'bg-white/20 dark:bg-white/10 text-white font-medium'
+                  : 'text-white/90 hover:bg-white/10 dark:hover:bg-white/5 hover:text-white'
               }`}
             >
               <span className="font-medium">{lang.label}</span>
               {currentLocale === lang.code && (
-                <svg className="w-4 h-4 text-foreground" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 text-[#CAFA00]" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}
