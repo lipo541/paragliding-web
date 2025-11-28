@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
 import { SupabaseProvider } from "@/lib/supabase/SupabaseProvider";
@@ -25,17 +26,14 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  params?: Promise<{ locale?: string }>;
 }
 
 export default async function RootLayout({
   children,
-  params,
 }: RootLayoutProps) {
-  // locale-ის დინამიური წამოღება URL-დან
-  // თუ params არ არის ან locale არ არის, default 'ka'
-  const resolvedParams = params ? await params : {};
-  const locale = resolvedParams.locale || 'ka';
+  // Middleware-დან locale header-ის წამოღება
+  const headersList = await headers();
+  const locale = headersList.get('x-locale') || 'ka';
   
   return (
     <html lang={locale} suppressHydrationWarning>

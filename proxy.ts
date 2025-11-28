@@ -9,7 +9,16 @@ export function proxy(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  if (pathnameHasLocale) return;
+  // Extract locale from path for x-locale header
+  const localeMatch = pathname.match(/^\/([a-z]{2})(\/|$)/);
+  const detectedLocale = localeMatch ? localeMatch[1] : defaultLocale;
+
+  if (pathnameHasLocale) {
+    // Add x-locale header for root layout to use
+    const response = NextResponse.next();
+    response.headers.set('x-locale', detectedLocale);
+    return response;
+  }
 
   // Redirect to default locale (ka)
   const locale = defaultLocale;

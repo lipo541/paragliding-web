@@ -5,6 +5,7 @@ import LocationPage from '@/components/locationpage/LocationPage';
 import { 
   getLocationAlternateUrls, 
   BASE_URL,
+  SITE_NAME,
   LocationJsonLd,
   BreadcrumbJsonLd,
   generateLocationParams,
@@ -89,6 +90,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: ogDescription,
       type: 'website',
       locale: locale,
+      siteName: SITE_NAME,
       images: ogImage ? [{ url: ogImage }] : undefined,
       url: alternateUrls?.canonical || `${BASE_URL}/${locale}/locations/${country}/${location}`,
     },

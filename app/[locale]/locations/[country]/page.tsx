@@ -5,6 +5,7 @@ import CountryPage from '@/components/countrypage/CountryPage';
 import { 
   getCountryAlternateUrls, 
   BASE_URL,
+  SITE_NAME,
   BreadcrumbJsonLd,
   generateCountryParams,
   type Locale 
@@ -74,6 +75,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: data.og_image_url ? [data.og_image_url] : [],
       type: 'website',
       locale: locale,
+      siteName: SITE_NAME,
       url: alternateUrls?.canonical || `${BASE_URL}/${locale}/locations/${country}`,
     },
     twitter: {

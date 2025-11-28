@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: 'website',
       locale: safeLocale,
+      siteName: SITE_NAME,
       url: alternateUrls.canonical,
     },
   };

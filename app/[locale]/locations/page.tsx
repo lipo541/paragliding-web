@@ -6,6 +6,7 @@ import {
   buildCanonicalUrl,
   getStaticPageAlternateUrls,
   BASE_URL,
+  SITE_NAME,
   BreadcrumbJsonLd,
   generateLocaleParams,
   type Locale 
@@ -45,6 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       url: alternateUrls.canonical,
       type: 'website',
       locale,
+      siteName: SITE_NAME,
     },
     twitter: {
       card: 'summary_large_image',
