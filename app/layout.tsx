@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
 import { SupabaseProvider } from "@/lib/supabase/SupabaseProvider";
@@ -52,6 +53,7 @@ export default async function RootLayout({
             {children}
           </ThemeProvider>
         </SupabaseProvider>
+        <Analytics />
       </body>
     </html>
   );
