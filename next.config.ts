@@ -100,12 +100,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // sitemap და robots - მოკლე cache
+        // sitemap და robots - 24 საათიანი cache (Google-friendly)
         source: '/(sitemap.xml|robots.txt)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=3600, must-revalidate', // 1 საათი
+            value: 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=43200',
           },
         ],
       },
