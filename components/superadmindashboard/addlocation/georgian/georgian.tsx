@@ -52,7 +52,9 @@ export default function GeorgianForm() {
     setSharedVideos,
     sharedFlightTypes,
     setSharedFlightTypes,
-    getSelectedLocation 
+    getSelectedLocation,
+    deleteHeroImage,
+    deleteGalleryImage
   } = useLocation();
 
   const kaContent = languageContent.ka;
@@ -144,10 +146,7 @@ export default function GeorgianForm() {
                 />
               </label>
               <button
-                onClick={() => {
-                  setPendingImages({ ...pendingImages, heroImage: null });
-                  setImagePreviews({ ...imagePreviews, heroPreview: null });
-                }}
+                onClick={() => deleteHeroImage()}
                 className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -412,16 +411,7 @@ export default function GeorgianForm() {
                 <img src={img.preview} alt={img.alt} className="w-full h-full object-cover" />
               </div>
               <button
-                onClick={() => {
-                  setImagePreviews({
-                    ...imagePreviews,
-                    galleryPreviews: imagePreviews.galleryPreviews.filter((_, i) => i !== index)
-                  });
-                  setPendingImages({
-                    ...pendingImages,
-                    galleryImages: pendingImages.galleryImages.filter((_, i) => i !== index)
-                  });
-                }}
+                onClick={() => deleteGalleryImage(index)}
                 className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors opacity-0 group-hover:opacity-100"
               >
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
