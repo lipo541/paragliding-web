@@ -29,15 +29,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   for (const route of STATIC_ROUTES) {
     for (const locale of locales) {
-      // terms და privacy გვერდებს დაბალი პრიორიტეტი
-      const isLegalPage = route === '/terms' || route === '/privacy';
+      // პრიორიტეტები გვერდის ტიპის მიხედვით
       const isHomePage = route === '';
+      const isLocationsIndex = route === '/locations';
+      const isPromotions = route === '/promotions';
+      const isLegalPage = route === '/terms' || route === '/privacy';
+      const isInfoPage = route === '/about' || route === '/contact';
+      
+      // პრიორიტეტის განსაზღვრა (SEO ოპტიმიზებული)
+      let priority: number;
+      let changeFrequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+      
+      if (isHomePage) {
+        priority = 1.0;
+        changeFrequency = 'daily';
+      } else if (isLocationsIndex) {
+        priority = 0.9; // ლოკაციების მთავარი გვერდი - მაღალი
+        changeFrequency = 'weekly';
+      } else if (isPromotions) {
+        priority = 0.8; // აქციები ხშირად იცვლება
+        changeFrequency = 'daily';
+      } else if (isInfoPage) {
+        priority = 0.6; // about/contact - საინფორმაციო
+        changeFrequency = 'monthly';
+      } else if (isLegalPage) {
+        priority = 0.3; // იურიდიული - დაბალი
+        changeFrequency = 'yearly';
+      } else {
+        priority = 0.5;
+        changeFrequency = 'weekly';
+      }
       
       entries.push({
         url: `${BASE_URL}/${locale}${route}`,
-        lastModified: staticPagesDate, // ✅ ფიქსირებული თარიღი
-        changeFrequency: isHomePage ? 'daily' : (isLegalPage ? 'yearly' : 'weekly'),
-        priority: isHomePage ? 1.0 : (isLegalPage ? 0.3 : 0.8),
+        lastModified: staticPagesDate,
+        changeFrequency,
+        priority,
         alternates: {
           languages: Object.fromEntries(
             locales.map(l => [l, `${BASE_URL}/${l}${route}`])
@@ -77,7 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           url: `${BASE_URL}/${locale}/locations/${slug}`,
           lastModified: countryLastModified,
           changeFrequency: 'weekly',
-          priority: 0.9,
+          priority: 0.85, // ქვეყნები - მაღალი პრიორიტეტი
           alternates: {
             languages: alternateLanguages,
           },
@@ -126,8 +153,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         entries.push({
           url: `${BASE_URL}/${locale}/locations/${countrySlug}/${locationSlug}`,
           lastModified: locationLastModified,
-          changeFrequency: 'weekly',
-          priority: 0.85,
+          changeFrequency: 'daily', // ლოკაციები - ხშირი განახლება (ჯავშნები, ფასები)
+          priority: 0.95, // 🔺 ყველაზე მაღალი - ეს არის კონვერსიის გვერდები!
           alternates: {
             languages: alternateLanguages,
           },

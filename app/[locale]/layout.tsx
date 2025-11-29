@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import LocaleLayoutClient from "@/components/layout/LocaleLayoutClient";
+import SEONavLinks from "@/components/seo/SEONavLinks";
 import { 
   SITE_NAME, 
   DEFAULT_DESCRIPTIONS, 
@@ -60,7 +61,10 @@ export default async function LocaleLayout({
       <OrganizationJsonLd />
       <WebSiteJsonLd />
       
-      <LocaleLayoutClient>
+      {/* SEO Navigation Links - Server Rendered for Google */}
+      <SEONavLinks locale={locale} />
+      
+      <LocaleLayoutClient locale={locale}>
         {children}
       </LocaleLayoutClient>
     </>

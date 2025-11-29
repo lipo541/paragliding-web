@@ -9,9 +9,10 @@ import { createClient } from "@/lib/supabase/client";
 
 interface LocaleLayoutClientProps {
   children: React.ReactNode;
+  locale: string;
 }
 
-export default function LocaleLayoutClient({ children }: LocaleLayoutClientProps) {
+export default function LocaleLayoutClient({ children, locale }: LocaleLayoutClientProps) {
   const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
 
