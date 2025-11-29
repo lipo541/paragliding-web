@@ -4,6 +4,7 @@ import {
   getStaticPageAlternateUrls, 
   getPageSEO,
   SITE_NAME,
+  DEFAULT_OG_IMAGE,
   generateLocaleParams,
   type Locale 
 } from '@/lib/seo';
@@ -42,6 +43,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: safeLocale,
       siteName: SITE_NAME,
       url: alternateUrls.canonical,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: SITE_NAME,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${SITE_NAME}`,
+      description,
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

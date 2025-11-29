@@ -7,6 +7,7 @@ import {
   getStaticPageAlternateUrls,
   BASE_URL,
   SITE_NAME,
+  DEFAULT_OG_IMAGE,
   BreadcrumbJsonLd,
   generateLocaleParams,
   type Locale 
@@ -47,11 +48,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: 'website',
       locale,
       siteName: SITE_NAME,
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: SITE_NAME,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: og.title,
       description: og.description,
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
