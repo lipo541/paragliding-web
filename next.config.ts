@@ -17,8 +17,10 @@ const nextConfig: NextConfig = {
    * 
    * ეს იწვევს canonical, hreflang და სხვა meta tags
    * body-ში rendering-ს რაც Google-ს არ ესმის.
+   * 
+   * IMPORTANT: Google-InspectionTool - GSC URL Inspection იყენებს!
    */
-  htmlLimitedBots: /Googlebot|Bingbot|Slackbot|Twitterbot|LinkedInBot|WhatsApp|facebookexternalhit|Discordbot|TelegramBot/i,
+  htmlLimitedBots: /Googlebot|Google-InspectionTool|Bingbot|Slackbot|Twitterbot|LinkedInBot|WhatsApp|facebookexternalhit|Discordbot|TelegramBot/i,
 
   // ============================================
   // 🔗 URL Configuration
