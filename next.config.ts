@@ -5,6 +5,22 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   
   // ============================================
+  // 🤖 SEO: Disable metadata streaming for crawlers
+  // ============================================
+  
+  /**
+   * htmlLimitedBots - ბოტების სია რომლებისთვისაც metadata
+   * უნდა იყოს <head>-ში და არა body-ში streaming-ით
+   * 
+   * Next.js 16-ში default-ად მხოლოდ Twitterbot, Slackbot, Bingbot
+   * არიან ამ სიაში, მაგრამ Googlebot არა!
+   * 
+   * ეს იწვევს canonical, hreflang და სხვა meta tags
+   * body-ში rendering-ს რაც Google-ს არ ესმის.
+   */
+  htmlLimitedBots: /Googlebot|Bingbot|Slackbot|Twitterbot|LinkedInBot|WhatsApp|facebookexternalhit|Discordbot|TelegramBot/i,
+
+  // ============================================
   // 🔗 URL Configuration
   // ============================================
   
