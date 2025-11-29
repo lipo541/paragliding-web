@@ -38,6 +38,11 @@ export default async function RootLayout({
   
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        {/* Preconnect to Supabase Storage for faster image loading */}
+        <link rel="preconnect" href="https://dxvczwjbroyxpwnnwaca.supabase.co" />
+        <link rel="dns-prefetch" href="https://dxvczwjbroyxpwnnwaca.supabase.co" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
