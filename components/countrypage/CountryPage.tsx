@@ -48,13 +48,18 @@ interface Location {
 interface CountryPageProps {
   slug: string;
   locale: string;
+  initialData?: {
+    country: Country | null;
+    locations: Location[];
+  };
 }
 
-export default function CountryPage({ slug, locale }: CountryPageProps) {
+export default function CountryPage({ slug, locale, initialData }: CountryPageProps) {
   const { t } = useTranslation('countrypage');
-  const [country, setCountry] = useState<Country | null>(null);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // ✅ Use initialData for SSR if available
+  const [country, setCountry] = useState<Country | null>(initialData?.country ?? null);
+  const [locations, setLocations] = useState<Location[]>(initialData?.locations ?? []);
+  const [isLoading, setIsLoading] = useState(!initialData?.country); // Not loading if we have initialData
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -81,38 +86,54 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
 
   useEffect(() => {
     const fetchCountryData = async () => {
-      setIsLoading(true);
       const supabase = createClient();
 
+      // ✅ If we have initialData, skip fetching country and locations
+      // This enables SSR - data is already loaded server-side
+      let currentCountry = initialData?.country || country;
+      let currentLocations = initialData?.locations || locations;
+
+      // Only fetch if initialData is not provided (client-side navigation)
+      if (!initialData?.country) {
+        setIsLoading(true);
+        try {
+          const slugField = `slug_${locale}`;
+          const { data: countryData, error: countryError } = await supabase
+            .from('countries')
+            .select('*')
+            .eq(slugField, slug)
+            .eq('is_active', true)
+            .single();
+
+          if (countryError) throw countryError;
+          setCountry(countryData);
+          currentCountry = countryData;
+
+          const { data: locationsData, error: locationsError } = await supabase
+            .from('locations')
+            .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
+            .eq('country_id', countryData.id)
+            .order('name_ka');
+
+          if (locationsError) throw locationsError;
+          setLocations(locationsData || []);
+          currentLocations = locationsData || [];
+        } catch (error) {
+          console.error('Error fetching country data:', error);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // ✅ Always fetch user's existing rating (user-specific, can't be SSR'd)
       try {
-        const slugField = `slug_${locale}`;
-        const { data: countryData, error: countryError } = await supabase
-          .from('countries')
-          .select('*')
-          .eq(slugField, slug)
-          .eq('is_active', true)
-          .single();
-
-        if (countryError) throw countryError;
-        setCountry(countryData);
-
-        const { data: locationsData, error: locationsError } = await supabase
-          .from('locations')
-          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
-          .eq('country_id', countryData.id)
-          .order('name_ka');
-
-        if (locationsError) throw locationsError;
-        setLocations(locationsData || []);
-
-        // Fetch user's existing rating
         const { data: { user } } = await supabase.auth.getUser();
-        if (user && countryData) {
+        if (user && currentCountry) {
           const { data: ratingData } = await supabase
             .from('ratings')
             .select('rating')
             .eq('ratable_type', 'country')
-            .eq('ratable_id', String(countryData.id))
+            .eq('ratable_id', String(currentCountry.id))
             .eq('user_id', user.id)
             .single();
           
@@ -121,14 +142,17 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
           }
         }
       } catch (error) {
-        console.error('Error fetching country data:', error);
-      } finally {
+        console.error('Error fetching user rating:', error);
+      }
+      
+      // ✅ Only set loading false if we were actually loading
+      if (!initialData?.country) {
         setIsLoading(false);
       }
     };
 
     fetchCountryData();
-  }, [slug, locale]);
+  }, [slug, locale, initialData]);
 
   // Scroll tracking with hysteresis - complete transition once started
   useEffect(() => {
@@ -172,7 +196,8 @@ export default function CountryPage({ slug, locale }: CountryPageProps) {
     }
   };
 
-  if (isLoading) {
+  // ✅ Only show loading if we don't have country data yet
+  if (isLoading && !country) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-foreground"></div>

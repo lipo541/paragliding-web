@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import CountryPage from '@/components/countrypage/CountryPage';
 import { 
   getCountryAlternateUrls, 
@@ -29,7 +29,7 @@ interface PageProps {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, country } = await params;
-  const supabase = createClient();
+  const supabase = createServerClient();
 
   const slugField = `slug_${locale}`;
   const { data } = await supabase
@@ -89,9 +89,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const { locale, country } = await params;
-  const supabase = createClient();
+  const supabase = createServerClient();
 
-  // Fetch country data for breadcrumb
+  // Fetch country data for breadcrumb and SSR
   const slugField = `slug_${locale}`;
   const { data: countryData } = await supabase
     .from('countries')
@@ -99,6 +99,13 @@ export default async function Page({ params }: PageProps) {
     .eq(slugField, country)
     .eq('is_active', true)
     .single();
+
+  // ✅ Fetch locations for SSR
+  const { data: locationsData } = countryData ? await supabase
+    .from('locations')
+    .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url, cached_rating, cached_rating_count, altitude, best_season_start, best_season_end, difficulty_level')
+    .eq('country_id', countryData.id)
+    .order('name_ka') : { data: null };
 
   const getLocalizedField = (data: Record<string, unknown>, field: string) => {
     const localeKey = `${field}_${locale}`;
@@ -120,7 +127,15 @@ export default async function Page({ params }: PageProps) {
       {/* JSON-LD Structured Data */}
       <BreadcrumbJsonLd items={breadcrumbItems} />
       
-      <CountryPage slug={country} locale={locale} />
+      {/* ✅ Pass initialData for SSR - all content will be server-rendered */}
+      <CountryPage 
+        slug={country} 
+        locale={locale}
+        initialData={{
+          country: countryData,
+          locations: locationsData || []
+        }}
+      />
     </>
   );
 }
