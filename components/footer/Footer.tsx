@@ -67,9 +67,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
+            <span className="block text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
               {t('quickLinks')}
-            </h3>
+            </span>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -86,9 +86,9 @@ export default function Footer() {
 
           {/* Auth Links */}
           <div>
-            <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
+            <span className="block text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
               {t('account')}
-            </h3>
+            </span>
             <ul className="space-y-2">
               {authLinks.map((link) => (
                 <li key={link.href}>
@@ -105,7 +105,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div>
-            <h3 className="text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">{t('followUs')}</h3>
+            <span className="block text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">{t('followUs')}</span>
             <div className="flex flex-wrap gap-2">
               {socialLinks.map((social) => (
                 <a

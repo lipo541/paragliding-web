@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import UserBottomNav from "@/components/userbottomnav/UserBottomNav";
@@ -13,36 +13,16 @@ interface LocaleLayoutClientProps {
 }
 
 export default function LocaleLayoutClient({ children, locale }: LocaleLayoutClientProps) {
-  const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
 
+  // Auth check in background - არ ბლოკავს რენდერინგს
+  // ეს საჭიროა Supabase session-ის ინიციალიზაციისთვის
   useEffect(() => {
-    const checkAuth = async () => {
-      await supabase.auth.getSession();
-      setIsLoading(false);
-    };
-    
-    checkAuth();
+    supabase.auth.getSession();
   }, [supabase.auth]);
 
-  if (isLoading) {
-    return (
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <div className="flex min-h-screen items-center justify-center bg-background">
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-12 w-12 animate-spin rounded-full border-4 border-foreground/20 border-t-foreground"></div>
-            <p className="text-sm text-foreground/60">იტვირთება...</p>
-          </div>
-        </div>
-      </ThemeProvider>
-    );
-  }
-
+  // ✅ children პირდაპირ რენდერდება - არა loading spinner
+  // ეს უზრუნველყოფს რომ კონტენტი ჩანს Google-ისთვის
   return (
     <ThemeProvider
       attribute="class"

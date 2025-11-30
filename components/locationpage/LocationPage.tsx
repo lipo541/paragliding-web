@@ -97,6 +97,11 @@ interface LocationPageProps {
   countrySlug: string;
   locationSlug: string;
   locale: string;
+  // ✅ Server-side fetched data for SSR/SEO
+  initialData?: {
+    location: Location | null;
+    locationPage: LocationPageData | null;
+  };
 }
 
 // --- Components ---
@@ -129,11 +134,12 @@ const SectionTitle = ({ icon: Icon, title }: { icon: any; title: string }) => (
   </div>
 );
 
-export default function LocationPage({ countrySlug, locationSlug, locale }: LocationPageProps) {
+export default function LocationPage({ countrySlug, locationSlug, locale, initialData }: LocationPageProps) {
   const { t } = useTranslation('locationpage');
-  const [location, setLocation] = useState<Location | null>(null);
-  const [locationPage, setLocationPage] = useState<LocationPageData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // ✅ Use initialData for SSR if available, otherwise null for client fetch
+  const [location, setLocation] = useState<Location | null>(initialData?.location ?? null);
+  const [locationPage, setLocationPage] = useState<LocationPageData | null>(initialData?.locationPage ?? null);
+  const [isLoading, setIsLoading] = useState(!initialData?.location); // Not loading if we have initialData
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
@@ -199,33 +205,50 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
 
   useEffect(() => {
     const fetchLocationData = async () => {
-      setIsLoading(true);
       const supabase = createClient();
 
+      // ✅ If we have initialData, use it - skip location/locationPage fetch
+      // This enables SSR - data is already loaded server-side
+      let currentLocation = initialData?.location || location;
+      let currentLocationPage = initialData?.locationPage || locationPage;
+
+      // Only fetch if initialData is not provided (client-side navigation)
+      if (!initialData?.location) {
+        setIsLoading(true);
+        try {
+          const slugField = `slug_${locale}`;
+          const { data: locationData, error: locationError } = await supabase
+            .from('locations')
+            .select('*')
+            .eq(slugField, locationSlug)
+            .single();
+
+          if (locationError) throw locationError;
+          setLocation(locationData);
+          currentLocation = locationData;
+
+          const { data: pageData, error: pageError } = await supabase
+            .from('location_pages')
+            .select('*')
+            .eq('location_id', locationData.id)
+            .eq('is_active', true)
+            .single();
+
+          if (pageError && pageError.code !== 'PGRST116') throw pageError;
+          setLocationPage(pageData);
+          currentLocationPage = pageData;
+        } catch (error) {
+          console.error('Error fetching location data:', error);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // ✅ Always fetch ratings (user-specific data, can't be SSR'd)
       try {
-        const slugField = `slug_${locale}`;
-        const { data: locationData, error: locationError } = await supabase
-          .from('locations')
-          .select('*')
-          .eq(slugField, locationSlug)
-          .single();
-
-        if (locationError) throw locationError;
-        setLocation(locationData);
-
-        const { data: pageData, error: pageError } = await supabase
-          .from('location_pages')
-          .select('*')
-          .eq('location_id', locationData.id)
-          .eq('is_active', true)
-          .single();
-
-        if (pageError && pageError.code !== 'PGRST116') throw pageError;
-        setLocationPage(pageData);
-
         // Fetch flight type ratings for ALL users (including non-authenticated)
-        if (pageData?.content?.[locale]?.flight_types) {
-          const flightTypesData: FlightType[] = pageData.content[locale].flight_types;
+        if (currentLocationPage?.content?.[locale]?.flight_types) {
+          const flightTypesData: FlightType[] = currentLocationPage.content[locale].flight_types;
           const sharedIds = flightTypesData.map((ft: FlightType) => ft.shared_id).filter(Boolean) as string[];
           
           if (sharedIds.length > 0) {
@@ -264,12 +287,12 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
         const { data: { user } } = await supabase.auth.getUser();
         setIsAuthenticated(!!user);
         
-        if (user && locationData) {
+        if (user && currentLocation) {
           const { data: ratingData } = await supabase
             .from('ratings')
             .select('rating')
             .eq('ratable_type', 'location')
-            .eq('ratable_id', String(locationData.id))
+            .eq('ratable_id', String(currentLocation.id))
             .eq('user_id', user.id)
             .single();
           
@@ -278,14 +301,14 @@ export default function LocationPage({ countrySlug, locationSlug, locale }: Loca
           }
         }
       } catch (error) {
-        console.error('Error fetching location data:', error);
+        console.error('Error fetching ratings:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchLocationData();
-  }, [countrySlug, locationSlug, locale]);
+  }, [countrySlug, locationSlug, locale, initialData]);
 
   // Handle hash navigation for auto-scroll
   useEffect(() => {

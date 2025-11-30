@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import LocationPage from '@/components/locationpage/LocationPage';
 import { 
   getLocationAlternateUrls, 
@@ -31,7 +31,7 @@ interface PageProps {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, country, location } = await params;
-  const supabase = createClient();
+  const supabase = createServerClient();
 
   const slugField = `slug_${locale}`;
   const { data } = await supabase
@@ -105,7 +105,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const { locale, country, location } = await params;
-  const supabase = createClient();
+  const supabase = createServerClient();
 
   // Fetch location data for JSON-LD
   const slugField = `slug_${locale}`;
@@ -122,6 +122,14 @@ export default async function Page({ params }: PageProps) {
     .eq('id', locationData.country_id)
     .single() : { data: null };
 
+  // ✅ Fetch location_pages for SSR (full content for SEO)
+  const { data: locationPageData } = locationData ? await supabase
+    .from('location_pages')
+    .select('*')
+    .eq('location_id', locationData.id)
+    .eq('is_active', true)
+    .single() : { data: null };
+
   // Helper for localized fields
   const getLocalizedField = (data: Record<string, unknown>, field: string) => {
     const localeKey = `${field}_${locale}`;
@@ -133,6 +141,10 @@ export default async function Page({ params }: PageProps) {
   const countryName = countryData ? getLocalizedField(countryData, 'name') : '';
   const description = locationData ? getLocalizedField(locationData, 'seo_description') : '';
   const pageUrl = `${BASE_URL}/${locale}/locations/${country}/${location}`;
+
+  // ✅ Extract H1 tag from location_pages content
+  const contentData = locationPageData?.content?.[locale] || locationPageData?.content?.en || {};
+  const h1Tag = contentData.h1_tag || locationName;
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -160,8 +172,20 @@ export default async function Page({ params }: PageProps) {
           <BreadcrumbJsonLd items={breadcrumbItems} />
         </>
       )}
+
+      {/* ✅ Server-rendered H1 for SEO - Google will see this! */}
+      <h1 className="sr-only">{h1Tag}</h1>
       
-      <LocationPage countrySlug={country} locationSlug={location} locale={locale} />
+      {/* ✅ Pass initialData for SSR - all content will be server-rendered */}
+      <LocationPage 
+        countrySlug={country} 
+        locationSlug={location} 
+        locale={locale}
+        initialData={{
+          location: locationData,
+          locationPage: locationPageData
+        }}
+      />
     </>
   );
 }
