@@ -90,12 +90,12 @@ export default async function SEONavLinks({ locale }: SEONavLinksProps) {
         );
       })}
       
-      {/* Alternate language links */}
+      {/* Alternate language links - NO hrefLang attribute to avoid duplicates */}
+      {/* hreflang is already handled by generateMetadata() in page.tsx */}
       {LOCALES.map((lang) => (
         <Link
           key={lang}
           href={`/${lang}`}
-          hrefLang={lang}
         >
           {lang.toUpperCase()}
         </Link>
