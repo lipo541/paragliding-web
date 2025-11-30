@@ -26,6 +26,7 @@ export function OrganizationJsonLd() {
       "height": 512
     },
     "description": "Professional paragliding tandem flights in Georgia",
+    "telephone": "+995511440400",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "GE",

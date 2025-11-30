@@ -1258,7 +1258,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
                 <div className="flex items-center justify-center gap-3">
                   {/* WhatsApp */}
                   <a
-                    href="https://wa.me/your-number"
+                    href="https://wa.me/995511440400"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative flex items-center justify-center w-10 h-10 rounded-lg bg-[#25D366]/10 dark:bg-[#25D366]/20 border border-[#25D366]/20 dark:border-[#25D366]/30 hover:bg-[#25D366]/20 dark:hover:bg-[#25D366]/30 hover:border-[#25D366]/40 transition-all hover:scale-110 active:scale-95"
@@ -1271,7 +1271,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
 
                   {/* Viber */}
                   <a
-                    href="viber://chat?number=your-number"
+                    href="viber://chat?number=995511440400"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative flex items-center justify-center w-10 h-10 rounded-lg bg-[#7360F2]/10 dark:bg-[#7360F2]/20 border border-[#7360F2]/20 dark:border-[#7360F2]/30 hover:bg-[#7360F2]/20 dark:hover:bg-[#7360F2]/30 hover:border-[#7360F2]/40 transition-all hover:scale-110 active:scale-95"
@@ -1284,7 +1284,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
 
                   {/* Telegram */}
                   <a
-                    href="https://t.me/your-username"
+                    href="https://t.me/+995511440400"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative flex items-center justify-center w-10 h-10 rounded-lg bg-[#229ED9]/10 dark:bg-[#229ED9]/20 border border-[#229ED9]/20 dark:border-[#229ED9]/30 hover:bg-[#229ED9]/20 dark:hover:bg-[#229ED9]/30 hover:border-[#229ED9]/40 transition-all hover:scale-110 active:scale-95"

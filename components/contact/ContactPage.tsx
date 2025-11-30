@@ -24,7 +24,7 @@ export default function ContactPage({ locale }: ContactPageProps) {
   const contactInfo = [
     { icon: IoLocationOutline, label: t.address, value: t.addressValue },
     { icon: IoMailOutline, label: t.email, value: 'info@paragliding.ge', link: 'mailto:info@paragliding.ge' },
-    { icon: IoCallOutline, label: t.phone, value: '+995 555 123 456', link: 'tel:+995555123456' },
+    { icon: IoCallOutline, label: t.phone, value: '+995 511 440 400', link: 'tel:+995511440400' },
     { icon: IoTimeOutline, label: t.hours, value: t.hoursValue },
   ];
 
