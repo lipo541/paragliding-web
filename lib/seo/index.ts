@@ -59,6 +59,7 @@ export {
   OrganizationJsonLd,
   WebSiteJsonLd,
   BreadcrumbJsonLd,
+  CountryJsonLd,
   LocationJsonLd,
   ParaglidingActivityJsonLd,
   FAQJsonLd,

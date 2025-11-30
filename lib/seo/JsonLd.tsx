@@ -105,6 +105,85 @@ export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
 }
 
 // ============================================
+// 🌍 Country Schema (ქვეყნის გვერდისთვის - ItemList + LocalBusiness)
+// ============================================
+
+interface LocationItem {
+  id: string;
+  name: string;
+  slug: string;
+  image?: string;
+  rating?: number;
+  ratingCount?: number;
+  altitude?: number;
+}
+
+interface CountrySchemaProps {
+  countryName: string;
+  countrySlug: string;
+  locale: string;
+  locations: LocationItem[];
+}
+
+export function CountryJsonLd({
+  countryName,
+  countrySlug,
+  locale,
+  locations,
+}: CountrySchemaProps) {
+  // ItemList schema with LocalBusiness items - enables Review Snippets
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": `Paragliding Locations in ${countryName}`,
+    "description": `All paragliding locations in ${countryName}`,
+    "numberOfItems": locations.length,
+    "itemListElement": locations.map((loc, index) => {
+      const locationUrl = `${BASE_URL}/${locale}/locations/${countrySlug}/${loc.slug}`;
+      
+      const item: Record<string, unknown> = {
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "LocalBusiness",
+          "@id": locationUrl,
+          "name": `Paragliding ${loc.name}`,
+          "url": locationUrl,
+          ...(loc.image && { "image": loc.image }),
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "GE",
+            "addressRegion": countryName,
+            "addressLocality": loc.name,
+          },
+          "priceRange": "₾150 - ₾400",
+        },
+      };
+
+      // Add AggregateRating if available
+      if (loc.rating && loc.ratingCount && loc.ratingCount > 0 && loc.rating > 0) {
+        (item.item as Record<string, unknown>)["aggregateRating"] = {
+          "@type": "AggregateRating",
+          "ratingValue": loc.rating,
+          "bestRating": 5,
+          "worstRating": 1,
+          "ratingCount": loc.ratingCount,
+        };
+      }
+
+      return item;
+    }),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// ============================================
 // 📍 LocalBusiness Schema (ლოკაციისთვის - Google Rich Results მხარდაჭერილი)
 // ============================================
 
@@ -154,7 +233,7 @@ export function LocationJsonLd({
     // Price range - Georgian Lari typical paragliding prices
     "priceRange": minPrice && maxPrice 
       ? `${currency}${minPrice} - ${currency}${maxPrice}` 
-      : "₾150 - ₾400",
+      : "₾150 - ₾500",
   };
 
   // Rating - დავამატოთ მხოლოდ თუ ვალიდურია

@@ -7,6 +7,7 @@ import {
   BASE_URL,
   SITE_NAME,
   BreadcrumbJsonLd,
+  CountryJsonLd,
   generateCountryParams,
   type Locale 
 } from '@/lib/seo';
@@ -122,10 +123,31 @@ export default async function Page({ params }: PageProps) {
     { name: countryName, url: `${BASE_URL}/${locale}/locations/${country}` },
   ];
 
+  // Prepare locations for JSON-LD
+  const locationsForSchema = (locationsData || []).map((loc) => ({
+    id: loc.id,
+    name: getLocalizedField(loc, 'name'),
+    slug: (loc[`slug_${locale}` as keyof typeof loc] || loc.slug_en) as string,
+    image: loc.og_image_url,
+    rating: loc.cached_rating,
+    ratingCount: loc.cached_rating_count,
+    altitude: loc.altitude,
+  }));
+
   return (
     <>
       {/* JSON-LD Structured Data */}
       <BreadcrumbJsonLd items={breadcrumbItems} />
+      
+      {/* ✅ ItemList with LocalBusiness items - enables Review Snippets */}
+      {locationsForSchema.length > 0 && (
+        <CountryJsonLd
+          countryName={countryName}
+          countrySlug={country}
+          locale={locale}
+          locations={locationsForSchema}
+        />
+      )}
       
       {/* ✅ Pass initialData for SSR - all content will be server-rendered */}
       <CountryPage 
