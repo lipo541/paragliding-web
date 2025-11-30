@@ -116,6 +116,9 @@ interface LocationSchemaProps {
   ratingCount?: number;
   altitude?: number;
   url: string;
+  minPrice?: number;
+  maxPrice?: number;
+  currency?: string;
 }
 
 export function LocationJsonLd({
@@ -127,6 +130,9 @@ export function LocationJsonLd({
   ratingCount,
   altitude,
   url,
+  minPrice,
+  maxPrice,
+  currency = '₾',
 }: LocationSchemaProps) {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -144,8 +150,10 @@ export function LocationJsonLd({
     },
     // Additional categorization
     "additionalType": "https://schema.org/SportsActivityLocation",
-    // Price range indicator
-    "priceRange": "$$",
+    // Price range - Georgian Lari typical paragliding prices
+    "priceRange": minPrice && maxPrice 
+      ? `${currency}${minPrice} - ${currency}${maxPrice}` 
+      : "₾150 - ₾400",
   };
 
   // Rating - დავამატოთ მხოლოდ თუ ვალიდურია
