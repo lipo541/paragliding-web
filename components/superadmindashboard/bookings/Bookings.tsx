@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { ConfirmDialog } from '@/components/ui';
 
 interface Booking {
   id: string;
@@ -29,6 +30,12 @@ export default function Bookings() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedBookingId, setExpandedBookingId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; bookingId: string | null; bookingName: string }>({
+    isOpen: false,
+    bookingId: null,
+    bookingName: '',
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchBookings();
@@ -69,6 +76,28 @@ export default function Bookings() {
       fetchBookings();
     } catch (error) {
       console.error('Error updating booking status:', error);
+    }
+  };
+
+  const deleteBooking = async (bookingId: string) => {
+    setIsDeleting(true);
+    const supabase = createClient();
+
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('id', bookingId);
+
+      if (error) throw error;
+
+      // Refresh bookings
+      fetchBookings();
+      setDeleteConfirm({ isOpen: false, bookingId: null, bookingName: '' });
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -305,6 +334,19 @@ export default function Bookings() {
                           <option value="confirmed">დადასტურება</option>
                           <option value="cancelled">გაუქმება</option>
                         </select>
+                        <button
+                          onClick={() => setDeleteConfirm({ 
+                            isOpen: true, 
+                            bookingId: booking.id, 
+                            bookingName: `${booking.full_name} - ${booking.location_name}` 
+                          })}
+                          className="p-1.5 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-colors"
+                          title="წაშლა"
+                        >
+                          <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -363,6 +405,18 @@ export default function Bookings() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        onClose={() => setDeleteConfirm({ isOpen: false, bookingId: null, bookingName: '' })}
+        onConfirm={() => deleteConfirm.bookingId && deleteBooking(deleteConfirm.bookingId)}
+        title="ჯავშნის წაშლა"
+        message={`დარწმუნებული ხართ, რომ გსურთ წაშალოთ ეს ჯავშანი?\n\n"${deleteConfirm.bookingName}"\n\nეს მოქმედება შეუქცევადია.`}
+        confirmText={isDeleting ? 'იშლება...' : 'წაშლა'}
+        cancelText="გაუქმება"
+        variant="danger"
+      />
     </div>
   );
 }
