@@ -154,6 +154,20 @@ export default async function Page({ params }: PageProps) {
     { name: locationName, url: pageUrl },
   ];
 
+  // ✅ Filter locationPageData to include ONLY current locale content
+  // This reduces HTML size and prevents SEO confusion from multiple languages
+  const filteredLocationPageData = locationPageData ? {
+    ...locationPageData,
+    content: {
+      // Only include current locale (fallback to 'en')
+      [locale]: locationPageData.content?.[locale] || locationPageData.content?.en || {},
+      // Include shared data (images, videos, flight types)
+      shared_images: locationPageData.content?.shared_images,
+      shared_videos: locationPageData.content?.shared_videos,
+      shared_flight_types: locationPageData.content?.shared_flight_types,
+    }
+  } : null;
+
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -176,14 +190,14 @@ export default async function Page({ params }: PageProps) {
       {/* ✅ Server-rendered H1 for SEO - Google will see this! */}
       <h1 className="sr-only">{h1Tag}</h1>
       
-      {/* ✅ Pass initialData for SSR - all content will be server-rendered */}
+      {/* ✅ Pass filtered initialData - only current locale content (SEO optimized) */}
       <LocationPage 
         countrySlug={country} 
         locationSlug={location} 
         locale={locale}
         initialData={{
           location: locationData,
-          locationPage: locationPageData
+          locationPage: filteredLocationPageData
         }}
       />
     </>
