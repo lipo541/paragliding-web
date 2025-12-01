@@ -66,9 +66,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency,
         priority,
         alternates: {
-          languages: Object.fromEntries(
-            locales.map(l => [l, `${BASE_URL}/${l}${route}`])
-          ),
+          languages: {
+            ...Object.fromEntries(
+              locales.map(l => [l, `${BASE_URL}/${l}${route}`])
+            ),
+            'x-default': `${BASE_URL}/en${route}`, // English as default
+          },
         },
       });
     }
@@ -103,7 +106,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         if (!availableLocales.includes('en')) availableLocales.push('en');
       }
       
-      for (const locale of locales) {
+      // მხოლოდ იმ ენებისთვის დავამატოთ URL, სადაც კონტენტი არსებობს
+      for (const locale of availableLocales) {
         const slug = country[`slug_${locale}` as keyof typeof country] || country.slug_en;
         
         // Alternates - მხოლოდ იმ ენებისთვის სადაც კონტენტი არსებობს
@@ -112,6 +116,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const altSlug = country[`slug_${l}` as keyof typeof country] || country.slug_en;
           alternateLanguages[l] = `${BASE_URL}/${l}/locations/${altSlug}`;
         }
+        // x-default: English if available, otherwise Georgian
+        const xDefaultSlug = country.slug_en || country.slug_ka;
+        alternateLanguages['x-default'] = `${BASE_URL}/en/locations/${xDefaultSlug}`;
 
         entries.push({
           url: `${BASE_URL}/${locale}/locations/${slug}`,
@@ -172,7 +179,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         if (!availableLocales.includes('en')) availableLocales.push('en');
       }
       
-      for (const locale of locales) {
+      // მხოლოდ იმ ენებისთვის დავამატოთ URL, სადაც კონტენტი არსებობს
+      for (const locale of availableLocales) {
         const locationSlug = location[`slug_${locale}` as keyof typeof location] || location.slug_en;
         const countrySlug = country[`slug_${locale}`] || country.slug_en;
 
@@ -183,6 +191,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           const altCountrySlug = country[`slug_${l}`] || country.slug_en;
           alternateLanguages[l] = `${BASE_URL}/${l}/locations/${altCountrySlug}/${altLocationSlug}`;
         }
+        // x-default: English if available, otherwise Georgian
+        const xDefaultLocationSlug = location.slug_en || location.slug_ka;
+        const xDefaultCountrySlug = country.slug_en || country.slug_ka;
+        alternateLanguages['x-default'] = `${BASE_URL}/en/locations/${xDefaultCountrySlug}/${xDefaultLocationSlug}`;
 
         entries.push({
           url: `${BASE_URL}/${locale}/locations/${countrySlug}/${locationSlug}`,
@@ -200,10 +212,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ============================================
   // 📊 Debug Info (visible in server logs)
   // ============================================
-  console.log(`[SITEMAP] Generated ${entries.length} URLs`);
-  console.log(`[SITEMAP] - Static pages: ${STATIC_ROUTES.length * locales.length}`);
-  console.log(`[SITEMAP] - Countries: ${countries?.length || 0} x ${locales.length} = ${(countries?.length || 0) * locales.length}`);
-  console.log(`[SITEMAP] - Locations: ${locations?.length || 0} x ${locales.length} = ${(locations?.length || 0) * locales.length}`);
+  const staticCount = STATIC_ROUTES.length * locales.length;
+  const dynamicCount = entries.length - staticCount;
+  
+  console.log(`[SITEMAP] Generated ${entries.length} URLs total`);
+  console.log(`[SITEMAP] - Static pages: ${staticCount}`);
+  console.log(`[SITEMAP] - Dynamic pages (countries + locations): ${dynamicCount}`);
 
   return entries;
 }

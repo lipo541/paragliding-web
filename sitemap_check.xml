@@ -1,0 +1,916 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+<loc>http://localhost:3000/ka</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/about</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/about" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/about" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/about" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/about" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/about" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/about" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/about</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/about" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/about" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/about" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/about" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/about" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/about" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/about</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/about" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/about" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/about" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/about" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/about" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/about" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/about</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/about" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/about" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/about" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/about" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/about" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/about" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/about</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/about" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/about" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/about" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/about" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/about" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/about" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/about</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/about" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/about" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/about" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/about" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/about" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/about" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/contact</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/contact" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/contact" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/contact" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/contact" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/contact" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/contact" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/contact</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/contact" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/contact" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/contact" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/contact" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/contact" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/contact" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/contact</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/contact" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/contact" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/contact" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/contact" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/contact" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/contact" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/contact</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/contact" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/contact" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/contact" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/contact" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/contact" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/contact" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/contact</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/contact" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/contact" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/contact" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/contact" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/contact" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/contact" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/contact</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/contact" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/contact" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/contact" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/contact" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/contact" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/contact" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.9</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/promotions</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/promotions" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/promotions" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/promotions" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/promotions" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/promotions" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/promotions" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/promotions</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/promotions" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/promotions" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/promotions" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/promotions" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/promotions" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/promotions" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/promotions</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/promotions" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/promotions" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/promotions" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/promotions" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/promotions" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/promotions" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/promotions</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/promotions" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/promotions" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/promotions" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/promotions" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/promotions" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/promotions" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/promotions</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/promotions" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/promotions" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/promotions" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/promotions" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/promotions" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/promotions" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/promotions</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/promotions" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/promotions" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/promotions" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/promotions" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/promotions" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/promotions" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/terms</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/terms" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/terms" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/terms" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/terms" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/terms" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/terms" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/terms</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/terms" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/terms" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/terms" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/terms" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/terms" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/terms" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/terms</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/terms" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/terms" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/terms" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/terms" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/terms" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/terms" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/terms</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/terms" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/terms" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/terms" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/terms" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/terms" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/terms" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/terms</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/terms" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/terms" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/terms" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/terms" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/terms" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/terms" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/terms</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/terms" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/terms" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/terms" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/terms" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/terms" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/terms" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/privacy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/privacy" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/privacy" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/privacy" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/privacy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/privacy" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/privacy" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/privacy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/privacy" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/privacy" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/privacy" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/privacy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/privacy" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/privacy" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/privacy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/privacy" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/privacy" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/privacy" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/privacy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/privacy" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/privacy" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/privacy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/privacy" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/privacy" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/privacy" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/privacy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/privacy" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/privacy" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/privacy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/privacy" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/privacy" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/privacy" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/privacy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/privacy" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/privacy" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/privacy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/privacy" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/privacy" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/privacy" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/privacy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/privacy" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/privacy" />
+<lastmod>2025-11-24T00:00:00.000Z</lastmod>
+<changefreq>yearly</changefreq>
+<priority>0.3</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations/ka-sakarthvelo</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan" />
+<lastmod>2025-11-28T13:35:01.487Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.85</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations/en-georgia</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan" />
+<lastmod>2025-11-28T13:35:01.487Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.85</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations/ru-gruziya</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan" />
+<lastmod>2025-11-28T13:35:01.487Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.85</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations/ar-jwrjya</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan" />
+<lastmod>2025-11-28T13:35:01.487Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.85</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations/de-georgien</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan" />
+<lastmod>2025-11-28T13:35:01.487Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.85</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations/tr-grcistan</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan" />
+<lastmod>2025-11-28T13:35:01.487Z</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.85</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-gudauri" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-gudauri" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri" />
+<lastmod>2025-12-01T11:35:47.217Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations/en-georgia/en-gudauri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-gudauri" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-gudauri" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri" />
+<lastmod>2025-12-01T11:35:47.217Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-gudauri" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-gudauri" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri" />
+<lastmod>2025-12-01T11:35:47.217Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-gudauri" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-gudauri" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri" />
+<lastmod>2025-12-01T11:35:47.217Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations/de-georgien/de-gudauri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-gudauri" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-gudauri" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri" />
+<lastmod>2025-12-01T11:35:47.217Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-gudauri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-gudauri" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-gudauri" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-ghwdawry" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-gudauri" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-gudauri" />
+<lastmod>2025-12-01T11:35:47.217Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-rustavi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-rustawi" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi" />
+<lastmod>2025-11-24T16:13:43.012Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations/en-georgia/en-rustavi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-rustavi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-rustawi" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi" />
+<lastmod>2025-11-24T16:13:43.012Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-rustavi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-rustawi" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi" />
+<lastmod>2025-11-24T16:13:43.012Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-rustavi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-rustawi" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi" />
+<lastmod>2025-11-24T16:13:43.012Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations/de-georgien/de-rustawi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-rustavi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-rustawi" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi" />
+<lastmod>2025-11-24T16:13:43.012Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-rusthavi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-rustavi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-rustavi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-rwstafy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-rustawi" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-rustavi" />
+<lastmod>2025-11-24T16:13:43.012Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-tiflis" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis" />
+<lastmod>2025-11-24T16:03:33.665Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations/en-georgia/en-tbilisi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-tiflis" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis" />
+<lastmod>2025-11-24T16:03:33.665Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-tiflis" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis" />
+<lastmod>2025-11-24T16:03:33.665Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-tiflis" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis" />
+<lastmod>2025-11-24T16:03:33.665Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations/de-georgien/de-tiflis</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-tiflis" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis" />
+<lastmod>2025-11-24T16:03:33.665Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-tbilisi" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-tbilisi" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-tblysy" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-tiflis" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-tiflis" />
+<lastmod>2025-11-24T16:03:33.665Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-mestia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-mestia" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-mestia" />
+<lastmod>2025-11-25T06:41:01.804Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations/en-georgia/en-mestia</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-mestia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-mestia" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-mestia" />
+<lastmod>2025-11-25T06:41:01.804Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-mestia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-mestia" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-mestia" />
+<lastmod>2025-11-25T06:41:01.804Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-mestia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-mestia" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-mestia" />
+<lastmod>2025-11-25T06:41:01.804Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations/de-georgien/de-mestia</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-mestia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-mestia" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-mestia" />
+<lastmod>2025-11-25T06:41:01.804Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations/tr-grcistan/tr-mestia</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-mestia" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-mestia" />
+<xhtml:link rel="alternate" hreflang="ru" href="http://localhost:3000/ru/locations/ru-gruziya/ru-mestiya" />
+<xhtml:link rel="alternate" hreflang="ar" href="http://localhost:3000/ar/locations/ar-jwrjya/ar-mystya" />
+<xhtml:link rel="alternate" hreflang="de" href="http://localhost:3000/de/locations/de-georgien/de-mestia" />
+<xhtml:link rel="alternate" hreflang="tr" href="http://localhost:3000/tr/locations/tr-grcistan/tr-mestia" />
+<lastmod>2025-11-25T06:41:01.804Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-ananuri" />
+<lastmod>2025-11-24T16:40:05.223Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/en/locations/en-georgia/en-ananuri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-ananuri" />
+<lastmod>2025-11-24T16:40:05.223Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ru/locations/ru-gruziya/ru-ananuri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-ananuri" />
+<lastmod>2025-11-24T16:40:05.223Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/ar/locations/ar-jwrjya/ar-nanwry</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-ananuri" />
+<lastmod>2025-11-24T16:40:05.223Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/de/locations/de-georgien/de-ananuri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-ananuri" />
+<lastmod>2025-11-24T16:40:05.223Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+<url>
+<loc>http://localhost:3000/tr/locations/tr-grcistan/tr-ananuri</loc>
+<xhtml:link rel="alternate" hreflang="ka" href="http://localhost:3000/ka/locations/ka-sakarthvelo/ka-ananuri" />
+<xhtml:link rel="alternate" hreflang="en" href="http://localhost:3000/en/locations/en-georgia/en-ananuri" />
+<lastmod>2025-11-24T16:40:05.223Z</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.95</priority>
+</url>
+</urlset>
+
