@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import PromotionPage from '@/components/promotions/PromotionPage';
+import { getPromotionsData } from '@/lib/data/promotions';
 import { 
   getStaticPageAlternateUrls, 
   getPageSEO,
@@ -68,6 +69,9 @@ export default async function PromotionsPage({ params }: PageProps) {
   const safeLocale = (locale as Locale) || 'ka';
   const { title } = getPageSEO('promotions', safeLocale);
   
+  // ✅ Fetch data server-side for SEO
+  const { promoCodes, locations } = await getPromotionsData();
+  
   // Breadcrumb items
   const breadcrumbItems = [
     { name: 'Home', url: `${BASE_URL}/${locale}` },
@@ -79,7 +83,11 @@ export default async function PromotionsPage({ params }: PageProps) {
       <BreadcrumbJsonLd items={breadcrumbItems} />
       {/* SEO: Server-rendered h1 for crawlers */}
       <h1 className="sr-only">{title}</h1>
-      <PromotionPage locale={locale || 'ka'} />
+      <PromotionPage 
+        locale={locale || 'ka'} 
+        initialPromoCodes={promoCodes}
+        initialLocations={locations}
+      />
     </>
   );
 }

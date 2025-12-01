@@ -5,55 +5,26 @@ import { createClient } from '@/lib/supabase/client';
 import PromoCard from '@/components/promotions/PromoCard';
 import { Search, Tag, TrendingUp, Filter, ChevronDown, X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import type { PromoCode, PromoLocation } from '@/lib/data/promotions';
 
-interface PromoCode {
-  id: string;
-  code: string;
-  discount_percentage: number;
-  valid_from: string | null;
-  valid_until: string | null;
-  usage_limit: number | null;
-  usage_count: number;
-  image_path: string | null;
-  description_ka: string | null;
-  description_en: string | null;
-  description_ru: string | null;
-  description_ar: string | null;
-  description_de: string | null;
-  description_tr: string | null;
-  is_active: boolean;
-  is_published: boolean;
-  created_at: string;
-  promo_code_locations: Array<{
-    location_id: string;
-    locations: {
-      id: string;
-      name_ka: string;
-      name_en: string;
-      name_ru: string;
-      name_ar: string;
-      name_de: string;
-      name_tr: string;
-    };
-  }>;
+interface PromotionPageProps {
+  locale: string;
+  initialPromoCodes?: PromoCode[];
+  initialLocations?: PromoLocation[];
 }
 
-interface Location {
-  id: string;
-  name_ka: string;
-  name_en: string;
-  name_ru: string;
-  name_ar: string;
-  name_de: string;
-  name_tr: string;
-}
-
-export default function PromotionPage({ locale }: { locale: string }) {
+export default function PromotionPage({ 
+  locale, 
+  initialPromoCodes = [], 
+  initialLocations = [] 
+}: PromotionPageProps) {
   const supabase = createClient();
   const { t } = useTranslation('promotionpage');
-  const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // ✅ Initialize with server-fetched data for SSR
+  const [promoCodes, setPromoCodes] = useState<PromoCode[]>(initialPromoCodes);
+  const [locations, setLocations] = useState<PromoLocation[]>(initialLocations);
+  // ✅ Not loading if we have initial data
+  const [isLoading, setIsLoading] = useState(initialPromoCodes.length === 0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'discount' | 'expiring'>('newest');
@@ -66,8 +37,13 @@ export default function PromotionPage({ locale }: { locale: string }) {
     return item[nameKey] || item.name_ka || '';
   };
 
-  // Fetch data
+  // ✅ Only fetch client-side if no initial data was provided (fallback)
   useEffect(() => {
+    // Skip if we already have server-provided data
+    if (initialPromoCodes.length > 0) {
+      return;
+    }
+    
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -107,7 +83,7 @@ export default function PromotionPage({ locale }: { locale: string }) {
     };
 
     fetchData();
-  }, [supabase]);
+  }, [supabase, initialPromoCodes.length]);
 
 
 
