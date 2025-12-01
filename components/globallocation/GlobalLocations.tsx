@@ -64,19 +64,23 @@ interface Location {
 
 interface GlobalLocationsProps {
   locale: string;
+  initialCountries?: Country[];
+  initialLocations?: Location[];
 }
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'rating' | 'name' | 'altitude';
 
-export default function GlobalLocations({ locale }: GlobalLocationsProps) {
+export default function GlobalLocations({ locale, initialCountries = [], initialLocations = [] }: GlobalLocationsProps) {
   // Translation hook
   const { t } = useTranslation('globallocations');
   
   // --- State Management ---
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // ✅ Initialize with server-fetched data for SSR
+  const [countries, setCountries] = useState<Country[]>(initialCountries);
+  const [locations, setLocations] = useState<Location[]>(initialLocations);
+  // ✅ Not loading if we have initial data
+  const [isLoading, setIsLoading] = useState(initialCountries.length === 0 && initialLocations.length === 0);
   const [searchQuery, setSearchQuery] = useState('');
   const [heroSearchQuery, setHeroSearchQuery] = useState('');
   const [isHeroSearchOpen, setIsHeroSearchOpen] = useState(false);
@@ -141,8 +145,13 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
   };
 
   // --- Data Fetching ---
-  
+  // ✅ Only fetch client-side if no initial data was provided (fallback for direct navigation)
   useEffect(() => {
+    // Skip if we already have server-provided data
+    if (initialCountries.length > 0 || initialLocations.length > 0) {
+      return;
+    }
+    
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -228,7 +237,7 @@ export default function GlobalLocations({ locale }: GlobalLocationsProps) {
     };
 
     fetchData();
-  }, [supabase]);
+  }, [supabase, initialCountries.length, initialLocations.length]);
 
   // Scroll tracking with hysteresis
   useEffect(() => {

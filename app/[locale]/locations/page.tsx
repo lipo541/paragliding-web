@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import GlobalLocations from '@/components/globallocation/GlobalLocations';
+import { getLocationsData } from '@/lib/data/locations';
 import { 
   getPageSEO, 
   getPageOG, 
@@ -71,6 +72,9 @@ export default async function LocationsPage({ params }: PageProps) {
   const safeLocale = (locale as Locale) || 'ka';
   const seo = getPageSEO('locations', safeLocale);
 
+  // ✅ Fetch data server-side for SEO
+  const { countries, locations } = await getLocationsData(locale);
+
   // Breadcrumb items
   const breadcrumbItems = [
     { name: 'Home', url: `${BASE_URL}/${locale}` },
@@ -82,7 +86,11 @@ export default async function LocationsPage({ params }: PageProps) {
       <BreadcrumbJsonLd items={breadcrumbItems} />
       {/* SEO: Server-rendered h1 for crawlers */}
       <h1 className="sr-only">{seo.title}</h1>
-      <GlobalLocations locale={locale} />
+      <GlobalLocations 
+        locale={locale} 
+        initialCountries={countries}
+        initialLocations={locations}
+      />
     </>
   );
 }
