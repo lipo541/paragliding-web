@@ -68,6 +68,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function LocationsPage({ params }: PageProps) {
   const { locale } = await params;
+  const safeLocale = (locale as Locale) || 'ka';
+  const seo = getPageSEO('locations', safeLocale);
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -78,6 +80,8 @@ export default async function LocationsPage({ params }: PageProps) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbItems} />
+      {/* SEO: Server-rendered h1 for crawlers */}
+      <h1 className="sr-only">{seo.title}</h1>
       <GlobalLocations locale={locale} />
     </>
   );

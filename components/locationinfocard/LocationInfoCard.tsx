@@ -169,7 +169,9 @@ export default function LocationInfoCard({
         href={locationUrl}
         className="absolute inset-0 z-0"
         aria-label={name}
-      />
+      >
+        <span className="sr-only">{name}</span>
+      </Link>
     </div>
   );
 }

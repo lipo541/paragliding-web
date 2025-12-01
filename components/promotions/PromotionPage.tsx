@@ -189,8 +189,8 @@ export default function PromotionPage({ locale }: { locale: string }) {
               <Tag className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#4697D2]" />
             </div>
             <div>
-              <h1 className="text-sm lg:text-base font-bold text-[#1a1a1a] dark:text-white">{t('page.title')}</h1>
-              <p className="text-[10px] text-[#1a1a1a]/60 dark:text-white/60">{sortedPromos.length} {t('page.active')}</p>
+              <h2 className="text-sm lg:text-base font-bold text-[#1a1a1a] dark:text-white">{t('page.title')}</h2>
+              <p className="text-[10px] text-[#1a1a1a]/60 dark:text-white/60">{sortedPromos.length} {t('page.active')}</p></p>
             </div>
           </div>
         </div>
