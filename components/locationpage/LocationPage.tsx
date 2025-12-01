@@ -356,7 +356,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
   if (!location || !locationPage) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-zinc-50 dark:bg-black">
-        <h1 className="text-xl font-medium text-foreground/80">{t('error.notFound')}</h1>
+        <h2 className="text-xl font-medium text-foreground/80">{t('error.notFound')}</h2>
         <Link 
           href={`/${locale}/locations/${countrySlug}`}
           className="px-4 py-2 text-sm font-medium backdrop-blur-md bg-white/20 dark:bg-black/20 hover:bg-white/30 dark:hover:bg-black/30 border border-white/30 dark:border-white/20 rounded-full transition-all shadow-xl"
@@ -594,10 +594,10 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
               </div>
             </div>
             
-            {/* Main Title */}
-            <h1 className="text-xl lg:text-4xl font-bold text-[#1a1a1a] dark:text-white mb-2 lg:mb-3 drop-shadow-sm dark:drop-shadow-2xl max-w-4xl leading-tight">
+            {/* Main Title - Using h2 because h1 is in page.tsx for SEO */}
+            <h2 className="text-xl lg:text-4xl font-bold text-[#1a1a1a] dark:text-white mb-2 lg:mb-3 drop-shadow-sm dark:drop-shadow-2xl max-w-4xl leading-tight">
               {h1Tag || locationName}
-            </h1>
+            </h2>
             
             {/* Subtitle/Description - Hidden on mobile */}
             {pTag && (

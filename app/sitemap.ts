@@ -80,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   const { data: countries } = await supabase
     .from('countries')
-    .select('slug_ka, slug_en, slug_ru, slug_de, slug_tr, slug_ar, updated_at')
+    .select('slug_ka, slug_en, slug_ru, slug_de, slug_tr, slug_ar, updated_at, content')
     .eq('is_active', true);
 
   if (countries && countries.length > 0) {
@@ -90,12 +90,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ? new Date(country.updated_at as string) 
         : staticPagesDate;
       
+      // Check which locales have actual content
+      const countryContent = country.content as Record<string, unknown> | null;
+      let availableLocales = [...locales];
+      if (countryContent) {
+        availableLocales = locales.filter(l => {
+          const localeContent = countryContent[l] as Record<string, unknown> | undefined;
+          return localeContent && (localeContent.h1_tag || localeContent.p_tag || localeContent.history_text);
+        });
+        // Always include ka and en as fallback
+        if (!availableLocales.includes('ka')) availableLocales.push('ka');
+        if (!availableLocales.includes('en')) availableLocales.push('en');
+      }
+      
       for (const locale of locales) {
         const slug = country[`slug_${locale}` as keyof typeof country] || country.slug_en;
         
-        // Alternates - ყველა ენის URL-ები
+        // Alternates - მხოლოდ იმ ენებისთვის სადაც კონტენტი არსებობს
         const alternateLanguages: Record<string, string> = {};
-        for (const l of locales) {
+        for (const l of availableLocales) {
           const altSlug = country[`slug_${l}` as keyof typeof country] || country.slug_en;
           alternateLanguages[l] = `${BASE_URL}/${l}/locations/${altSlug}`;
         }
@@ -117,14 +130,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 3. ლოკაციების გვერდები (დინამიური)
   // ============================================
   
+  // Fetch locations with their page content to check available translations
   const { data: locations } = await supabase
     .from('locations')
     .select(`
+      id,
       slug_ka, slug_en, slug_ru, slug_de, slug_tr, slug_ar,
       updated_at,
       countries!inner(
         slug_ka, slug_en, slug_ru, slug_de, slug_tr, slug_ar
-      )
+      ),
+      location_pages(content)
     `);
     // .eq('is_active', true);  // TODO: გააქტიურეთ როცა is_active ველი დაემატება
 
@@ -138,13 +154,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ? new Date(location.updated_at as string) 
         : staticPagesDate;
       
+      // Check which locales have actual content (to avoid hreflang mismatch)
+      const locationPage = Array.isArray(location.location_pages) 
+        ? location.location_pages[0] 
+        : location.location_pages;
+      const pageContent = locationPage?.content;
+      
+      // Determine available locales based on content
+      let availableLocales = [...locales];
+      if (pageContent) {
+        availableLocales = locales.filter(l => {
+          const localeContent = pageContent[l];
+          return localeContent && (localeContent.h1_tag || localeContent.p_tag || localeContent.history_text);
+        });
+        // Always include ka and en as fallback
+        if (!availableLocales.includes('ka')) availableLocales.push('ka');
+        if (!availableLocales.includes('en')) availableLocales.push('en');
+      }
+      
       for (const locale of locales) {
         const locationSlug = location[`slug_${locale}` as keyof typeof location] || location.slug_en;
         const countrySlug = country[`slug_${locale}`] || country.slug_en;
 
-        // Alternates - ყველა ენის URL-ები
+        // Alternates - მხოლოდ იმ ენებისთვის სადაც კონტენტი არსებობს
         const alternateLanguages: Record<string, string> = {};
-        for (const l of locales) {
+        for (const l of availableLocales) {
           const altLocationSlug = location[`slug_${l}` as keyof typeof location] || location.slug_en;
           const altCountrySlug = country[`slug_${l}`] || country.slug_en;
           alternateLanguages[l] = `${BASE_URL}/${l}/locations/${altCountrySlug}/${altLocationSlug}`;

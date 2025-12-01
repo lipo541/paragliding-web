@@ -145,7 +145,11 @@ export const STATIC_ROUTES = [
 
 export interface AlternateUrls {
   canonical: string;
-  languages: Record<Locale | 'x-default', string>;
+  /** 
+   * hreflang URLs - შეიძლება არ იყოს ყველა ენა 
+   * თუ კონტენტი არ არსებობს კონკრეტულ ენაზე
+   */
+  languages: Partial<Record<Locale | 'x-default', string>>;
 }
 
 export interface SEOMetadata {

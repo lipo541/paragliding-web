@@ -9,16 +9,21 @@ export default function Logo() {
   const locale = pathname.split('/')[1] || 'ka';
 
   return (
-    <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-opacity">
+    <Link 
+      href={`/${locale}`} 
+      className="flex items-center hover:opacity-80 transition-opacity"
+      aria-label="XParagliding - მთავარი გვერდი"
+    >
       {/* Vercel logo - თეთრ ფონზე შავი, შავ ფონზე თეთრი */}
       <Image
         src="/vercel.svg"
-        alt="XParagliding"
+        alt="XParagliding Logo"
         width={32}
         height={8}
         className="invert dark:invert-0"
         priority
       />
+      <span className="sr-only">XParagliding - პარაგლაიდინგის დაჯავშნა საქართველოში</span>
     </Link>
   );
 }

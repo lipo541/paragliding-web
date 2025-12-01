@@ -99,9 +99,10 @@ export default function ContactPage({ locale }: ContactPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#4697D2]/20 dark:bg-[#4697D2]/30 text-[#4697D2] hover:bg-black hover:text-white hover:border hover:border-white transition-all"
-                  aria-label={social.name}
+                  aria-label={`${social.name} - გამოგვყევით ${social.name}-ზე`}
                 >
                   <Icon className="w-4 h-4" />
+                  <span className="sr-only">{social.name} - XParagliding-ის ოფიციალური გვერდი</span>
                 </a>
               );
             })}

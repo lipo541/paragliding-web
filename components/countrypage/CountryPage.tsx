@@ -208,9 +208,9 @@ export default function CountryPage({ slug, locale, initialData }: CountryPagePr
   if (!country) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-        <h1 className="text-xl font-bold text-[#1a1a1a] dark:text-white">
+        <h2 className="text-xl font-bold text-[#1a1a1a] dark:text-white">
           {t('error.notFound')}
-        </h1>
+        </h2>
         <Link href={`/${locale}`} className="px-5 py-2 text-sm rounded-lg bg-[rgba(70,151,210,0.15)] dark:bg-white/10 hover:bg-[rgba(70,151,210,0.25)] dark:hover:bg-white/20 text-[#1a1a1a] dark:text-white transition-colors">
           {t('error.backToHome')}
         </Link>

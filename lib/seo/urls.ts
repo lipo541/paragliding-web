@@ -60,6 +60,37 @@ export function buildAlternateUrls(
   };
 }
 
+/**
+ * აგენერირებს alternate URLs მხოლოდ მითითებული ენებისთვის
+ * (hreflang language mismatch თავიდან ასაცილებლად)
+ */
+export function buildAlternateUrlsPartial(
+  pathsByLocale: Record<Locale, string>,
+  currentLocale: Locale,
+  availableLocales: Locale[]
+): AlternateUrls {
+  const languages: Record<string, string> = {};
+  
+  for (const locale of availableLocales) {
+    const path = pathsByLocale[locale] || pathsByLocale[X_DEFAULT_LOCALE];
+    if (path) {
+      languages[locale] = `${BASE_URL}/${locale}/${path}`;
+    }
+  }
+  
+  // x-default მიუთითებს ინგლისურზე თუ ხელმისაწვდომია, თუ არა - ქართულზე
+  if (languages['en']) {
+    languages['x-default'] = languages['en'];
+  } else if (languages['ka']) {
+    languages['x-default'] = languages['ka'];
+  }
+  
+  return {
+    canonical: languages[currentLocale] || languages['en'] || languages['ka'],
+    languages: languages as Record<Locale | 'x-default', string>,
+  };
+}
+
 // ============================================
 // 🗄️ Database Slug Fetchers
 // ============================================
@@ -174,42 +205,101 @@ export async function getCountrySlugs(
 
 /**
  * აგენერირებს location გვერდის alternate URLs
+ * მხოლოდ იმ ენებისთვის სადაც რეალურად არის კონტენტი (hreflang mismatch თავიდან აცილება)
  */
 export async function getLocationAlternateUrls(
   locationSlug: string,
   sourceLocale: Locale
 ): Promise<AlternateUrls | null> {
+  const supabase = createServerClient();
   const slugs = await getLocationSlugs(locationSlug, sourceLocale);
   
   if (!slugs) return null;
   
-  const pathsByLocale: Record<Locale, string> = {} as Record<Locale, string>;
+  // Fetch location_pages content to check which locales have content
+  const slugColumn = `slug_${sourceLocale}`;
+  const { data: location } = await supabase
+    .from('locations')
+    .select('id')
+    .eq(slugColumn, locationSlug)
+    .single();
   
-  for (const locale of locales) {
+  let availableLocales = [...locales]; // Default: all locales
+  
+  if (location) {
+    const { data: locationPage } = await supabase
+      .from('location_pages')
+      .select('content')
+      .eq('location_id', location.id)
+      .eq('is_active', true)
+      .single();
+    
+    if (locationPage?.content) {
+      // Filter locales to only those with actual content
+      availableLocales = locales.filter(locale => {
+        const localeContent = locationPage.content[locale];
+        // Check if locale has meaningful content (at least h1_tag or p_tag)
+        return localeContent && (localeContent.h1_tag || localeContent.p_tag || localeContent.history_text);
+      });
+      
+      // Always include ka and en as fallback (they usually have content)
+      if (!availableLocales.includes('ka')) availableLocales.push('ka');
+      if (!availableLocales.includes('en')) availableLocales.push('en');
+    }
+  }
+  
+  const pathsByLocale: Partial<Record<Locale, string>> = {};
+  
+  for (const locale of availableLocales) {
     pathsByLocale[locale] = `locations/${slugs.country[locale]}/${slugs.location[locale]}`;
   }
   
-  return buildAlternateUrls(pathsByLocale, sourceLocale);
+  return buildAlternateUrlsPartial(pathsByLocale as Record<Locale, string>, sourceLocale, availableLocales);
 }
 
 /**
  * აგენერირებს country გვერდის alternate URLs
+ * მხოლოდ იმ ენებისთვის სადაც რეალურად არის კონტენტი
  */
 export async function getCountryAlternateUrls(
   countrySlug: string,
   sourceLocale: Locale
 ): Promise<AlternateUrls | null> {
+  const supabase = createServerClient();
   const slugs = await getCountrySlugs(countrySlug, sourceLocale);
   
   if (!slugs) return null;
   
-  const pathsByLocale: Record<Locale, string> = {} as Record<Locale, string>;
+  // Fetch country content to check which locales have content
+  const slugColumn = `slug_${sourceLocale}`;
+  const { data: country } = await supabase
+    .from('countries')
+    .select('content')
+    .eq(slugColumn, countrySlug)
+    .single();
   
-  for (const locale of locales) {
+  let availableLocales = [...locales]; // Default: all locales
+  
+  if (country?.content) {
+    // Filter locales to only those with actual content
+    availableLocales = locales.filter(locale => {
+      const localeContent = country.content[locale];
+      // Check if locale has meaningful content
+      return localeContent && (localeContent.h1_tag || localeContent.p_tag || localeContent.history_text);
+    });
+    
+    // Always include ka and en as fallback
+    if (!availableLocales.includes('ka')) availableLocales.push('ka');
+    if (!availableLocales.includes('en')) availableLocales.push('en');
+  }
+  
+  const pathsByLocale: Partial<Record<Locale, string>> = {};
+  
+  for (const locale of availableLocales) {
     pathsByLocale[locale] = `locations/${slugs.country[locale]}`;
   }
   
-  return buildAlternateUrls(pathsByLocale, sourceLocale);
+  return buildAlternateUrlsPartial(pathsByLocale as Record<Locale, string>, sourceLocale, availableLocales);
 }
 
 /**

@@ -153,17 +153,22 @@ export default function LoginForm() {
     <div className="relative isolate flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-4">
         <div className="flex justify-center">
-          <Link href={`/${currentLocale}`} className="hover:opacity-80 transition-opacity">
+          <Link 
+            href={`/${currentLocale}`} 
+            className="hover:opacity-80 transition-opacity"
+            aria-label="XParagliding - მთავარი გვერდი"
+          >
             <div className="px-4 py-2 border-2 border-[#4697D2] dark:border-white/30 rounded-lg backdrop-blur-md bg-[rgba(70,151,210,0.1)] dark:bg-white/5">
               <Image
                 src="/vercel.svg"
-                alt="XParagliding"
+                alt="XParagliding Logo"
                 width={32}
                 height={8}
                 className="invert dark:invert-0"
                 priority
               />
             </div>
+            <span className="sr-only">XParagliding - პარაგლაიდინგის დაჯავშნა</span>
           </Link>
         </div>
 

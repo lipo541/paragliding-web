@@ -128,12 +128,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Private გვერდები - No Index
+        // Private გვერდები - No Index (არ უნდა ინდექსირდეს, მაგრამ ლინკები follow-ია)
         source: '/:locale/(login|register|profile|bookings|notifications|cms|user|forgot-password)',
         headers: [
           {
             key: 'X-Robots-Tag',
-            value: 'noindex, nofollow',
+            value: 'noindex',
           },
         ],
       },
