@@ -72,6 +72,6 @@ export default function robots(): MetadataRoute.Robots {
       `${BASE_URL}/image-sitemap.xml`,
       `${BASE_URL}/video-sitemap.xml`,
     ],
-    host: BASE_URL,
+    // Note: 'host' directive removed - it's Yandex-specific and ignored by Google
   };
 }
