@@ -134,6 +134,7 @@ export const STATIC_ROUTES = [
   '/about',
   '/contact',
   '/locations',
+  '/bookings',  // კონვერსიის გვერდი - ჯავშნის ფორმა
   '/promotions',
   '/terms',
   '/privacy',

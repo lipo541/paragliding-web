@@ -27,15 +27,6 @@ import {
   Video
 } from 'lucide-react';
 
-// Background images for slideshow
-const backgroundImages = [
-  'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070', // Paragliding over mountains
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070', // Mountain landscape
-  'https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070', // Paragliding sunset
-  'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?q=80&w=2070', // Mountain peaks
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070', // Mountain nature
-];
-
 // --- Interfaces ---
 
 interface Location {
@@ -391,93 +382,6 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
 
   return (
     <div className="min-h-screen relative selection:bg-blue-500/30">
-      {/* All Keyframes in One Style Tag */}
-      <style jsx>{`
-        @keyframes floatSlow {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-            opacity: 0.2;
-          }
-          25% {
-            transform: translateY(-50px) translateX(25px);
-            opacity: 0.35;
-          }
-          50% {
-            transform: translateY(-80px) translateX(40px);
-            opacity: 0.4;
-          }
-          75% {
-            transform: translateY(-50px) translateX(55px);
-            opacity: 0.3;
-          }
-        }
-
-        @keyframes floatMedium {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-            opacity: 0.15;
-          }
-          33% {
-            transform: translateY(-60px) translateX(-15px);
-            opacity: 0.3;
-          }
-          66% {
-            transform: translateY(-100px) translateX(-30px);
-            opacity: 0.25;
-          }
-        }
-
-        @keyframes floatFast {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-50px) translateX(25px);
-            opacity: 0.5;
-          }
-        }
-
-        @keyframes floatDrift {
-          0%, 100% {
-            transform: translateY(0) translateX(0) rotate(0deg);
-            opacity: 0.15;
-          }
-          25% {
-            transform: translateY(-30px) translateX(40px) rotate(30deg);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-60px) translateX(30px) rotate(60deg);
-            opacity: 0.25;
-          }
-          75% {
-            transform: translateY(-40px) translateX(-10px) rotate(90deg);
-            opacity: 0.28;
-          }
-        }
-
-        @keyframes pulseGlow {
-          0%, 100% {
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-          }
-          50% {
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
-          }
-        }
-
-        @keyframes breathe {
-          0%, 100% {
-            opacity: 0.6;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.8;
-            transform: scale(1.02);
-          }
-        }
-      `}</style>
-      
       {/* Full Screen Hero - Using Global Background */}
       <div 
         ref={heroRef}
@@ -507,46 +411,6 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
         
         {/* Dark Mode Overlay */}
         <div className="absolute inset-0 hidden dark:block bg-black/60" />
-        
-        {/* Floating Particles Effect - Enhanced */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Large slow particles */}
-          <div 
-            className="absolute top-[15%] left-[20%] w-2.5 h-2.5 bg-white/20 rounded-full blur-[2px]"
-            style={{ animation: 'floatSlow 18s ease-in-out infinite' }}
-          />
-          <div 
-            className="absolute top-[25%] right-[25%] w-2 h-2 bg-white/15 rounded-full blur-[2px]"
-            style={{ animation: 'floatMedium 15s ease-in-out infinite 2s' }}
-          />
-          {/* Medium particles */}
-          <div 
-            className="absolute top-[45%] left-[15%] w-1.5 h-1.5 bg-white/25 rounded-full blur-[1px]"
-            style={{ animation: 'floatFast 10s ease-in-out infinite' }}
-          />
-          <div 
-            className="absolute top-[35%] right-[15%] w-1.5 h-1.5 bg-white/20 rounded-full blur-[1px]"
-            style={{ animation: 'floatDrift 20s ease-in-out infinite 5s' }}
-          />
-          {/* Small fast particles */}
-          <div 
-            className="absolute top-[60%] left-[40%] w-1 h-1 bg-white/30 rounded-full blur-[1px]"
-            style={{ animation: 'floatFast 8s ease-in-out infinite 1s' }}
-          />
-          <div 
-            className="absolute top-[55%] right-[35%] w-1 h-1 bg-white/25 rounded-full blur-[1px]"
-            style={{ animation: 'floatMedium 12s ease-in-out infinite 4s' }}
-          />
-          {/* Distant particles */}
-          <div 
-            className="absolute bottom-[30%] left-[30%] w-2 h-2 bg-white/15 rounded-full blur-[3px]"
-            style={{ animation: 'floatSlow 22s ease-in-out infinite 8s' }}
-          />
-          <div 
-            className="absolute bottom-[25%] right-[20%] w-1.5 h-1.5 bg-white/20 rounded-full blur-[2px]"
-            style={{ animation: 'floatDrift 25s ease-in-out infinite 3s' }}
-          />
-        </div>
         
         {/* Hero Content - Info-Rich Layout */}
         <div 
@@ -1306,8 +1170,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
               
               {/* Booking Card */}
               <div className="group relative rounded-xl backdrop-blur-md shadow-xl shadow-black/5 dark:shadow-black/30 overflow-hidden transition-all duration-500 hover:shadow-2xl border border-[#4697D2]/30 dark:border-white/10 bg-[rgba(70,151,210,0.15)] dark:bg-black/40">
-                {/* Animated Gradient Border - hidden in dark mode */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400/30 via-purple-400/20 to-pink-400/30 dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" style={{ animation: 'pulseGlow 3s ease-in-out infinite' }} />
+                {/* Gradient Border - hidden in dark mode */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400/30 via-purple-400/20 to-pink-400/30 dark:from-transparent dark:via-transparent dark:to-transparent p-[1px] pointer-events-none" />
                 {/* Top Highlight */}
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 dark:via-white/10 to-transparent" />
                 {/* Corner Glow - disabled in dark mode */}

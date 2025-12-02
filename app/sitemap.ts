@@ -33,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const isHomePage = route === '';
       const isLocationsIndex = route === '/locations';
       const isPromotions = route === '/promotions';
+      const isBookings = route === '/bookings';
       const isLegalPage = route === '/terms' || route === '/privacy';
       const isInfoPage = route === '/about' || route === '/contact';
       
@@ -45,6 +46,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency = 'daily';
       } else if (isLocationsIndex) {
         priority = 0.9; // ლოკაციების მთავარი გვერდი - მაღალი
+        changeFrequency = 'weekly';
+      } else if (isBookings) {
+        priority = 0.85; // ჯავშნის გვერდი - კონვერსიის გვერდი
         changeFrequency = 'weekly';
       } else if (isPromotions) {
         priority = 0.8; // აქციები ხშირად იცვლება

@@ -21,7 +21,6 @@ export default function robots(): MetadataRoute.Robots {
           '/*/register',
           '/*/forgot-password',
           '/*/profile',
-          '/*/bookings',
           '/*/notifications',
           '/*/user',
           '/*/user-promotions',
@@ -55,7 +54,6 @@ export default function robots(): MetadataRoute.Robots {
           '/*/register',
           '/*/forgot-password',
           '/*/profile',
-          '/*/bookings',
           '/*/notifications',
           '/*/user',
           '/*/user-promotions',
@@ -68,7 +66,12 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    // Main sitemap + Image/Video sitemaps
+    sitemap: [
+      `${BASE_URL}/sitemap.xml`,
+      `${BASE_URL}/image-sitemap.xml`,
+      `${BASE_URL}/video-sitemap.xml`,
+    ],
     host: BASE_URL,
   };
 }
