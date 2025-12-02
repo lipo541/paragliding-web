@@ -75,6 +75,20 @@ const nextConfig: NextConfig = {
       },
       // Static pages redirect to default locale
       ...staticRedirects,
+      
+      // Dynamic routes - locale-ის გარეშე URL-ები გადამისამართდეს /ka-ზე
+      // /locations/:country/:location → /ka/locations/:country/:location
+      {
+        source: '/locations/:country/:location',
+        destination: '/ka/locations/:country/:location',
+        permanent: true, // 308 redirect
+      },
+      // /locations/:country → /ka/locations/:country
+      {
+        source: '/locations/:country',
+        destination: '/ka/locations/:country',
+        permanent: true, // 308 redirect
+      },
     ];
   },
 
