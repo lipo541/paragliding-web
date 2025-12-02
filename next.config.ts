@@ -57,23 +57,24 @@ const nextConfig: NextConfig = {
   // ============================================
   
   async redirects() {
+    // სტატიკური გვერდები რომლებიც უნდა გადამისამართდეს /ka-ზე
+    const staticRoutes = ['about', 'contact', 'locations', 'promotions', 'bookings', 'terms', 'privacy'];
+    
+    const staticRedirects = staticRoutes.map(route => ({
+      source: `/${route}`,
+      destination: `/ka/${route}`,
+      permanent: true, // 308 redirect
+    }));
+    
     return [
-      // Trailing slash redirect (თუ ვინმე / -ით შემოვა)
-      // Next.js ავტომატურად აკეთებს trailingSlash: false-ით
-      
-      // Legacy URL-ები (თუ გაქვთ ძველი URL-ები)
-      // {
-      //   source: '/old-page',
-      //   destination: '/ka/new-page',
-      //   permanent: true, // 301 redirect
-      // },
-      
       // Root redirect to default locale
       {
         source: '/',
         destination: '/ka',
         permanent: true, // 308 redirect - SEO-სთვის უკეთესია
       },
+      // Static pages redirect to default locale
+      ...staticRedirects,
     ];
   },
 
