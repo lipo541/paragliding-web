@@ -76,6 +76,43 @@ export function WebSiteJsonLd() {
 }
 
 // ============================================
+// 🧭 SiteNavigationElement Schema (Google Sitelinks-ისთვის)
+// ============================================
+
+interface NavItem {
+  name: string;
+  url: string;
+}
+
+export function SiteNavigationJsonLd({ locale = 'en' }: { locale?: string }) {
+  const navItems: NavItem[] = [
+    { name: 'Locations', url: `${BASE_URL}/${locale}/locations` },
+    { name: 'Bookings', url: `${BASE_URL}/${locale}/bookings` },
+    { name: 'Promotions', url: `${BASE_URL}/${locale}/promotions` },
+    { name: 'About Us', url: `${BASE_URL}/${locale}/about` },
+    { name: 'Contact', url: `${BASE_URL}/${locale}/contact` },
+  ];
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": navItems.map((item, index) => ({
+      "@type": "SiteNavigationElement",
+      "position": index + 1,
+      "name": item.name,
+      "url": item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// ============================================
 // 🍞 Breadcrumb Schema
 // ============================================
 
@@ -187,6 +224,13 @@ export function CountryJsonLd({
 // 📍 LocalBusiness Schema (ლოკაციისთვის - Google Rich Results მხარდაჭერილი)
 // ============================================
 
+interface FlightTypeOffer {
+  name: string;
+  description?: string;
+  price: number;
+  currency?: string;
+}
+
 interface LocationSchemaProps {
   name: string;
   description: string;
@@ -199,6 +243,7 @@ interface LocationSchemaProps {
   minPrice?: number;
   maxPrice?: number;
   currency?: string;
+  flightTypes?: FlightTypeOffer[];
 }
 
 export function LocationJsonLd({
@@ -213,6 +258,7 @@ export function LocationJsonLd({
   minPrice,
   maxPrice,
   currency = '₾',
+  flightTypes,
 }: LocationSchemaProps) {
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -252,6 +298,28 @@ export function LocationJsonLd({
     schema["geo"] = {
       "@type": "GeoCoordinates",
       "elevation": `${altitude}m`,
+    };
+  }
+
+  // Flight Types as OfferCatalog - Google Sitelinks-ისთვის
+  if (flightTypes && flightTypes.length > 0) {
+    schema["hasOfferCatalog"] = {
+      "@type": "OfferCatalog",
+      "name": `Paragliding Flights in ${name}`,
+      "itemListElement": flightTypes.map((flight, index) => ({
+        "@type": "Offer",
+        "position": index + 1,
+        "name": flight.name,
+        "description": flight.description || `${flight.name} paragliding experience`,
+        "price": flight.price,
+        "priceCurrency": flight.currency || "GEL",
+        "availability": "https://schema.org/InStock",
+        "itemOffered": {
+          "@type": "Service",
+          "name": flight.name,
+          "description": flight.description || `${flight.name} in ${name}`,
+        }
+      }))
     };
   }
 

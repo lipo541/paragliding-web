@@ -168,6 +168,21 @@ export default async function Page({ params }: PageProps) {
     }
   } : null;
 
+  // ✅ Extract flight types for JSON-LD (current locale with prices)
+  const localeFlightTypes = contentData.flight_types || [];
+  const sharedFlightTypes = locationPageData?.content?.shared_flight_types || [];
+  
+  // Map flight types with prices for Schema.org
+  const flightTypesForSchema = localeFlightTypes.map((ft: { shared_id?: string; name: string; description?: string }) => {
+    const sharedFT = sharedFlightTypes.find((sft: { id: string }) => sft.id === ft.shared_id);
+    return {
+      name: ft.name,
+      description: ft.description,
+      price: sharedFT?.price_gel || 350, // fallback price
+      currency: 'GEL',
+    };
+  }).filter((ft: { name: string }) => ft.name); // filter empty
+
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -182,6 +197,7 @@ export default async function Page({ params }: PageProps) {
             ratingCount={locationData.cached_rating_count}
             altitude={locationData.altitude}
             url={pageUrl}
+            flightTypes={flightTypesForSchema.length > 0 ? flightTypesForSchema : undefined}
           />
           <BreadcrumbJsonLd items={breadcrumbItems} />
         </>

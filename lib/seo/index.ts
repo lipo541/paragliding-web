@@ -58,6 +58,7 @@ export {
 export {
   OrganizationJsonLd,
   WebSiteJsonLd,
+  SiteNavigationJsonLd,
   BreadcrumbJsonLd,
   CountryJsonLd,
   LocationJsonLd,

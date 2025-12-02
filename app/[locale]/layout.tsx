@@ -9,6 +9,7 @@ import {
   BASE_URL,
   OrganizationJsonLd,
   WebSiteJsonLd,
+  SiteNavigationJsonLd,
   type Locale 
 } from '@/lib/seo';
 
@@ -60,6 +61,7 @@ export default async function LocaleLayout({
       {/* Global JSON-LD Schemas */}
       <OrganizationJsonLd />
       <WebSiteJsonLd />
+      <SiteNavigationJsonLd locale={locale} />
       
       {/* SEO Navigation Links - Server Rendered for Google */}
       <SEONavLinks locale={locale} />
