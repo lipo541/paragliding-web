@@ -72,7 +72,7 @@ const nextConfig: NextConfig = {
       {
         source: '/',
         destination: '/ka',
-        permanent: false, // 307 redirect (შეიძლება შეიცვალოს)
+        permanent: true, // 308 redirect - SEO-სთვის უკეთესია
       },
     ];
   },
