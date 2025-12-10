@@ -1,0 +1,15 @@
+{
+  "dashboard": "Панель",
+  "bookings": "Бронирования",
+  "notifications": "Уведомления",
+  "profile": "Профиль",
+  "companies": "Компании",
+  "flights": "полётов",
+  "verified": "Проверен",
+  "pending": "Ожидание",
+  "company": "Компания",
+  "joinCompany": "Присоединиться к компании",
+  "stats": "Статистика",
+  "earnings": "Доходы",
+  "settings": "Настройки"
+}

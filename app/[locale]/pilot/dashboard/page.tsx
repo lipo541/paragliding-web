@@ -1,0 +1,13 @@
+import PilotDashboard from '@/components/pilotbottomnav/PilotDashboard';
+import PilotBottomNav from '@/components/pilotbottomnav/PilotBottomNav';
+
+export default function PilotDashboardPage() {
+  return (
+    <div className="min-h-screen bg-background pb-20 md:pb-0 md:pr-20">
+      <PilotBottomNav />
+      <main className="mx-auto max-w-6xl p-4 md:p-8">
+        <PilotDashboard />
+      </main>
+    </div>
+  );
+}

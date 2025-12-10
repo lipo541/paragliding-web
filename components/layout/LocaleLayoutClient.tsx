@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import UserBottomNav from "@/components/userbottomnav/UserBottomNav";
+import CompanyBottomNav from "@/components/companybottomnav/CompanyBottomNav";
+import PilotBottomNav from "@/components/pilotbottomnav/PilotBottomNav";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -36,6 +38,8 @@ export default function LocaleLayoutClient({ children, locale }: LocaleLayoutCli
       </div>
       <Footer />
       <UserBottomNav />
+      <CompanyBottomNav />
+      <PilotBottomNav />
     </ThemeProvider>
   );
 }

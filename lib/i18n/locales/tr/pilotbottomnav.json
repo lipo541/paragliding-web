@@ -1,0 +1,15 @@
+{
+  "dashboard": "Panel",
+  "bookings": "Rezervasyonlar",
+  "notifications": "Bildirimler",
+  "profile": "Profil",
+  "companies": "Şirketler",
+  "flights": "uçuş",
+  "verified": "Doğrulandı",
+  "pending": "Beklemede",
+  "company": "Şirket",
+  "joinCompany": "Bir Şirkete Katıl",
+  "stats": "İstatistikler",
+  "earnings": "Kazançlar",
+  "settings": "Ayarlar"
+}

@@ -1,0 +1,35 @@
+{
+  "title": "Firmenregistrierung",
+  "subtitle": "Füllen Sie das Formular aus, um Ihr Unternehmen zu registrieren",
+  "form": {
+    "logo": "Logo hochladen",
+    "name": "Firmenname",
+    "namePlaceholder": "Paragliding Georgia GmbH",
+    "identificationCode": "Identifikationscode",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "foundedDate": "Gründungsdatum",
+    "description": "Beschreibung",
+    "descriptionOptional": "Optional",
+    "submit": "Antrag einreichen",
+    "submitting": "Wird gesendet..."
+  },
+  "languages": {
+    "ka": "Georgisch",
+    "en": "Englisch",
+    "ru": "Russisch",
+    "de": "Deutsch",
+    "tr": "Türkisch",
+    "ar": "Arabisch"
+  },
+  "success": {
+    "title": "Antrag eingereicht!",
+    "message": "Ihr Antrag auf Firmenregistrierung wurde erhalten. Ein Administrator wird ihn prüfen und sich mit Ihnen in Verbindung setzen.",
+    "backHome": "Zurück zur Startseite"
+  },
+  "errors": {
+    "alreadyPending": "Ihr Firmenantrag wurde bereits eingereicht und wird geprüft",
+    "logoSize": "Die Logogröße darf 5MB nicht überschreiten",
+    "registrationFailed": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut."
+  }
+}

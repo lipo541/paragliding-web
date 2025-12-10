@@ -584,6 +584,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
                   <button
                     onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
                     className="lg:hidden p-1"
+                    aria-label={isHistoryExpanded ? 'Collapse section' : 'Expand section'}
+                    aria-expanded={String(isHistoryExpanded) as 'true' | 'false'}
                   >
                     <ChevronDown 
                       className={`w-5 h-5 text-[#1a1a1a] dark:text-white transition-transform duration-300 ${isHistoryExpanded ? 'rotate-180' : ''}`} 
@@ -1053,9 +1055,10 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
                     src={getMapSrc(location.map_iframe_url)}
                     width="100%"
                     height="100%"
-                    style={{ border: 0 }}
+                    className="border-0"
                     allowFullScreen
                     loading="lazy"
+                    title="Location map"
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
@@ -1286,6 +1289,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
           <button 
             onClick={() => setLightboxIndex(null)}
             className="absolute top-6 right-6 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+            aria-label="Close lightbox"
           >
             <X className="w-6 h-6" />
           </button>
@@ -1296,6 +1300,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
               setLightboxIndex(prev => prev === null ? null : (prev - 1 + gallery.length) % gallery.length);
             }}
             className="absolute left-4 p-3 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Previous image"
           >
             <ChevronLeft className="w-8 h-8" />
           </button>
@@ -1324,6 +1329,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
               setLightboxIndex(prev => prev === null ? null : (prev + 1) % gallery.length);
             }}
             className="absolute right-4 p-3 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Next image"
           >
             <ChevronRight className="w-8 h-8" />
           </button>
@@ -1380,6 +1386,7 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
             <button
               onClick={() => setShowAuthModal(false)}
               className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-foreground/10 transition-colors"
+              aria-label="Close modal"
             >
               <X className="w-5 h-5 text-foreground/60" />
             </button>

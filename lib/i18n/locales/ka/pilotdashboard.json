@@ -1,0 +1,17 @@
+{
+  "welcome": "გამარჯობა",
+  "welcomeSubtitle": "კეთილი იყოს შენი დაბრუნება პილოტის პანელზე",
+  "totalBookings": "სულ ჯავშანი",
+  "pendingBookings": "მომლოდინე",
+  "tandemFlights": "ტანდემ ფრენა",
+  "rating": "რეიტინგი",
+  "quickActions": "სწრაფი მოქმედებები",
+  "editProfile": "პროფილის რედაქტირება",
+  "manageSchedule": "განრიგის მართვა",
+  "certificates": "სერთიფიკატები",
+  "recentBookings": "ბოლო ჯავშნები",
+  "viewAll": "ყველას ნახვა",
+  "noBookings": "ჯერ არ გაქვთ ჯავშნები",
+  "loadingBookings": "ჯავშნების ჩატვირთვა...",
+  "noPilotProfile": "პილოტის პროფილი ვერ მოიძებნა"
+}

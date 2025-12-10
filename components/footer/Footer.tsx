@@ -103,6 +103,39 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Join Us Links */}
+          <div>
+            <span className="block text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">
+              შემოგვიერთდი
+            </span>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href={`/${locale}/register?type=company`}
+                  className="text-sm text-[#2d2d2d]/70 dark:text-white/60 hover:text-[#1a1a1a] dark:hover:text-white transition-colors"
+                >
+                  გაწევრიანდი როგორც კომპანია
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/register?type=pilot`}
+                  className="text-sm text-[#2d2d2d]/70 dark:text-white/60 hover:text-[#1a1a1a] dark:hover:text-white transition-colors"
+                >
+                  გაწევრიანდი როგორც პილოტი
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/register?type=student`}
+                  className="text-sm text-[#2d2d2d]/70 dark:text-white/60 hover:text-[#1a1a1a] dark:hover:text-white transition-colors"
+                >
+                  გახდი სტუდენტი - ისწავლე ფრენა
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Social Links */}
           <div>
             <span className="block text-sm font-semibold text-[#1a1a1a] dark:text-white mb-3">{t('followUs')}</span>

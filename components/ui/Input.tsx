@@ -34,7 +34,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             ${error ? 'border-red-500 focus:ring-red-500' : 'border-foreground/20'}
             ${className}
           `}
-          aria-invalid={error ? 'true' : 'false'}
+          aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
           {...props}
         />

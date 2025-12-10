@@ -1,0 +1,15 @@
+{
+  "dashboard": "لوحة التحكم",
+  "bookings": "الحجوزات",
+  "notifications": "الإشعارات",
+  "profile": "الملف الشخصي",
+  "companies": "الشركات",
+  "flights": "رحلات",
+  "verified": "موثق",
+  "pending": "قيد الانتظار",
+  "company": "الشركة",
+  "joinCompany": "انضم إلى شركة",
+  "stats": "الإحصائيات",
+  "earnings": "الأرباح",
+  "settings": "الإعدادات"
+}

@@ -1,0 +1,17 @@
+{
+  "welcome": "مرحباً",
+  "welcomeSubtitle": "مرحباً بك في لوحة تحكم الطيار",
+  "totalBookings": "إجمالي الحجوزات",
+  "pendingBookings": "قيد الانتظار",
+  "tandemFlights": "رحلات التاندم",
+  "rating": "التقييم",
+  "quickActions": "إجراءات سريعة",
+  "editProfile": "تعديل الملف الشخصي",
+  "manageSchedule": "إدارة الجدول",
+  "certificates": "الشهادات",
+  "recentBookings": "الحجوزات الأخيرة",
+  "viewAll": "عرض الكل",
+  "noBookings": "لا توجد حجوزات بعد",
+  "loadingBookings": "جاري تحميل الحجوزات...",
+  "noPilotProfile": "لم يتم العثور على ملف الطيار"
+}

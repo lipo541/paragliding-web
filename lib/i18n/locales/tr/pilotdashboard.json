@@ -1,0 +1,17 @@
+{
+  "welcome": "Merhaba",
+  "welcomeSubtitle": "Pilot panelinize hoş geldiniz",
+  "totalBookings": "Toplam Rezervasyon",
+  "pendingBookings": "Beklemede",
+  "tandemFlights": "Tandem Uçuşları",
+  "rating": "Puan",
+  "quickActions": "Hızlı İşlemler",
+  "editProfile": "Profili Düzenle",
+  "manageSchedule": "Takvimi Yönet",
+  "certificates": "Sertifikalar",
+  "recentBookings": "Son Rezervasyonlar",
+  "viewAll": "Tümünü Gör",
+  "noBookings": "Henüz rezervasyon yok",
+  "loadingBookings": "Rezervasyonlar yükleniyor...",
+  "noPilotProfile": "Pilot profili bulunamadı"
+}

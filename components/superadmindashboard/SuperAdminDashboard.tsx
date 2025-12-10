@@ -12,6 +12,8 @@ import Bookings from './bookings/Bookings';
 import Promotions from './promotions/Promotions';
 import Message from './messages/Message';
 import MessagesList from './messages/MessagesList';
+import CompaniesManager from './companies/CompaniesManager';
+import PilotsManager from './pilots/PilotsManager';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
@@ -366,17 +368,9 @@ export default function SuperAdminDashboard() {
               </div>
             )}
 
-            {activeTab === 'pilots' && (
-              <div className="bg-background rounded-lg border border-foreground/10 p-6">
-                <p className="text-foreground/60">პილოტების მართვა - განვითარების პროცესშია</p>
-              </div>
-            )}
+            {activeTab === 'pilots' && <PilotsManager />}
 
-            {activeTab === 'companies' && (
-              <div className="bg-background rounded-lg border border-foreground/10 p-6">
-                <p className="text-foreground/60">კომპანიების მართვა - განვითარების პროცესშია</p>
-              </div>
-            )}
+            {activeTab === 'companies' && <CompaniesManager />}
 
             {activeTab === 'bookings' && <Bookings />}
 

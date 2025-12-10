@@ -1,0 +1,17 @@
+{
+  "welcome": "Hello",
+  "welcomeSubtitle": "Welcome back to your pilot dashboard",
+  "totalBookings": "Total Bookings",
+  "pendingBookings": "Pending",
+  "tandemFlights": "Tandem Flights",
+  "rating": "Rating",
+  "quickActions": "Quick Actions",
+  "editProfile": "Edit Profile",
+  "manageSchedule": "Manage Schedule",
+  "certificates": "Certificates",
+  "recentBookings": "Recent Bookings",
+  "viewAll": "View All",
+  "noBookings": "No bookings yet",
+  "loadingBookings": "Loading bookings...",
+  "noPilotProfile": "Pilot profile not found"
+}

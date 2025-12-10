@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 import { useState, useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowRight, Lock, Mail, User, Eye, EyeOff } from 'lucide-react'
 import { SiGoogle } from 'react-icons/si'
 import type { Locale } from '@/lib/i18n/config'
@@ -19,7 +19,10 @@ type SocialProvider = {
 export default function RegisterForm() {
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
+  
+  const registerType = searchParams.get('type') // 'company', 'pilot', 'student'
   
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -49,7 +52,20 @@ export default function RegisterForm() {
         const { data: { session } } = await supabase.auth.getSession()
         
         if (session) {
-          // User is already logged in, check their role and redirect
+          // User is already logged in
+          // If they came with ?type=company/pilot/student, redirect to that form
+          if (registerType === 'company') {
+            router.push(`/${currentLocale}/register/company`)
+            return
+          } else if (registerType === 'pilot') {
+            router.push(`/${currentLocale}/register/pilot`)
+            return
+          } else if (registerType === 'student') {
+            router.push(`/${currentLocale}/register/student`)
+            return
+          }
+          
+          // Otherwise, check their role and redirect
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
@@ -72,7 +88,7 @@ export default function RegisterForm() {
     }
 
     checkAuth()
-  }, [supabase, router, currentLocale])
+  }, [supabase, router, currentLocale, registerType])
 
   // Prevent hydration mismatch
   if (checkingAuth) {

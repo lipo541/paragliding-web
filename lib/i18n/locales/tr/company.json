@@ -1,0 +1,35 @@
+{
+  "title": "Şirket Kaydı",
+  "subtitle": "Şirketinizi kaydetmek için formu doldurun",
+  "form": {
+    "logo": "Logo Yükle",
+    "name": "Şirket Adı",
+    "namePlaceholder": "Paragliding Georgia Ltd.",
+    "identificationCode": "Kimlik Kodu",
+    "phone": "Telefon",
+    "email": "E-posta",
+    "foundedDate": "Kuruluş Tarihi",
+    "description": "Açıklama",
+    "descriptionOptional": "İsteğe bağlı",
+    "submit": "Başvuruyu Gönder",
+    "submitting": "Gönderiliyor..."
+  },
+  "languages": {
+    "ka": "Gürcüce",
+    "en": "İngilizce",
+    "ru": "Rusça",
+    "de": "Almanca",
+    "tr": "Türkçe",
+    "ar": "Arapça"
+  },
+  "success": {
+    "title": "Başvuru Gönderildi!",
+    "message": "Şirket kayıt başvurunuz alındı. Bir yönetici inceleyecek ve sizinle iletişime geçecektir.",
+    "backHome": "Ana Sayfaya Dön"
+  },
+  "errors": {
+    "alreadyPending": "Şirket başvurunuz zaten gönderildi ve inceleme bekliyor",
+    "logoSize": "Logo boyutu 5MB'ı geçmemelidir",
+    "registrationFailed": "Kayıt başarısız. Lütfen tekrar deneyin."
+  }
+}

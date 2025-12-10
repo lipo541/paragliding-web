@@ -1,0 +1,17 @@
+{
+  "dashboard": "დეშბორდი",
+  "bookings": "ჯავშნები",
+  "notifications": "შეტყობინებები",
+  "profile": "პროფილი",
+  "companies": "კომპანიები",
+  "flights": "ფრენა",
+  "verified": "ვერიფიცირებული",
+  "pending": "მომლოდინე",
+  "company": "კომპანია",
+  "joinCompany": "კომპანიასთან გაწევრიანება",
+  "stats": "სტატისტიკა",
+  "earnings": "შემოსავლები",
+  "settings": "პარამეტრები",
+  "logout": "გასვლა",
+  "pilot": "პილოტი"
+}

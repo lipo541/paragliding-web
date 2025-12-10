@@ -14,6 +14,7 @@ import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import PasswordStrength from '@/components/ui/PasswordStrength';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import MyApplications from './MyApplications';
 
 interface ProfileData {
   full_name: string | null;
@@ -251,31 +252,34 @@ export default function UserProfile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pb-20 bg-zinc-50 dark:bg-black">
+      <div className="min-h-screen flex items-center justify-center pb-20">
         <Spinner size="lg" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black pb-24 pt-6 px-4 md:pr-20 selection:bg-blue-500/30">
-      <div className="max-w-2xl mx-auto space-y-3">
+    <div className="min-h-screen pb-24 pt-6 px-4 md:pr-20 selection:bg-blue-500/30">
+      <div className="max-w-2xl mx-auto space-y-4">
         
         {/* Compact Header */}
         <div className="animate-fadeIn">
-          <h1 className="text-lg lg:text-xl font-bold text-foreground mb-1">{t('title')}</h1>
-          <p className="text-xs text-foreground/50">{t('subtitle')}</p>
+          <h1 className="text-xl lg:text-2xl font-bold text-[#1a1a1a] dark:text-white mb-1">{t('title')}</h1>
+          <p className="text-sm text-[#1a1a1a]/50 dark:text-white/50">{t('subtitle')}</p>
         </div>
 
+        {/* My Applications Section */}
+        <MyApplications />
+
         {/* Avatar Upload Section - Glass Card */}
-        <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm p-4 animate-fadeIn">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0">
-              <svg className="w-4 h-4 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl p-5 animate-fadeIn">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-1.5 rounded bg-[#4697D2]/20 dark:bg-white/10 flex-shrink-0">
+              <svg className="w-4 h-4 text-[#4697D2] dark:text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <h2 className="text-sm font-bold text-foreground">{t('avatar.title')}</h2>
+            <h2 className="text-sm font-bold text-[#1a1a1a] dark:text-white">{t('avatar.title')}</h2>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -285,10 +289,10 @@ export default function UserProfile() {
                 <img
                   src={profile.avatar_url}
                   alt="Profile"
-                  className="w-20 h-20 rounded-full object-cover border border-foreground/10 shadow-md"
+                  className="w-20 h-20 rounded-full object-cover border border-[#4697D2]/20 dark:border-white/10 shadow-md"
                 />
               ) : (
-                <div className="w-20 h-20 rounded-full bg-foreground text-background flex items-center justify-center text-2xl font-bold shadow-md">
+                <div className="w-20 h-20 rounded-full bg-[#4697D2] dark:bg-white text-white dark:text-[#1a1a1a] flex items-center justify-center text-2xl font-bold shadow-md">
                   {profile.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
                 </div>
               )}
@@ -302,7 +306,7 @@ export default function UserProfile() {
               {profile.avatar_url && !uploadingAvatar && (
                 <button
                   onClick={handleDeleteAvatar}
-                  className="absolute -top-1 -right-1 bg-foreground text-background rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                  className="absolute -top-1 -right-1 bg-[#4697D2] dark:bg-white text-white dark:text-[#1a1a1a] rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
                   aria-label={t('avatar.delete')}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,8 +320,8 @@ export default function UserProfile() {
             <div
               className={`flex-1 border border-dashed rounded-lg p-4 text-center transition-all cursor-pointer ${
                 isDragging
-                  ? 'border-foreground bg-foreground/5'
-                  : 'border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5'
+                  ? 'border-[#4697D2] dark:border-white bg-[#4697D2]/5 dark:bg-white/5'
+                  : 'border-[#4697D2]/30 dark:border-white/20 hover:border-[#4697D2]/60 dark:hover:border-white/40 hover:bg-[#4697D2]/5 dark:hover:bg-white/5'
               }`}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -330,30 +334,31 @@ export default function UserProfile() {
                 accept="image/*"
                 className="hidden"
                 onChange={(e) => e.target.files?.[0] && handleAvatarUpload(e.target.files[0])}
+                aria-label="Upload avatar image"
               />
               
               <div className="space-y-1.5 pointer-events-none">
-                <svg className="w-6 h-6 mx-auto text-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 mx-auto text-[#1a1a1a]/40 dark:text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
-                <p className="text-xs text-foreground/60">
-                  <span className="text-foreground font-medium">{t('avatar.choose')}</span> {t('avatar.or')}
+                <p className="text-xs text-[#1a1a1a]/60 dark:text-white/60">
+                  <span className="text-[#1a1a1a] dark:text-white font-medium">{t('avatar.choose')}</span> {t('avatar.or')}
                 </p>
-                <p className="text-[10px] text-foreground/40">{t('avatar.maxSize')}</p>
+                <p className="text-[10px] text-[#1a1a1a]/40 dark:text-white/40">{t('avatar.maxSize')}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Profile Form - Glass Card */}
-        <form onSubmit={handleSubmitProfile(onSubmitProfile)} className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm p-4 space-y-4 animate-fadeIn">
-          <div className="flex items-center gap-2 pb-3 border-b border-foreground/10">
-            <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0">
-              <svg className="w-4 h-4 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <form onSubmit={handleSubmitProfile(onSubmitProfile)} className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl p-5 space-y-4 animate-fadeIn">
+          <div className="flex items-center gap-2 pb-3 border-b border-[#4697D2]/20 dark:border-white/10">
+            <div className="p-1.5 rounded bg-[#4697D2]/20 dark:bg-white/10 flex-shrink-0">
+              <svg className="w-4 h-4 text-[#4697D2] dark:text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h2 className="text-sm font-bold text-foreground">{t('form.title')}</h2>
+            <h2 className="text-sm font-bold text-[#1a1a1a] dark:text-white">{t('form.title')}</h2>
           </div>
 
           <Input
@@ -365,7 +370,7 @@ export default function UserProfile() {
           />
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">
+            <label className="block text-sm font-medium text-[#1a1a1a] dark:text-white">
               {t('form.phone.label')}
             </label>
             <PhoneInput
@@ -373,7 +378,7 @@ export default function UserProfile() {
               defaultCountry="GE"
               value={phoneValue}
               onChange={(value) => setValue('phone', value || '', { shouldDirty: true, shouldValidate: true })}
-              className="phone-input w-full px-4 py-2 bg-background border border-foreground/20 rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="phone-input w-full px-4 py-3 bg-white/80 dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/20 rounded-lg text-[#1a1a1a] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:ring-white/20"
             />
             {profileErrors.phone && (
               <p className="text-sm text-red-600 flex items-center gap-1 animate-fadeIn">
@@ -406,26 +411,26 @@ export default function UserProfile() {
         </form>
 
         {/* Password Change Section - Glass Card */}
-        <div className="bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-sm overflow-hidden animate-fadeIn">
+        <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl overflow-hidden animate-fadeIn">
           <button
             onClick={() => setShowPasswordChange(!showPasswordChange)}
-            className="w-full p-4 flex items-center justify-between hover:bg-foreground/5 transition-colors"
+            className="w-full p-5 flex items-center justify-between hover:bg-[#4697D2]/10 dark:hover:bg-white/5 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded bg-foreground/10 flex-shrink-0">
-                <svg className="w-4 h-4 text-foreground/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-1.5 rounded bg-[#4697D2]/20 dark:bg-white/10 flex-shrink-0">
+                <svg className="w-4 h-4 text-[#4697D2] dark:text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h2 className="text-sm font-bold text-foreground">{t('password.title')}</h2>
+              <h2 className="text-sm font-bold text-[#1a1a1a] dark:text-white">{t('password.title')}</h2>
             </div>
-            <svg className={`w-5 h-5 text-foreground/60 transition-transform ${showPasswordChange ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-5 h-5 text-[#1a1a1a]/60 dark:text-white/60 transition-transform ${showPasswordChange ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
 
           {showPasswordChange && (
-            <form onSubmit={handleSubmitPassword(onSubmitPassword)} className="p-4 pt-0 space-y-4 animate-fadeIn">
+            <form onSubmit={handleSubmitPassword(onSubmitPassword)} className="p-5 pt-0 space-y-4 animate-fadeIn">
               <Input
                 {...registerPassword('newPassword')}
                 type="password"

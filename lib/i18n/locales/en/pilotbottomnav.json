@@ -1,0 +1,17 @@
+{
+  "dashboard": "Dashboard",
+  "bookings": "Bookings",
+  "notifications": "Notifications",
+  "profile": "Profile",
+  "companies": "Companies",
+  "flights": "flights",
+  "verified": "Verified",
+  "pending": "Pending",
+  "company": "Company",
+  "joinCompany": "Join a Company",
+  "stats": "Statistics",
+  "earnings": "Earnings",
+  "settings": "Settings",
+  "pilot": "Pilot",
+  "logout": "Logout"
+}

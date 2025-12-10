@@ -1,0 +1,35 @@
+{
+  "title": "Company Registration",
+  "subtitle": "Fill out the form to register your company",
+  "form": {
+    "logo": "Upload Logo",
+    "name": "Company Name",
+    "namePlaceholder": "Paragliding Georgia LLC",
+    "identificationCode": "Identification Code",
+    "phone": "Phone",
+    "email": "Email",
+    "foundedDate": "Founded Date",
+    "description": "Description",
+    "descriptionOptional": "Optional",
+    "submit": "Submit Application",
+    "submitting": "Submitting..."
+  },
+  "languages": {
+    "ka": "Georgian",
+    "en": "English",
+    "ru": "Russian",
+    "de": "German",
+    "tr": "Turkish",
+    "ar": "Arabic"
+  },
+  "success": {
+    "title": "Application Submitted!",
+    "message": "Your company registration application has been received. An administrator will review it and contact you.",
+    "backHome": "Back to Home"
+  },
+  "errors": {
+    "alreadyPending": "Your company application has already been submitted and is pending review",
+    "logoSize": "Logo size must not exceed 5MB",
+    "registrationFailed": "Registration failed. Please try again."
+  }
+}

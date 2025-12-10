@@ -94,6 +94,14 @@ import ruUserbottomnav from '../locales/ru/userbottomnav.json';
 import arUserbottomnav from '../locales/ar/userbottomnav.json';
 import deUserbottomnav from '../locales/de/userbottomnav.json';
 import trUserbottomnav from '../locales/tr/userbottomnav.json';
+
+import kaCompanybottomnav from '../locales/ka/companybottomnav.json';
+import enCompanybottomnav from '../locales/en/companybottomnav.json';
+import ruCompanybottomnav from '../locales/ru/companybottomnav.json';
+import arCompanybottomnav from '../locales/ar/companybottomnav.json';
+import deCompanybottomnav from '../locales/de/companybottomnav.json';
+import trCompanybottomnav from '../locales/tr/companybottomnav.json';
+
 import kaUsernotification from '../locales/ka/usernotification.json';
 import enUsernotification from '../locales/en/usernotification.json';
 import ruUsernotification from '../locales/ru/usernotification.json';
@@ -120,6 +128,34 @@ import arFooter from '../locales/ar/footer.json';
 import deFooter from '../locales/de/footer.json';
 import trFooter from '../locales/tr/footer.json';
 
+import kaPilotprofile from '../locales/ka/pilotprofile.json';
+import enPilotprofile from '../locales/en/pilotprofile.json';
+import ruPilotprofile from '../locales/ru/pilotprofile.json';
+import arPilotprofile from '../locales/ar/pilotprofile.json';
+import dePilotprofile from '../locales/de/pilotprofile.json';
+import trPilotprofile from '../locales/tr/pilotprofile.json';
+
+import kaPilotbottomnav from '../locales/ka/pilotbottomnav.json';
+import enPilotbottomnav from '../locales/en/pilotbottomnav.json';
+import ruPilotbottomnav from '../locales/ru/pilotbottomnav.json';
+import arPilotbottomnav from '../locales/ar/pilotbottomnav.json';
+import dePilotbottomnav from '../locales/de/pilotbottomnav.json';
+import trPilotbottomnav from '../locales/tr/pilotbottomnav.json';
+
+import kaPilotdashboard from '../locales/ka/pilotdashboard.json';
+import enPilotdashboard from '../locales/en/pilotdashboard.json';
+import ruPilotdashboard from '../locales/ru/pilotdashboard.json';
+import arPilotdashboard from '../locales/ar/pilotdashboard.json';
+import dePilotdashboard from '../locales/de/pilotdashboard.json';
+import trPilotdashboard from '../locales/tr/pilotdashboard.json';
+
+import kaPilotbookings from '../locales/ka/pilotbookings.json';
+import enPilotbookings from '../locales/en/pilotbookings.json';
+import ruPilotbookings from '../locales/ru/pilotbookings.json';
+import arPilotbookings from '../locales/ar/pilotbookings.json';
+import dePilotbookings from '../locales/de/pilotbookings.json';
+import trPilotbookings from '../locales/tr/pilotbookings.json';
+
 const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
   ka: {
     navigation: kaNavigation,
@@ -135,10 +171,15 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     login: kaLogin,
     register: kaRegister,
     userbottomnav: kaUserbottomnav,
+    companybottomnav: kaCompanybottomnav,
     usernotification: kaUsernotification,
     userprofile: kaUserprofile,
     userbookings: kaUserbookings,
     footer: kaFooter,
+    pilotprofile: kaPilotprofile,
+    pilotbottomnav: kaPilotbottomnav,
+    pilotdashboard: kaPilotdashboard,
+    pilotbookings: kaPilotbookings,
   },
   en: {
     navigation: enNavigation,
@@ -154,10 +195,15 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     login: enLogin,
     register: enRegister,
     userbottomnav: enUserbottomnav,
+    companybottomnav: enCompanybottomnav,
     usernotification: enUsernotification,
     userprofile: enUserprofile,
     userbookings: enUserbookings,
     footer: enFooter,
+    pilotprofile: enPilotprofile,
+    pilotbottomnav: enPilotbottomnav,
+    pilotdashboard: enPilotdashboard,
+    pilotbookings: enPilotbookings,
   },
   ru: {
     navigation: ruNavigation,
@@ -173,10 +219,15 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     login: ruLogin,
     register: ruRegister,
     userbottomnav: ruUserbottomnav,
+    companybottomnav: ruCompanybottomnav,
     usernotification: ruUsernotification,
     userprofile: ruUserprofile,
     userbookings: ruUserbookings,
     footer: ruFooter,
+    pilotprofile: ruPilotprofile,
+    pilotbottomnav: ruPilotbottomnav,
+    pilotdashboard: ruPilotdashboard,
+    pilotbookings: ruPilotbookings,
   },
   ar: {
     navigation: arNavigation,
@@ -192,10 +243,15 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     login: arLogin,
     register: arRegister,
     userbottomnav: arUserbottomnav,
+    companybottomnav: arCompanybottomnav,
     usernotification: arUsernotification,
     userprofile: arUserprofile,
     userbookings: arUserbookings,
     footer: arFooter,
+    pilotprofile: arPilotprofile,
+    pilotbottomnav: arPilotbottomnav,
+    pilotdashboard: arPilotdashboard,
+    pilotbookings: arPilotbookings,
   },
   de: {
     navigation: deNavigation,
@@ -211,10 +267,15 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     login: deLogin,
     register: deRegister,
     userbottomnav: deUserbottomnav,
+    companybottomnav: deCompanybottomnav,
     usernotification: deUsernotification,
     userprofile: deUserprofile,
     userbookings: deUserbookings,
     footer: deFooter,
+    pilotprofile: dePilotprofile,
+    pilotbottomnav: dePilotbottomnav,
+    pilotdashboard: dePilotdashboard,
+    pilotbookings: dePilotbookings,
   },
   tr: {
     navigation: trNavigation,
@@ -230,10 +291,15 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     login: trLogin,
     register: trRegister,
     userbottomnav: trUserbottomnav,
+    companybottomnav: trCompanybottomnav,
     usernotification: trUsernotification,
     userprofile: trUserprofile,
     userbookings: trUserbookings,
     footer: trFooter,
+    pilotprofile: trPilotprofile,
+    pilotbottomnav: trPilotbottomnav,
+    pilotdashboard: trPilotdashboard,
+    pilotbookings: trPilotbookings,
   },
 };
 

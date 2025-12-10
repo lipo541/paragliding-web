@@ -1,0 +1,15 @@
+{
+  "dashboard": "Dashboard",
+  "bookings": "Buchungen",
+  "notifications": "Benachrichtigungen",
+  "profile": "Profil",
+  "companies": "Unternehmen",
+  "flights": "Flüge",
+  "verified": "Verifiziert",
+  "pending": "Ausstehend",
+  "company": "Unternehmen",
+  "joinCompany": "Einem Unternehmen beitreten",
+  "stats": "Statistiken",
+  "earnings": "Einnahmen",
+  "settings": "Einstellungen"
+}

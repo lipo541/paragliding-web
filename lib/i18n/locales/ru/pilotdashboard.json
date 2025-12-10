@@ -1,0 +1,17 @@
+{
+  "welcome": "Привет",
+  "welcomeSubtitle": "Добро пожаловать в панель пилота",
+  "totalBookings": "Всего бронирований",
+  "pendingBookings": "Ожидающие",
+  "tandemFlights": "Тандемных полётов",
+  "rating": "Рейтинг",
+  "quickActions": "Быстрые действия",
+  "editProfile": "Редактировать профиль",
+  "manageSchedule": "Управление расписанием",
+  "certificates": "Сертификаты",
+  "recentBookings": "Последние бронирования",
+  "viewAll": "Посмотреть все",
+  "noBookings": "Пока нет бронирований",
+  "loadingBookings": "Загрузка бронирований...",
+  "noPilotProfile": "Профиль пилота не найден"
+}
