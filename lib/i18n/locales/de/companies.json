@@ -1,0 +1,34 @@
+{
+  "hero": {
+    "title": "Paragliding-Unternehmen",
+    "subtitle": "Entdecken Sie die besten verifizierten Paragliding-Unternehmen. Wählen Sie einen vertrauenswürdigen Partner für Ihr sicheres Flugerlebnis.",
+    "badge": "Verifizierte Unternehmen"
+  },
+  "search": {
+    "placeholder": "Unternehmen nach Namen suchen...",
+    "resultText": "Ergebnisse"
+  },
+  "filters": {
+    "allCountries": "Alle Länder",
+    "allLocations": "Alle Standorte",
+    "sortByName": "Nach Name",
+    "sortByDate": "Nach Datum",
+    "sortByRating": "Nach Bewertung",
+    "sortByPilots": "Nach Piloten",
+    "filterBy": "Filter",
+    "sortBy": "Sortieren"
+  },
+  "card": {
+    "verified": "Verifiziert",
+    "pilots": "Piloten",
+    "reviews": "Bewertungen",
+    "viewDetails": "Details anzeigen"
+  },
+  "empty": {
+    "noResults": "Keine Ergebnisse gefunden",
+    "noResultsDescription": "Versuchen Sie andere Suchbegriffe oder löschen Sie Filter",
+    "noCompanies": "Keine Unternehmen gefunden",
+    "noCompaniesDescription": "Derzeit sind keine verifizierten Unternehmen verfügbar",
+    "clearSearch": "Suche löschen"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Пилоты парапланеризма",
+    "subtitle": "Откройте для себя опытных и сертифицированных тандем-пилотов. Выберите лучшего пилота для незабываемого полета.",
+    "badge": "Сертифицированные пилоты"
+  },
+  "search": {
+    "placeholder": "Поиск пилота по имени...",
+    "resultText": "Найдено {count} пилотов"
+  },
+  "filters": {
+    "allCountries": "Все страны",
+    "allLocations": "Все локации",
+    "allCompanies": "Все компании",
+    "independent": "Независимый",
+    "sortByName": "По имени",
+    "sortByExperience": "По опыту",
+    "sortByFlights": "По полетам",
+    "sortByRating": "По рейтингу",
+    "filterBy": "Фильтр",
+    "sortBy": "Сортировка"
+  },
+  "card": {
+    "experience": "Опыт",
+    "years": "лет",
+    "flights": "полетов",
+    "languages": "Языки",
+    "viewProfile": "Профиль",
+    "independent": "Независимый"
+  },
+  "empty": {
+    "noResults": "Пилоты не найдены",
+    "noResultsDescription": "Попробуйте другой поисковый запрос или очистите фильтры",
+    "noPilots": "Нет доступных пилотов",
+    "noPilotsDescription": "Сертифицированные пилоты в настоящее время недоступны",
+    "clearSearch": "Очистить поиск"
+  }
+}

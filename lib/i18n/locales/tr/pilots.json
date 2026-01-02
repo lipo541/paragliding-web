@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Yamaç Paraşütü Pilotları",
+    "subtitle": "Deneyimli ve sertifikalı tandem pilotları keşfedin. Unutulmaz uçuş deneyiminiz için en iyi pilotu seçin.",
+    "badge": "Sertifikalı Pilotlar"
+  },
+  "search": {
+    "placeholder": "İsme göre pilot ara...",
+    "resultText": "{count} pilot bulundu"
+  },
+  "filters": {
+    "allCountries": "Tüm Ülkeler",
+    "allLocations": "Tüm Lokasyonlar",
+    "allCompanies": "Tüm Şirketler",
+    "independent": "Bağımsız",
+    "sortByName": "İsme Göre",
+    "sortByExperience": "Deneyime Göre",
+    "sortByFlights": "Uçuşlara Göre",
+    "sortByRating": "Değerlendirmeye Göre",
+    "filterBy": "Filtre",
+    "sortBy": "Sırala"
+  },
+  "card": {
+    "experience": "Deneyim",
+    "years": "yıl",
+    "flights": "uçuş",
+    "languages": "Diller",
+    "viewProfile": "Profili Görüntüle",
+    "independent": "Bağımsız"
+  },
+  "empty": {
+    "noResults": "Pilot bulunamadı",
+    "noResultsDescription": "Farklı bir arama terimi deneyin veya filtreleri temizleyin",
+    "noPilots": "Mevcut pilot yok",
+    "noPilotsDescription": "Şu anda sertifikalı pilot bulunmamaktadır",
+    "clearSearch": "Aramayı Temizle"
+  }
+}

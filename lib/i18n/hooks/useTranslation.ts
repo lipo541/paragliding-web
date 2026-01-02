@@ -156,6 +156,27 @@ import arPilotbookings from '../locales/ar/pilotbookings.json';
 import dePilotbookings from '../locales/de/pilotbookings.json';
 import trPilotbookings from '../locales/tr/pilotbookings.json';
 
+import kaCompanies from '../locales/ka/companies.json';
+import enCompanies from '../locales/en/companies.json';
+import ruCompanies from '../locales/ru/companies.json';
+import arCompanies from '../locales/ar/companies.json';
+import deCompanies from '../locales/de/companies.json';
+import trCompanies from '../locales/tr/companies.json';
+
+import kaPilots from '../locales/ka/pilots.json';
+import enPilots from '../locales/en/pilots.json';
+import ruPilots from '../locales/ru/pilots.json';
+import arPilots from '../locales/ar/pilots.json';
+import dePilots from '../locales/de/pilots.json';
+import trPilots from '../locales/tr/pilots.json';
+
+import kaCompanyprofile from '../locales/ka/companyprofile.json';
+import enCompanyprofile from '../locales/en/companyprofile.json';
+import ruCompanyprofile from '../locales/ru/companyprofile.json';
+import arCompanyprofile from '../locales/ar/companyprofile.json';
+import deCompanyprofile from '../locales/de/companyprofile.json';
+import trCompanyprofile from '../locales/tr/companyprofile.json';
+
 const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
   ka: {
     navigation: kaNavigation,
@@ -180,6 +201,9 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     pilotbottomnav: kaPilotbottomnav,
     pilotdashboard: kaPilotdashboard,
     pilotbookings: kaPilotbookings,
+    companies: kaCompanies,
+    pilots: kaPilots,
+    companyprofile: kaCompanyprofile,
   },
   en: {
     navigation: enNavigation,
@@ -204,6 +228,9 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     pilotbottomnav: enPilotbottomnav,
     pilotdashboard: enPilotdashboard,
     pilotbookings: enPilotbookings,
+    companies: enCompanies,
+    pilots: enPilots,
+    companyprofile: enCompanyprofile,
   },
   ru: {
     navigation: ruNavigation,
@@ -228,6 +255,9 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     pilotbottomnav: ruPilotbottomnav,
     pilotdashboard: ruPilotdashboard,
     pilotbookings: ruPilotbookings,
+    companies: ruCompanies,
+    pilots: ruPilots,
+    companyprofile: ruCompanyprofile,
   },
   ar: {
     navigation: arNavigation,
@@ -252,6 +282,9 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     pilotbottomnav: arPilotbottomnav,
     pilotdashboard: arPilotdashboard,
     pilotbookings: arPilotbookings,
+    companies: arCompanies,
+    pilots: arPilots,
+    companyprofile: arCompanyprofile,
   },
   de: {
     navigation: deNavigation,
@@ -276,6 +309,9 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     pilotbottomnav: dePilotbottomnav,
     pilotdashboard: dePilotdashboard,
     pilotbookings: dePilotbookings,
+    companies: deCompanies,
+    pilots: dePilots,
+    companyprofile: deCompanyprofile,
   },
   tr: {
     navigation: trNavigation,
@@ -300,6 +336,9 @@ const translations: Record<Locale, Partial<Record<Namespace, any>>> = {
     pilotbottomnav: trPilotbottomnav,
     pilotdashboard: trPilotdashboard,
     pilotbookings: trPilotbookings,
+    companies: trCompanies,
+    pilots: trPilots,
+    companyprofile: trCompanyprofile,
   },
 };
 

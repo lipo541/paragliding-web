@@ -10,6 +10,7 @@ import RatingModal from '@/components/rating/RatingModal';
 import CommentsList from '@/components/comments/CommentsList';
 import LocationInfoCard from '@/components/locationinfocard/LocationInfoCard';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import Breadcrumbs, { breadcrumbLabels, type Locale } from '@/components/shared/Breadcrumbs';
 
 interface Country {
   id: string;
@@ -390,6 +391,17 @@ export default function CountryPage({ slug, locale, initialData }: CountryPagePr
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Breadcrumbs */}
+      <div className="w-full max-w-[1280px] mx-auto px-4 pt-4">
+        <Breadcrumbs 
+          items={[
+            { label: breadcrumbLabels[locale as Locale]?.home || 'Home', href: `/${locale}` },
+            { label: breadcrumbLabels[locale as Locale]?.locations || 'Locations', href: `/${locale}/locations` },
+            { label: countryName }
+          ]} 
+        />
       </div>
 
       {/* Main Content */}

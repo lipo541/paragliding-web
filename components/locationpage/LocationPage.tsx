@@ -9,6 +9,8 @@ import RatingDisplay from '@/components/rating/RatingDisplay';
 import RatingInput from '@/components/rating/RatingInput';
 import RatingModal from '@/components/rating/RatingModal';
 import CommentsList from '@/components/comments/CommentsList';
+import { useCart } from '@/lib/context/CartContext';
+import Breadcrumbs, { breadcrumbLabels, type Locale as BreadcrumbLocale, type BreadcrumbItem } from '@/components/shared/Breadcrumbs';
 import { 
   MapPin, 
   Calendar, 
@@ -24,8 +26,13 @@ import {
   Clock,
   CheckCircle2,
   Image as ImageIcon,
-  Video
+  Video,
+  Users,
+  ShoppingCart
 } from 'lucide-react';
+import PilotsList from '@/components/pilot/PilotsList';
+import CompanyLogosMarquee from '@/components/locationpage/CompanyLogosMarquee';
+import type { AdditionalService } from '@/lib/types/services';
 
 // --- Interfaces ---
 
@@ -84,6 +91,16 @@ interface SharedFlightType {
   price_eur: number;
 }
 
+interface Company {
+  id: string;
+  name_ka?: string;
+  name_en?: string;
+  logo_url?: string;
+  slug_ka?: string;
+  slug_en?: string;
+  cached_rating?: number;
+}
+
 interface LocationPageProps {
   countrySlug: string;
   locationSlug: string;
@@ -92,6 +109,8 @@ interface LocationPageProps {
   initialData?: {
     location: Location | null;
     locationPage: LocationPageData | null;
+    companies?: Company[];
+    services?: AdditionalService[];
   };
 }
 
@@ -127,9 +146,12 @@ const SectionTitle = ({ icon: Icon, title }: { icon: any; title: string }) => (
 
 export default function LocationPage({ countrySlug, locationSlug, locale, initialData }: LocationPageProps) {
   const { t } = useTranslation('locationpage');
+  const { addItem } = useCart();
   // ✅ Use initialData for SSR if available, otherwise null for client fetch
   const [location, setLocation] = useState<Location | null>(initialData?.location ?? null);
   const [locationPage, setLocationPage] = useState<LocationPageData | null>(initialData?.locationPage ?? null);
+  const [companies] = useState<Company[]>(initialData?.companies ?? []);
+  const [services] = useState<AdditionalService[]>(initialData?.services ?? []);
   const [isLoading, setIsLoading] = useState(!initialData?.location); // Not loading if we have initialData
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -140,6 +162,8 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
   const [flightTypeRatings, setFlightTypeRatings] = useState<{ [key: string]: { userRating: number | null; showInput: boolean; avgRating: number; count: number } }>({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [addedToCart, setAddedToCart] = useState<string | null>(null);
+  const [flightQuantities, setFlightQuantities] = useState<{ [key: string]: number }>({});
   
   // Hero visibility state
   const [heroVisible, setHeroVisible] = useState(true);
@@ -167,6 +191,47 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
         setLocation({ ...location, ...updatedLocation });
       }
     }
+  };
+
+  const handleAddToCart = (pkg: any, priceGel: number) => {
+    if (!location || !locationPage) return;
+    
+    const flightTypeName = getLocalizedField(pkg, 'name', locale) || pkg.name_ka || pkg.name;
+    const locationName = getLocalizedField(location, 'name', locale);
+    const quantity = flightQuantities[pkg.shared_id] || 1;
+    const heroImage = locationPage.content?.shared_images?.hero_image?.url || location.og_image_url;
+    
+    // Get locale-specific slug for location
+    const localeSlugKey = `slug_${locale}` as keyof Location;
+    const locationSlugValue = (location[localeSlugKey] as string) || locationSlug;
+    
+    addItem({
+      type: pkg.shared_id || pkg.id,
+      name: flightTypeName,
+      price: priceGel,
+      quantity: quantity,
+      imageUrl: heroImage,
+      locationId: location.id, // Direct locationId for services loading
+      location: {
+        id: location.id,
+        name: locationName,
+        slug: locationSlugValue,
+        countrySlug: countrySlug, // Use prop directly
+      },
+    });
+    
+    // Show feedback and reset quantity
+    setAddedToCart(pkg.shared_id || pkg.id);
+    setFlightQuantities(prev => ({ ...prev, [pkg.shared_id]: 1 }));
+    setTimeout(() => setAddedToCart(null), 2000);
+  };
+
+  const updateFlightQuantity = (sharedId: string, delta: number) => {
+    setFlightQuantities(prev => {
+      const current = prev[sharedId] || 1;
+      const newValue = Math.max(1, Math.min(10, current + delta));
+      return { ...prev, [sharedId]: newValue };
+    });
   };
 
   const handleFlightTypeRatingChange = async (sharedId: string, newRating: number | null) => {
@@ -552,6 +617,18 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
         </div>
       </div>
 
+      {/* Breadcrumbs */}
+      <div className="w-full max-w-[1280px] mx-auto px-4 pt-4">
+        <Breadcrumbs 
+          items={[
+            { label: breadcrumbLabels[locale as BreadcrumbLocale]?.home || 'Home', href: `/${locale}` },
+            { label: breadcrumbLabels[locale as BreadcrumbLocale]?.locations || 'Locations', href: `/${locale}/locations` },
+            { label: countrySlug, href: `/${locale}/locations/${countrySlug}` },
+            { label: locationName }
+          ]} 
+        />
+      </div>
+
       {/* Main Content Grid */}
       <div className="w-full max-w-[1280px] mx-auto px-4 py-5 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
@@ -829,23 +906,85 @@ export default function LocationPage({ countrySlug, locationSlug, locale, initia
                           )}
                         </div>
 
-                        {/* Action */}
-                        <Link
-                          href={`/${locale}/bookings?locationId=${location.id}&flightTypeId=${pkg.shared_id}`}
-                          className="w-full py-3 px-4 rounded-lg font-semibold text-sm text-center hover:opacity-90 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 shadow-md dark:bg-foreground dark:text-background"
-                          style={{ 
-                            backgroundColor: '#2196f3',
-                            color: '#ffffff'
-                          }}
-                        >
-                          {t('sidebar.bookNow')}
-                        </Link>
+                        {/* Action Buttons */}
+                        <div className="space-y-2">
+                          <Link
+                            href={`/${locale}/bookings?locationId=${location.id}&flightTypeId=${pkg.shared_id}`}
+                            className="w-full py-3 px-4 rounded-lg font-semibold text-sm text-center hover:opacity-90 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 shadow-md dark:bg-foreground dark:text-background block"
+                            style={{ 
+                              backgroundColor: '#2196f3',
+                              color: '#ffffff'
+                            }}
+                          >
+                            {t('sidebar.bookNow')}
+                          </Link>
+                          
+                          {/* Quantity Selector + Add to Cart */}
+                          <div className="flex items-center gap-2">
+                            {/* Quantity Selector */}
+                            <div className="flex items-center bg-white/60 dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/20 rounded-lg overflow-hidden">
+                              <button
+                                onClick={() => pkg.shared_id && updateFlightQuantity(pkg.shared_id, -1)}
+                                className="px-2.5 py-2 text-[#1a1a1a] dark:text-white hover:bg-[#4697D2]/20 dark:hover:bg-white/10 transition-colors disabled:opacity-50"
+                                disabled={!pkg.shared_id || (flightQuantities[pkg.shared_id] || 1) <= 1}
+                              >
+                                <span className="text-sm font-bold">−</span>
+                              </button>
+                              <span className="px-2 py-2 min-w-[32px] text-center text-sm font-semibold text-[#1a1a1a] dark:text-white">
+                                {pkg.shared_id ? (flightQuantities[pkg.shared_id] || 1) : 1}
+                              </span>
+                              <button
+                                onClick={() => pkg.shared_id && updateFlightQuantity(pkg.shared_id, 1)}
+                                className="px-2.5 py-2 text-[#1a1a1a] dark:text-white hover:bg-[#4697D2]/20 dark:hover:bg-white/10 transition-colors disabled:opacity-50"
+                                disabled={!pkg.shared_id || (flightQuantities[pkg.shared_id] || 1) >= 10}
+                              >
+                                <span className="text-sm font-bold">+</span>
+                              </button>
+                            </div>
+                            
+                            {/* Add to Cart Button */}
+                            <button
+                              onClick={() => handleAddToCart(pkg, priceGel || 0)}
+                              className={`flex-1 py-2.5 px-3 rounded-lg font-medium text-sm text-center transition-all duration-300 flex items-center justify-center gap-2 border ${
+                                addedToCart === pkg.shared_id
+                                  ? 'bg-green-500/20 border-green-500/50 text-green-700 dark:text-green-400'
+                                  : 'bg-white/60 dark:bg-black/40 border-[#4697D2]/30 dark:border-white/20 text-[#1a1a1a] dark:text-white hover:bg-[#4697D2]/10 dark:hover:bg-white/10'
+                              }`}
+                            >
+                              <ShoppingCart className="w-4 h-4" />
+                              {addedToCart === pkg.shared_id 
+                                ? (locale === 'ka' ? 'დამატებულია!' : 'Added!') 
+                                : (locale === 'ka' ? 'კალათაში' : 'Add')
+                              }
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     );
                   })}
                 </div>
               </section>
             )}
+
+            {/* Company Logos Section */}
+            {companies.length > 0 && (
+              <CompanyLogosMarquee 
+                companies={companies}
+                locale={locale}
+                title={locale === 'ka' ? 'პარტნიორი კომპანიები' : 'Partner Companies'}
+              />
+            )}
+
+            {/* Pilots Section */}
+            <section id="pilots-section" className="scroll-mt-20">
+              <SectionTitle icon={Users} title={locale === 'ka' ? 'პილოტები' : 'Pilots'} />
+              <PilotsList 
+                locationId={location.id}
+                locationName={getLocalizedField(location, 'name', locale)}
+                locale={locale}
+                initialLimit={6}
+              />
+            </section>
 
             {/* Divider */}
             {gallery.length > 0 && <div className="border-t border-[#4697D2]/30 dark:border-white/20 my-6"></div>}

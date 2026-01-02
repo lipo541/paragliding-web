@@ -1,13 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { X, Save, Globe, RefreshCw, Image } from 'lucide-react';
+import { X, Save, Globe, RefreshCw, Image, Upload, Building2, Phone, Mail, Calendar, Hash, Trash2, MapPin } from 'lucide-react';
 import Spinner from '@/components/ui/Spinner';
+import CompanyLocationsSelect from '@/components/company/CompanyLocationsSelect';
+import toast from 'react-hot-toast';
+
+interface Country {
+  id: string;
+  name_ka: string;
+  name_en: string | null;
+}
 
 interface CompanyData {
   id: string;
   user_id: string;
+  country_id: string | null;
+  location_ids: string[];
   identification_code: string;
   phone: string;
   email: string | null;
@@ -87,8 +97,24 @@ const languages: { code: Language; name: string; flag: string }[] = [
 export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEditFormProps) {
   const [activeTab, setActiveTab] = useState<Language>('ka');
   const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [formData, setFormData] = useState<CompanyData>({ ...company });
+  const [countries, setCountries] = useState<Country[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
+
+  // Fetch countries
+  useEffect(() => {
+    const fetchCountries = async () => {
+      const { data } = await supabase
+        .from('countries')
+        .select('id, name_ka, name_en')
+        .eq('is_active', true)
+        .order('name_ka', { ascending: true });
+      setCountries(data || []);
+    };
+    fetchCountries();
+  }, [supabase]);
 
   // Transliterate non-Latin characters to Latin
   const transliterate = (text: string): string => {
@@ -167,6 +193,59 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
     }));
   };
 
+  // Handle logo upload
+  const handleLogoUpload = async (file: File) => {
+    setUploadingLogo(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${company.id}-${Date.now()}.${fileExt}`;
+
+      // Upload to storage
+      const { error: uploadError } = await supabase.storage
+        .from('company-logos')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('company-logos')
+        .getPublicUrl(fileName);
+
+      // Update form data
+      setFormData(prev => ({ ...prev, logo_url: publicUrl }));
+      toast.success('ლოგო წარმატებით აიტვირთა');
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      toast.error('ლოგოს ატვირთვისას მოხდა შეცდომა');
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
+  // Delete logo
+  const handleDeleteLogo = async () => {
+    if (!formData.logo_url) return;
+    
+    try {
+      // Extract filename from URL
+      const urlParts = formData.logo_url.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      
+      // Try to delete from storage (ignore error if file doesn't exist)
+      await supabase.storage
+        .from('company-logos')
+        .remove([fileName]);
+      
+      setFormData(prev => ({ ...prev, logo_url: null }));
+      toast.success('ლოგო წაიშალა');
+    } catch (error) {
+      console.error('Error deleting logo:', error);
+      // Still clear the URL even if deletion fails
+      setFormData(prev => ({ ...prev, logo_url: null }));
+    }
+  };
+
   // Save changes
   const handleSave = async () => {
     setSaving(true);
@@ -174,6 +253,15 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
       const { error } = await supabase
         .from('companies')
         .update({
+          // Basic info
+          country_id: formData.country_id,
+          location_ids: formData.location_ids || [],
+          identification_code: formData.identification_code,
+          phone: formData.phone,
+          email: formData.email,
+          founded_date: formData.founded_date,
+          logo_url: formData.logo_url,
+          status: formData.status,
           // Names
           name_ka: formData.name_ka,
           name_en: formData.name_en,
@@ -281,6 +369,177 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
 
       {/* Form Content */}
       <div className="space-y-4">
+        {/* Logo Section */}
+        <div className="p-4 bg-foreground/5 rounded-xl border border-foreground/10">
+          <p className="text-xs font-medium text-foreground/60 mb-3 flex items-center gap-1.5">
+            <Building2 className="w-3.5 h-3.5" />
+            ლოგო
+          </p>
+          <div className="flex items-center gap-4">
+            <div className="relative group">
+              {formData.logo_url ? (
+                <img
+                  src={formData.logo_url}
+                  alt="Company Logo"
+                  className="w-20 h-20 rounded-xl object-cover border-2 border-foreground/20"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-xl bg-foreground/10 flex items-center justify-center border-2 border-dashed border-foreground/20">
+                  <Building2 className="w-8 h-8 text-foreground/30" />
+                </div>
+              )}
+              {uploadingLogo && (
+                <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
+                  <Spinner size="sm" className="border-white" />
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && handleLogoUpload(e.target.files[0])}
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingLogo}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition-colors disabled:opacity-50"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                ატვირთვა
+              </button>
+              {formData.logo_url && (
+                <button
+                  type="button"
+                  onClick={handleDeleteLogo}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg text-xs font-medium transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  წაშლა
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Basic Company Info */}
+        <div className="p-4 bg-foreground/5 rounded-xl border border-foreground/10">
+          <p className="text-xs font-medium text-foreground/60 mb-3 flex items-center gap-1.5">
+            📋 ძირითადი ინფორმაცია
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Identification Code */}
+            <div>
+              <label className="block text-xs font-medium text-foreground/70 mb-1 flex items-center gap-1">
+                <Hash className="w-3 h-3" />
+                საიდენტიფიკაციო კოდი
+              </label>
+              <input
+                type="text"
+                value={formData.identification_code || ''}
+                onChange={(e) => handleFieldChange('identification_code', e.target.value)}
+                className="w-full px-3 py-2 bg-foreground/5 border border-foreground/10 rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                placeholder="მაგ: 123456789"
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-xs font-medium text-foreground/70 mb-1 flex items-center gap-1">
+                <Phone className="w-3 h-3" />
+                ტელეფონი
+              </label>
+              <input
+                type="tel"
+                value={formData.phone || ''}
+                onChange={(e) => handleFieldChange('phone', e.target.value)}
+                className="w-full px-3 py-2 bg-foreground/5 border border-foreground/10 rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                placeholder="+995 5XX XXX XXX"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-xs font-medium text-foreground/70 mb-1 flex items-center gap-1">
+                <Mail className="w-3 h-3" />
+                ელ. ფოსტა
+              </label>
+              <input
+                type="email"
+                value={formData.email || ''}
+                onChange={(e) => handleFieldChange('email', e.target.value)}
+                className="w-full px-3 py-2 bg-foreground/5 border border-foreground/10 rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+                placeholder="company@example.com"
+              />
+            </div>
+
+            {/* Founded Date */}
+            <div>
+              <label className="block text-xs font-medium text-foreground/70 mb-1 flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                დაარსების თარიღი
+              </label>
+              <input
+                type="date"
+                value={formData.founded_date || ''}
+                onChange={(e) => handleFieldChange('founded_date', e.target.value)}
+                className="w-full px-3 py-2 bg-foreground/5 border border-foreground/10 rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              />
+            </div>
+
+            {/* Status */}
+            <div>
+              <label className="block text-xs font-medium text-foreground/70 mb-1">
+                სტატუსი
+              </label>
+              <select
+                value={formData.status || 'pending'}
+                onChange={(e) => handleFieldChange('status', e.target.value)}
+                className="w-full px-3 py-2 bg-foreground/5 border border-foreground/10 rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              >
+                <option value="pending">მოლოდინში</option>
+                <option value="verified">დადასტურებული</option>
+                <option value="blocked">დაბლოკილი</option>
+                <option value="hidden">დამალული</option>
+              </select>
+            </div>
+
+            {/* Country */}
+            <div>
+              <label className="block text-xs font-medium text-foreground/70 mb-1 flex items-center gap-1">
+                <MapPin className="w-3 h-3" />
+                ქვეყანა
+              </label>
+              <select
+                value={formData.country_id || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, country_id: e.target.value || null }))}
+                className="w-full px-3 py-2 bg-foreground/5 border border-foreground/10 rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-foreground/20"
+              >
+                <option value="">აირჩიეთ ქვეყანა</option>
+                {countries.map(country => (
+                  <option key={country.id} value={country.id}>
+                    {country.name_ka} {country.name_en ? `(${country.name_en})` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Location Selection */}
+        <div className="p-3 bg-foreground/3 rounded-xl border border-foreground/10">
+          <CompanyLocationsSelect
+            companyId={company.id}
+            selectedLocationIds={formData.location_ids || []}
+            selectedCountryId={formData.country_id || undefined}
+            onUpdate={(ids) => setFormData(prev => ({ ...prev, location_ids: ids }))}
+            onCountryUpdate={(countryId) => setFormData(prev => ({ ...prev, country_id: countryId }))}
+          />
+        </div>
+
         {/* Basic Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Name */}

@@ -5,7 +5,8 @@ import { createClient } from '@/lib/supabase/client';
 import { 
   Building2, Clock, CheckCircle, XCircle, EyeOff, Search, Eye, 
   ChevronDown, ChevronUp, X, Send, MessageSquare, Calendar,
-  SortAsc, SortDesc, Users, Phone, Hash, RotateCcw, Info, Settings
+  SortAsc, SortDesc, Users, Phone, Hash, RotateCcw, Info, Settings,
+  Trash2, AlertTriangle
 } from 'lucide-react';
 import Spinner from '@/components/ui/Spinner';
 import CompanyEditForm from './CompanyEditForm';
@@ -18,6 +19,7 @@ type ExpandTab = 'info' | 'seo';
 interface Company {
   id: string;
   user_id: string;
+  country_id: string | null;
   identification_code: string;
   phone: string;
   email: string | null;
@@ -162,6 +164,14 @@ export default function CompaniesManager() {
 
   // Bulk selection
   const [selectedCompanies, setSelectedCompanies] = useState<Set<string>>(new Set());
+
+  // Delete modal
+  const [deleteModal, setDeleteModal] = useState<{
+    companyId: string;
+    userId: string;
+    companyName: string;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
   
   const supabase = createClient();
 
@@ -299,6 +309,66 @@ export default function CompaniesManager() {
       alert('შეცდომა ვერიფიკაციის გაგზავნისას');
     } finally {
       setSendingVerification(false);
+    }
+  };
+
+  // Delete company completely
+  const deleteCompany = async () => {
+    if (!deleteModal) return;
+
+    setDeleting(true);
+    try {
+      const { companyId, userId, companyName } = deleteModal;
+
+      // 1. Update pilots to remove company_id (set to null)
+      const { error: pilotsError } = await supabase
+        .from('pilots')
+        .update({ company_id: null })
+        .eq('company_id', companyId);
+      if (pilotsError) console.error('Error removing pilots from company:', pilotsError);
+
+      // 2. Delete pilot company requests
+      const { error: requestsError } = await supabase
+        .from('pilot_company_requests')
+        .delete()
+        .eq('company_id', companyId);
+      if (requestsError) console.error('Error deleting company requests:', requestsError);
+
+      // 3. Delete bookings associated with the company
+      const { error: bookingsError } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('company_id', companyId);
+      if (bookingsError) console.error('Error deleting bookings:', bookingsError);
+
+      // 4. Finally, delete the company record itself
+      const { error: deleteError } = await supabase
+        .from('companies')
+        .delete()
+        .eq('id', companyId);
+
+      if (deleteError) throw deleteError;
+
+      // 5. Reset user role back to USER
+      const { error: roleError } = await supabase
+        .from('profiles')
+        .update({ role: 'USER' })
+        .eq('id', userId);
+
+      if (roleError) console.error('Error resetting user role:', roleError);
+
+      // Remove from local state
+      setCompanies((prev) => prev.filter((c) => c.id !== companyId));
+      
+      // Close modal
+      setDeleteModal(null);
+      
+      alert(`კომპანია "${companyName}" და მასთან დაკავშირებული მონაცემები წარმატებით წაიშალა`);
+    } catch (error) {
+      console.error('Error deleting company:', error);
+      alert('შეცდომა კომპანიის წაშლისას');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -1128,10 +1198,25 @@ export default function CompaniesManager() {
                                   companyName: company.name_ka || company.name_en || '' 
                                 });
                               }}
-                              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 rounded-lg text-xs font-medium transition-colors ml-auto"
+                              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 rounded-lg text-xs font-medium transition-colors"
                             >
                               <MessageSquare className="w-3.5 h-3.5" />
                               შეტყობინება
+                            </button>
+                            {/* Delete Button */}
+                            <button
+                              onClick={() =>
+                                setDeleteModal({
+                                  companyId: company.id,
+                                  userId: company.user_id,
+                                  companyName: company.name_ka || company.name_en || 'კომპანია',
+                                })
+                              }
+                              disabled={updatingStatus === company.id || deleting}
+                              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600/10 text-red-700 hover:bg-red-600/20 rounded-lg text-xs font-medium transition-colors border border-red-600/30 dark:text-red-500 ml-auto"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              წაშლა
                             </button>
                           </div>
                         </div>
@@ -1162,6 +1247,69 @@ export default function CompaniesManager() {
           })
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="mx-4 w-full max-w-md rounded-2xl border border-red-500/30 bg-background p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
+                <AlertTriangle className="h-6 w-6 text-red-500" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">
+                  კომპანიის წაშლა
+                </h3>
+                <p className="text-sm text-foreground/60">
+                  ეს მოქმედება შეუქცევადია
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-6 rounded-lg bg-red-500/10 p-4">
+              <p className="text-sm text-foreground/80">
+                ნამდვილად გსურთ კომპანიის <strong>&quot;{deleteModal.companyName}&quot;</strong> წაშლა?
+              </p>
+              <ul className="mt-3 space-y-1 text-xs text-foreground/60">
+                <li>• კომპანიის პროფილი და ინფორმაცია</li>
+                <li>• კომპანიის პილოტები გახდებიან დამოუკიდებელი</li>
+                <li>• პილოტების მოთხოვნები კომპანიაში</li>
+                <li>• კომპანიის ყველა ჯავშანი</li>
+              </ul>
+              <p className="mt-3 text-xs font-medium text-red-600 dark:text-red-400">
+                ⚠️ ეს მოქმედება შეუქცევადია!
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteModal(null)}
+                disabled={deleting}
+                className="flex-1 rounded-lg border border-foreground/20 px-4 py-2.5 text-sm font-medium text-foreground/70 hover:bg-foreground/5 disabled:opacity-50"
+              >
+                გაუქმება
+              </button>
+              <button
+                onClick={deleteCompany}
+                disabled={deleting}
+                className="flex-1 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <Spinner size="sm" />
+                    იშლება...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    წაშლა
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

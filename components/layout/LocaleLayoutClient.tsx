@@ -7,6 +7,8 @@ import UserBottomNav from "@/components/userbottomnav/UserBottomNav";
 import CompanyBottomNav from "@/components/companybottomnav/CompanyBottomNav";
 import PilotBottomNav from "@/components/pilotbottomnav/PilotBottomNav";
 import { ThemeProvider } from "@/components/themechanger/ThemeProvider";
+import { CartProvider } from "@/lib/context/CartContext";
+import { NotificationToastProvider } from "@/components/notifications";
 import { createClient } from "@/lib/supabase/client";
 
 interface LocaleLayoutClientProps {
@@ -32,14 +34,18 @@ export default function LocaleLayoutClient({ children, locale }: LocaleLayoutCli
       enableSystem
       disableTransitionOnChange
     >
-      <Header />
-      <div className="pb-20">
-        {children}
-      </div>
-      <Footer />
-      <UserBottomNav />
-      <CompanyBottomNav />
-      <PilotBottomNav />
+      <CartProvider>
+        <NotificationToastProvider>
+          <Header />
+          <div className="pb-20">
+            {children}
+          </div>
+          <Footer />
+          <UserBottomNav />
+          <CompanyBottomNav />
+          <PilotBottomNav />
+        </NotificationToastProvider>
+      </CartProvider>
     </ThemeProvider>
   );
 }

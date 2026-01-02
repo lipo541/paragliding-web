@@ -8,16 +8,21 @@ import Navigation from './navigation/navigation';
 import AuthButtons from './authbuttons/authbuttons';
 import LanguageSwitch from './languageswitch/languageswitch';
 import ThemeToggle from './themetoggle/themetoggle';
-import Notifications from './notifications/notifications';
+import CartIcon from './notifications/notifications';
+import NotificationBell from '@/components/notifications/NotificationBell';
 import MobileMenu from './mobilemenu/mobilemenu';
 import LocationsDropdown from './navigation/LocationsDropdown';
+import ClubDropdown from './navigation/ClubDropdown';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import { useSupabase } from '@/lib/supabase/SupabaseProvider';
 
 export default function Header() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'ka';
   const { t } = useTranslation('navigation');
+  const { session } = useSupabase();
+  const user = session?.user;
 
   return (
     <>
@@ -40,7 +45,8 @@ export default function Header() {
             >
               <ThemeToggle />
               <LanguageSwitch />
-              <Notifications />
+              {user && <NotificationBell locale={locale} />}
+              <CartIcon />
               <div className="hidden md:block">
                 <AuthButtons />
               </div>
@@ -64,6 +70,8 @@ export default function Header() {
               {/* Special Layout for Locations */}
               {activeMenu === t('menu.locations') ? (
                 <LocationsDropdown locale={locale} />
+              ) : activeMenu === t('menu.club') ? (
+                <ClubDropdown locale={locale} />
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {/* Submenu items are handled by Navigation component */}

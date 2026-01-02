@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Paragliding Pilots",
+    "subtitle": "Discover experienced and certified tandem pilots. Choose the best pilot for your unforgettable flight experience.",
+    "badge": "Certified Pilots"
+  },
+  "search": {
+    "placeholder": "Search for a pilot by name...",
+    "resultText": "Found {count} pilots"
+  },
+  "filters": {
+    "allCountries": "All Countries",
+    "allLocations": "All Locations",
+    "allCompanies": "All Companies",
+    "independent": "Independent",
+    "sortByName": "By Name",
+    "sortByExperience": "By Experience",
+    "sortByFlights": "By Flights",
+    "sortByRating": "By Rating",
+    "filterBy": "Filter",
+    "sortBy": "Sort"
+  },
+  "card": {
+    "experience": "Experience",
+    "years": "years",
+    "flights": "flights",
+    "languages": "Languages",
+    "viewProfile": "View Profile",
+    "independent": "Independent"
+  },
+  "empty": {
+    "noResults": "No pilots found",
+    "noResultsDescription": "Try a different search term or clear the filters",
+    "noPilots": "No pilots available",
+    "noPilotsDescription": "No certified pilots are currently available",
+    "clearSearch": "Clear Search"
+  }
+}

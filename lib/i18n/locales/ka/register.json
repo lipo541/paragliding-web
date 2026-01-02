@@ -4,6 +4,10 @@
     "label": "სრული სახელი",
     "placeholder": "შეიყვანეთ თქვენი სახელი და გვარი"
   },
+  "phone": {
+    "label": "ტელეფონის ნომერი",
+    "placeholder": "+995 5XX XXX XXX"
+  },
   "email": {
     "label": "ელ-ფოსტა",
     "placeholder": "name@example.com"
@@ -32,6 +36,7 @@
     "allFields": "გთხოვთ შეავსოთ ყველა ველი",
     "passwordMismatch": "პაროლები არ ემთხვევა",
     "passwordLength": "პაროლი უნდა შედგებოდეს მინიმუმ 6 სიმბოლოსგან",
+    "invalidPhone": "გთხოვთ შეიყვანოთ სწორი ტელეფონის ნომერი",
     "registerFailed": "რეგისტრაცია ვერ მოხერხდა",
     "authFailed": "ავტორიზაცია ვერ მოხერხდა",
     "userAlreadyRegistered": "ეს ელფოსტა უკვე დარეგისტრირებულია"

@@ -75,8 +75,7 @@ export default function PilotBottomNav() {
           }
           
           fetchUnreadCount(user.id);
-          // TODO: Enable when bookings table exists
-          // fetchPendingBookings(pilot.id);
+          fetchPendingBookings(pilot.id);
         }
       }
     };
@@ -92,14 +91,13 @@ export default function PilotBottomNav() {
     };
 
     const fetchPendingBookings = async (pilotId: string) => {
-      // TODO: Enable when bookings table exists
-      // const { count } = await supabase
-      //   .from('bookings')
-      //   .select('id', { count: 'exact', head: true })
-      //   .eq('pilot_id', pilotId)
-      //   .eq('status', 'pending');
-      // setBookingCount(count || 0);
-      setBookingCount(0);
+      // Count unseen bookings for this pilot
+      const { count } = await supabase
+        .from('bookings')
+        .select('id', { count: 'exact', head: true })
+        .eq('pilot_id', pilotId)
+        .eq('seen_by_pilot', false);
+      setBookingCount(count || 0);
     };
 
     checkUser();
@@ -148,23 +146,14 @@ export default function PilotBottomNav() {
       )
       .subscribe();
 
-    // TODO: Enable real-time subscription when bookings table exists
-    // const bookingsChannel = supabase
-    //   .channel('pilot-bookings-badge')
-    //   .on(
-    //     'postgres_changes',
-    //     {
-    //       event: '*',
-    //       schema: 'public',
-    //       table: 'bookings',
-    //     },
-    //     async () => {
-    //       if (pilotProfile) {
-    //         fetchPendingBookings(pilotProfile.id);
-    //       }
-    //     }
-    //   )
-    //   .subscribe();
+    // Listen for custom event when message is marked as read
+    const handleMessageReadUpdated = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        fetchUnreadCount(user.id);
+      }
+    };
+    window.addEventListener('message-read-updated', handleMessageReadUpdated);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       if (session?.user) {
@@ -176,10 +165,59 @@ export default function PilotBottomNav() {
       subscription.unsubscribe();
       supabase.removeChannel(pilotChannel);
       supabase.removeChannel(messagesChannel);
-      // TODO: Enable when bookings table exists
-      // supabase.removeChannel(bookingsChannel);
+      window.removeEventListener('message-read-updated', handleMessageReadUpdated);
     };
   }, [supabase, pilotProfile]);
+
+  // Separate effect for bookings subscription that depends on pilotId
+  useEffect(() => {
+    const pilotId = pilotProfile?.id;
+    if (!pilotId) return;
+
+    const fetchUnseenBookings = async () => {
+      const { count } = await supabase
+        .from('bookings')
+        .select('id', { count: 'exact', head: true })
+        .eq('pilot_id', pilotId)
+        .eq('seen_by_pilot', false);
+      
+      setBookingCount(count || 0);
+    };
+
+    // Initial fetch
+    fetchUnseenBookings();
+
+    // Listen for custom event from PilotBookings when marking as seen
+    const handleBookingSeenUpdated = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.type === 'pilot') {
+        fetchUnseenBookings();
+      }
+    };
+    window.addEventListener('booking-seen-updated', handleBookingSeenUpdated);
+
+    // Subscribe to booking changes for this pilot
+    const channel = supabase
+      .channel('pilot-unseen-bookings-' + pilotId)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings',
+          filter: `pilot_id=eq.${pilotId}`
+        },
+        () => {
+          fetchUnseenBookings();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener('booking-seen-updated', handleBookingSeenUpdated);
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, pilotProfile?.id]);
 
   const getPilotName = () => {
     if (!pilotProfile) return '';

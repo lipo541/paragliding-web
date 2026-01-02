@@ -31,6 +31,9 @@ export const namespaces = [
   'profile',
   'admin',
   'validation',
+  'companies',
+  'pilots',
+  'companyprofile',
 ] as const;
 
 export type Namespace = (typeof namespaces)[number];

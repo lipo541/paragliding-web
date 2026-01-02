@@ -1,0 +1,34 @@
+{
+  "hero": {
+    "title": "Paragliding Companies",
+    "subtitle": "Discover the best verified paragliding companies. Choose a trusted partner for your safe flight experience.",
+    "badge": "Verified Companies"
+  },
+  "search": {
+    "placeholder": "Search company by name...",
+    "resultText": "results"
+  },
+  "filters": {
+    "allCountries": "All Countries",
+    "allLocations": "All Locations",
+    "sortByName": "By Name",
+    "sortByDate": "By Date",
+    "sortByRating": "By Rating",
+    "sortByPilots": "By Pilots",
+    "filterBy": "Filter",
+    "sortBy": "Sort"
+  },
+  "card": {
+    "verified": "Verified",
+    "pilots": "pilots",
+    "reviews": "reviews",
+    "viewDetails": "View Details"
+  },
+  "empty": {
+    "noResults": "No Results Found",
+    "noResultsDescription": "Try different search keywords or clear filters",
+    "noCompanies": "No Companies Found",
+    "noCompaniesDescription": "No verified companies are currently available",
+    "clearSearch": "Clear Search"
+  }
+}

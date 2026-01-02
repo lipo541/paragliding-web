@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "طيارو الطيران الشراعي",
+    "subtitle": "اكتشف طيارين تاندم ذوي خبرة ومعتمدين. اختر أفضل طيار لتجربة طيران لا تُنسى.",
+    "badge": "طيارون معتمدون"
+  },
+  "search": {
+    "placeholder": "ابحث عن طيار بالاسم...",
+    "resultText": "تم العثور على {count} طيار"
+  },
+  "filters": {
+    "allCountries": "جميع البلدان",
+    "allLocations": "جميع المواقع",
+    "allCompanies": "جميع الشركات",
+    "independent": "مستقل",
+    "sortByName": "بالاسم",
+    "sortByExperience": "بالخبرة",
+    "sortByFlights": "بالرحلات",
+    "sortByRating": "بالتقييم",
+    "filterBy": "تصفية",
+    "sortBy": "ترتيب"
+  },
+  "card": {
+    "experience": "الخبرة",
+    "years": "سنوات",
+    "flights": "رحلات",
+    "languages": "اللغات",
+    "viewProfile": "عرض الملف",
+    "independent": "مستقل"
+  },
+  "empty": {
+    "noResults": "لم يتم العثور على طيارين",
+    "noResultsDescription": "جرب مصطلح بحث مختلف أو امسح الفلاتر",
+    "noPilots": "لا يوجد طيارون متاحون",
+    "noPilotsDescription": "لا يوجد طيارون معتمدون متاحون حالياً",
+    "clearSearch": "مسح البحث"
+  }
+}

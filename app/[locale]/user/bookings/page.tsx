@@ -1,5 +1,5 @@
-import UserBookings from '@/components/userbottomnav/UserBookings';
+import UserBookingsNew from '@/components/userbottomnav/UserBookingsNew';
 
 export default function UserBookingsPage() {
-  return <UserBookings />;
+  return <UserBookingsNew />;
 }

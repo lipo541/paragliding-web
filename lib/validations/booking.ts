@@ -1,4 +1,15 @@
 import { z } from 'zod';
+import { 
+  PLATFORM_FEE, 
+  DEFAULT_CURRENCY,
+  type BookingSource,
+  type PaymentStatus,
+  type RefundStatus 
+} from '../types/booking';
+
+// =====================================================
+// Booking Schema
+// =====================================================
 
 export const bookingSchema = z.object({
   // User info (optional for guest bookings)
@@ -38,13 +49,51 @@ export const bookingSchema = z.object({
   // Pricing
   base_price: z.number().positive('Base price must be positive'),
   total_price: z.number().positive('Total price must be positive'),
-  currency: z.string().length(3).default('GEL'),
+  currency: z.string().length(3).default(DEFAULT_CURRENCY),
 
   // Status
   status: z.enum(['pending', 'confirmed', 'cancelled', 'completed']).default('pending'),
+
+  // =====================================================
+  // NEW: Assignment fields
+  // =====================================================
+  pilot_id: z.string().uuid().nullable().optional(),
+  company_id: z.string().uuid().nullable().optional(),
+  booking_source: z.enum(['platform_general', 'company_direct', 'pilot_direct']).default('platform_general'),
+
+  // =====================================================
+  // NEW: Payment fields (auto-calculated mostly)
+  // =====================================================
+  deposit_amount: z.number().positive().default(PLATFORM_FEE),
 });
 
 export type BookingFormData = z.infer<typeof bookingSchema>;
+
+// =====================================================
+// Booking Status Update Schema
+// =====================================================
+
+export const bookingStatusUpdateSchema = z.object({
+  status: z.enum(['pending', 'confirmed', 'cancelled', 'completed']),
+  cancellation_reason: z.string().max(500).optional().nullable(),
+});
+
+export type BookingStatusUpdate = z.infer<typeof bookingStatusUpdateSchema>;
+
+// =====================================================
+// Booking Assignment Schema
+// =====================================================
+
+export const bookingAssignmentSchema = z.object({
+  booking_id: z.string().uuid(),
+  pilot_id: z.string().uuid().nullable().optional(),
+  company_id: z.string().uuid().nullable().optional(),
+}).refine(
+  (data) => data.pilot_id || data.company_id,
+  { message: 'Either pilot_id or company_id must be provided' }
+);
+
+export type BookingAssignment = z.infer<typeof bookingAssignmentSchema>;
 
 export const promoCodeValidationSchema = z.object({
   code: z.string()

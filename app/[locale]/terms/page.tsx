@@ -9,6 +9,7 @@ import {
   generateLocaleParams,
   type Locale 
 } from '@/lib/seo';
+import Breadcrumbs, { buildBreadcrumbs } from '@/components/shared/Breadcrumbs';
 
 // ✅ ISR: Revalidate daily (86400 seconds)
 export const revalidate = 86400;
@@ -75,7 +76,11 @@ export default async function TermsPage({ params }: PageProps) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbItems} />
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 max-w-7xl py-8">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['terms'])} />
+        </div>
         <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
         <p className="text-gray-600">Terms of Service content coming soon...</p>
       </div>

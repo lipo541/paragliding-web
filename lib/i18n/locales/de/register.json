@@ -4,6 +4,10 @@
     "label": "Vollständiger Name",
     "placeholder": "Geben Sie Ihren vollständigen Namen ein"
   },
+  "phone": {
+    "label": "Telefonnummer",
+    "placeholder": "+995 5XX XXX XXX"
+  },
   "email": {
     "label": "E-Mail",
     "placeholder": "name@example.com"
@@ -32,6 +36,7 @@
     "allFields": "Bitte füllen Sie alle Felder aus",
     "passwordMismatch": "Passwörter stimmen nicht überein",
     "passwordLength": "Passwort muss mindestens 6 Zeichen lang sein",
+    "invalidPhone": "Bitte geben Sie eine gültige Telefonnummer ein",
     "registerFailed": "Registrierung fehlgeschlagen",
     "authFailed": "Autorisierung fehlgeschlagen",
     "userAlreadyRegistered": "Diese E-Mail ist bereits registriert"

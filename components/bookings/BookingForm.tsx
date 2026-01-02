@@ -135,6 +135,11 @@ export default function BookingForm({
       const finalBasePrice = selectedFlightType ? selectedFlightType.price * numberOfPeople : 0;
       const finalDiscountAmount = promoData?.isValid ? (finalBasePrice * promoData.discount) / 100 : 0;
       const finalTotalPrice = finalBasePrice - finalDiscountAmount;
+      
+      // Calculate deposit: 50₾ per person
+      const depositAmount = 50 * numberOfPeople;
+      // Amount due to pilot/company = total_price - deposit
+      const amountDue = finalTotalPrice - depositAmount;
 
       // Set user_id if authenticated
       const bookingData = {
@@ -144,6 +149,8 @@ export default function BookingForm({
         total_price: finalTotalPrice,
         promo_code: promoCode?.toUpperCase() || null,
         promo_discount: promoData?.discount || 0,
+        deposit_amount: depositAmount,
+        amount_due: amountDue,
       };
 
       // Insert booking

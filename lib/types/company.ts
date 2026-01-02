@@ -10,8 +10,15 @@ export interface Company {
   id: string;
   user_id: string;
   
+  // Multi-language Names
+  name_ka: string;
+  name_en?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
+  name_de?: string | null;
+  name_tr?: string | null;
+  
   // Basic Information
-  name: string;
   phone: string;
   email: string;
   founded_date?: string | null;
@@ -25,8 +32,20 @@ export interface Company {
   description_de?: string | null;
   description_tr?: string | null;
   
+  // Slugs
+  slug_ka?: string | null;
+  slug_en?: string | null;
+  slug_ru?: string | null;
+  slug_ar?: string | null;
+  slug_de?: string | null;
+  slug_tr?: string | null;
+  
   // Logo
   logo_url?: string | null;
+  
+  // Stripe (for future payouts)
+  stripe_account_id?: string | null;
+  stripe_onboarding_complete?: boolean;
   
   // Status
   status: CompanyStatus;
@@ -38,7 +57,12 @@ export interface Company {
 
 export interface CompanyInsert {
   user_id: string;
-  name: string;
+  name_ka: string;
+  name_en?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
+  name_de?: string | null;
+  name_tr?: string | null;
   phone: string;
   email: string;
   founded_date?: string | null;
@@ -54,7 +78,12 @@ export interface CompanyInsert {
 }
 
 export interface CompanyUpdate {
-  name?: string;
+  name_ka?: string;
+  name_en?: string | null;
+  name_ru?: string | null;
+  name_ar?: string | null;
+  name_de?: string | null;
+  name_tr?: string | null;
   phone?: string;
   email?: string;
   founded_date?: string | null;

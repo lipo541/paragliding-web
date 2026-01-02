@@ -31,6 +31,8 @@ import {
   FileText,
   Edit,
   FileCheck,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import Spinner from '@/components/ui/Spinner';
 import Image from 'next/image';
@@ -232,6 +234,14 @@ export default function PilotsManager() {
   // Bulk selection
   const [selectedPilots, setSelectedPilots] = useState<Set<string>>(new Set());
 
+  // Delete modal
+  const [deleteModal, setDeleteModal] = useState<{
+    pilotId: string;
+    userId: string;
+    pilotName: string;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
   const supabase = createClient();
 
   // Default verification messages in 6 languages
@@ -400,6 +410,69 @@ export default function PilotsManager() {
       alert('შეცდომა ვერიფიკაციის გაგზავნისას');
     } finally {
       setSendingVerification(false);
+    }
+  };
+
+  // Delete pilot completely
+  const deletePilot = async () => {
+    if (!deleteModal) return;
+
+    setDeleting(true);
+    try {
+      const { pilotId, userId, pilotName } = deleteModal;
+
+      // 1. Delete pilot achievements
+      const { error: achievementsError } = await supabase
+        .from('pilot_achievements')
+        .delete()
+        .eq('pilot_id', pilotId);
+      if (achievementsError) console.error('Error deleting achievements:', achievementsError);
+
+      // 2. Delete pilot company requests
+      const { error: requestsError } = await supabase
+        .from('pilot_company_requests')
+        .delete()
+        .eq('pilot_id', pilotId);
+      if (requestsError) console.error('Error deleting company requests:', requestsError);
+
+      // 3. Delete bookings (or set pilot_id to null if you want to keep booking history)
+      const { error: bookingsError } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('pilot_id', pilotId);
+      if (bookingsError) console.error('Error deleting bookings:', bookingsError);
+
+      // Note: ratings and comments tables only support 'country', 'location', 'flight_type' types
+      // Pilot ratings/comments would need schema changes if needed in the future
+
+      // 4. Finally, delete the pilot record itself
+      const { error: deleteError } = await supabase
+        .from('pilots')
+        .delete()
+        .eq('id', pilotId);
+
+      if (deleteError) throw deleteError;
+
+      // 5. Reset user role back to USER
+      const { error: roleError } = await supabase
+        .from('profiles')
+        .update({ role: 'USER' })
+        .eq('id', userId);
+
+      if (roleError) console.error('Error resetting user role:', roleError);
+
+      // Remove from local state
+      setPilots((prev) => prev.filter((p) => p.id !== pilotId));
+      
+      // Close modal
+      setDeleteModal(null);
+      
+      alert(`პილოტი "${pilotName}" და მასთან დაკავშირებული ყველა მონაცემი წარმატებით წაიშალა`);
+    } catch (error) {
+      console.error('Error deleting pilot:', error);
+      alert('შეცდომა პილოტის წაშლისას');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -1099,6 +1172,21 @@ export default function PilotsManager() {
                                 დამალვა
                               </button>
                             )}
+                            {/* Delete Button - Always visible */}
+                            <button
+                              onClick={() =>
+                                setDeleteModal({
+                                  pilotId: pilot.id,
+                                  userId: pilot.user_id,
+                                  pilotName: displayName,
+                                })
+                              }
+                              disabled={updatingStatus === pilot.id || deleting}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-red-600/10 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-600/20 disabled:opacity-50 dark:text-red-500 border border-red-600/30"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              წაშლა
+                            </button>
                             {updatingStatus === pilot.id && (
                               <Spinner size="sm" />
                             )}
@@ -1411,6 +1499,69 @@ export default function PilotsManager() {
               >
                 {sendingMessage ? <Spinner size="sm" /> : <Send className="h-4 w-4" />}
                 გაგზავნა
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="mx-4 w-full max-w-md rounded-2xl border border-red-500/30 bg-background p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10">
+                <AlertTriangle className="h-6 w-6 text-red-500" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">
+                  პილოტის წაშლა
+                </h3>
+                <p className="text-sm text-foreground/60">
+                  ეს მოქმედება შეუქცევადია
+                </p>
+              </div>
+            </div>
+
+            <div className="mb-6 rounded-lg bg-red-500/10 p-4">
+              <p className="text-sm text-foreground/80">
+                ნამდვილად გსურთ პილოტის <strong>&quot;{deleteModal.pilotName}&quot;</strong> წაშლა?
+              </p>
+              <ul className="mt-3 space-y-1 text-xs text-foreground/60">
+                <li>• პილოტის პროფილი და პირადი ინფორმაცია</li>
+                <li>• მიღწევები და სერტიფიკატები</li>
+                <li>• კომპანიასთან კავშირის მოთხოვნები</li>
+                <li>• ყველა ჯავშანი</li>
+              </ul>
+              <p className="mt-3 text-xs font-medium text-red-600 dark:text-red-400">
+                ⚠️ ეს მოქმედება შეუქცევადია!
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteModal(null)}
+                disabled={deleting}
+                className="flex-1 rounded-lg border border-foreground/20 px-4 py-2.5 text-sm font-medium text-foreground/70 hover:bg-foreground/5 disabled:opacity-50"
+              >
+                გაუქმება
+              </button>
+              <button
+                onClick={deletePilot}
+                disabled={deleting}
+                className="flex-1 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <Spinner size="sm" />
+                    იშლება...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    წაშლა
+                  </>
+                )}
               </button>
             </div>
           </div>

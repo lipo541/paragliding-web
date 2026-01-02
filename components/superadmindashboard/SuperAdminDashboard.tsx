@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import AddLocationFly from './addlocation/AddLocationFly';
 import AddCountry from './addcountry/AddCountry';
 import AddCountryPage from './addcountry/AddCountryPage';
@@ -14,13 +15,55 @@ import Message from './messages/Message';
 import MessagesList from './messages/MessagesList';
 import CompaniesManager from './companies/CompaniesManager';
 import PilotsManager from './pilots/PilotsManager';
+import { ServicesManager, ServiceCategoriesManager } from './services';
+import { HeroManager } from './hero';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
+  const supabase = createClient();
   const [activeTab, setActiveTab] = useState('overview');
   const [showAddLocationForm, setShowAddLocationForm] = useState(false);
   const [editLocationId, setEditLocationId] = useState<string | null>(null);
   const [showMessageForm, setShowMessageForm] = useState(false);
+  const [newBookingsCount, setNewBookingsCount] = useState(0);
+
+  // Fetch unseen bookings count
+  useEffect(() => {
+    const fetchNewBookingsCount = async () => {
+      const { count } = await supabase
+        .from('bookings')
+        .select('id', { count: 'exact', head: true })
+        .eq('seen_by_admin', false);
+      
+      setNewBookingsCount(count || 0);
+    };
+
+    fetchNewBookingsCount();
+
+    // Listen for custom event when marking as seen
+    const handleBookingSeenUpdated = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.type === 'admin') {
+        fetchNewBookingsCount();
+      }
+    };
+    window.addEventListener('booking-seen-updated', handleBookingSeenUpdated);
+
+    // Subscribe to changes
+    const channel = supabase
+      .channel('admin-bookings-badge')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bookings' },
+        () => fetchNewBookingsCount()
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener('booking-seen-updated', handleBookingSeenUpdated);
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,6 +89,20 @@ export default function SuperAdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
               მთავარი
+            </button>
+
+            <button
+              onClick={() => setActiveTab('slider')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'slider'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Hero სლაიდერი
             </button>
 
             <button
@@ -134,17 +191,58 @@ export default function SuperAdminDashboard() {
             </button>
 
             <button
-              onClick={() => setActiveTab('bookings')}
+              onClick={() => setActiveTab('services')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === 'bookings'
+                activeTab === 'services'
                   ? 'bg-foreground text-background'
                   : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
+              სერვისები
+            </button>
+
+            <button
+              onClick={() => setActiveTab('service-categories')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                activeTab === 'service-categories'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+              სერვის კატეგორიები
+            </button>
+
+            <button
+              onClick={() => setActiveTab('bookings')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors relative ${
+                activeTab === 'bookings'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <div className="relative">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                {newBookingsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                  </span>
+                )}
+              </div>
               ჯავშნები
+              {newBookingsCount > 0 && (
+                <span className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
+                  {newBookingsCount > 99 ? '99+' : newBookingsCount}
+                </span>
+              )}
             </button>
 
             <button
@@ -231,12 +329,15 @@ export default function SuperAdminDashboard() {
               <div className="flex items-center gap-4">
                 <h2 className="text-xl font-semibold text-foreground">
                   {activeTab === 'overview' && 'მთავარი გვერდი'}
+                  {activeTab === 'slider' && 'Hero სლაიდერი'}
                   {activeTab === 'addcountry' && 'დაამატე ქვეყანა'}
                   {activeTab === 'countrycontent' && 'ქვეყნების კონტენტი'}
                   {activeTab === 'addlocation' && 'ლოკაციის დამატება'}
                   {activeTab === 'users' && 'მომხმარებლები'}
                   {activeTab === 'pilots' && 'პილოტები'}
                   {activeTab === 'companies' && 'კომპანიები'}
+                  {activeTab === 'services' && 'დამატებითი სერვისები'}
+                  {activeTab === 'service-categories' && 'სერვისის კატეგორიები'}
                   {activeTab === 'bookings' && 'ჯავშნები'}
                   {activeTab === 'messages' && 'შეტყობინებები'}
                   {activeTab === 'comments' && 'კომენტარები'}
@@ -343,6 +444,8 @@ export default function SuperAdminDashboard() {
 
             {activeTab === 'addcountry' && <AddCountry />}
 
+            {activeTab === 'slider' && <HeroManager />}
+
             {activeTab === 'countrycontent' && <AddCountryPage />}
 
             {activeTab === 'addlocation' && showAddLocationForm && (
@@ -371,6 +474,10 @@ export default function SuperAdminDashboard() {
             {activeTab === 'pilots' && <PilotsManager />}
 
             {activeTab === 'companies' && <CompaniesManager />}
+
+            {activeTab === 'services' && <ServicesManager />}
+
+            {activeTab === 'service-categories' && <ServiceCategoriesManager />}
 
             {activeTab === 'bookings' && <Bookings />}
 

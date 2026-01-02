@@ -1,12 +1,14 @@
 'use client';
 
 import { IoRocketOutline, IoGlobeOutline, IoCardOutline, IoLocationOutline } from 'react-icons/io5';
+import Breadcrumbs, { buildBreadcrumbs, type Locale } from '@/components/shared/Breadcrumbs';
 
 interface AboutUsProps {
   locale: string;
 }
 
 export default function AboutUs({ locale }: AboutUsProps) {
+  const safeLocale = (locale as Locale) || 'ka';
   const t = {
     title: locale === 'ka' ? 'ჩვენს შესახებ' : locale === 'en' ? 'About Us' : locale === 'ru' ? 'О нас' : locale === 'ar' ? 'معلومات عنا' : locale === 'de' ? 'Über uns' : 'Hakkımızda',
     subtitle: locale === 'ka' ? 'პარაგლაიდინგის ციფრული პლატფორმა საქართველოში' : locale === 'en' ? 'Digital Paragliding Platform in Georgia' : locale === 'ru' ? 'Цифровая платформа парапланеризма в Грузии' : locale === 'ar' ? 'منصة رقمية للطيران الشراعي في جورجيا' : locale === 'de' ? 'Digitale Gleitschirm-Plattform in Georgien' : 'Gürcistan\'da Dijital Paraşüt Platformu',
@@ -86,7 +88,12 @@ export default function AboutUs({ locale }: AboutUsProps) {
 
   return (
     <main className="min-h-screen pt-20 pb-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <Breadcrumbs items={buildBreadcrumbs(safeLocale, ['about'])} />
+        </div>
+
         {/* Hero */}
         <div className="mb-10 text-center">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.2)] dark:bg-[#4697D2]/30 mb-4">

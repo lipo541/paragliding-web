@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 import { Calendar, MapPin, Clock, CheckCircle2, User, Mail, Phone, MessageSquare, CreditCard, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import CustomSelect from '@/components/ui/CustomSelect';
+import PilotBookingBanner from './PilotBookingBanner';
+import CompanyBookingBanner from './CompanyBookingBanner';
+import Breadcrumbs, { buildBreadcrumbs, type Locale } from '@/components/shared/Breadcrumbs';
+import QuickBookingServices, { SelectedService } from './QuickBookingServices';
 
 interface Country {
   id: string;
@@ -16,6 +20,12 @@ interface Country {
   name_ar: string;
   name_de: string;
   name_tr: string;
+  slug_ka?: string;
+  slug_en?: string;
+  slug_ru?: string;
+  slug_ar?: string;
+  slug_de?: string;
+  slug_tr?: string;
 }
 
 interface Location {
@@ -26,6 +36,12 @@ interface Location {
   name_ar: string;
   name_de: string;
   name_tr: string;
+  slug_ka?: string;
+  slug_en?: string;
+  slug_ru?: string;
+  slug_ar?: string;
+  slug_de?: string;
+  slug_tr?: string;
   country_id: string;
   og_image_url?: string;
 }
@@ -41,8 +57,10 @@ interface FlightType {
 interface BookingDetails {
   locationId?: string;
   locationName?: string;
+  locationSlug?: string;
   countryId?: string;
   countryName?: string;
+  countrySlug?: string;
   flightTypeName?: string;
   flightTypeId?: string;
   priceGel?: number;
@@ -89,6 +107,23 @@ export default function BookingsPage() {
   const [promoError, setPromoError] = useState('');
   const [specialRequests, setSpecialRequests] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Additional Services State
+  const [selectedAdditionalServices, setSelectedAdditionalServices] = useState<SelectedService[]>([]);
+
+  // Booking Mode (pilot/company direct or platform general)
+  const router = useRouter();
+  const [selectedPilot, setSelectedPilot] = useState<any>(null);
+  const [selectedCompany, setSelectedCompany] = useState<any>(null);
+  const [companyPilotsCount, setCompanyPilotsCount] = useState(0);
+  const [allowedLocationIds, setAllowedLocationIds] = useState<string[] | null>(null); // null = all locations allowed
+
+  // Booking source derived from mode
+  const bookingSource = selectedPilot 
+    ? 'pilot_direct' 
+    : selectedCompany 
+      ? 'company_direct' 
+      : 'platform_general';
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -96,10 +131,10 @@ export default function BookingsPage() {
       const supabase = createClient();
 
       try {
-        // Fetch all countries
+        // Fetch all countries with slugs
         const { data: countriesData } = await supabase
           .from('countries')
-          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr')
+          .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr')
           .eq('is_active', true)
           .order('name_ka');
         
@@ -108,12 +143,82 @@ export default function BookingsPage() {
         // Get URL parameters
         const locationId = searchParams.get('locationId');
         const flightTypeId = searchParams.get('flightTypeId');
+        const pilotId = searchParams.get('pilot');
+        const companyId = searchParams.get('company');
 
+        // ═══════════════════════════════════════════════════════════════
+        // PILOT DIRECT MODE
+        // ═══════════════════════════════════════════════════════════════
+        if (pilotId) {
+          const { data: pilotData } = await supabase
+            .from('pilots')
+            .select(`
+              id, 
+              first_name_ka, first_name_en, 
+              last_name_ka, last_name_en, 
+              avatar_url, 
+              cached_rating, cached_rating_count,
+              status,
+              slug_ka, slug_en,
+              location_ids,
+              company_id,
+              company:companies(id, name_ka, name_en, slug_ka, slug_en)
+            `)
+            .eq('id', pilotId)
+            .eq('status', 'verified')
+            .single();
+
+          if (pilotData) {
+            setSelectedPilot(pilotData);
+            setAllowedLocationIds(pilotData.location_ids || []);
+            
+            // If pilot has specific location in URL and it's in their locations
+            if (locationId && pilotData.location_ids?.includes(locationId)) {
+              // Will be handled below
+            }
+          }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // COMPANY DIRECT MODE
+        // ═══════════════════════════════════════════════════════════════
+        if (companyId && !pilotId) {
+          const { data: companyData } = await supabase
+            .from('companies')
+            .select('id, name_ka, name_en, logo_url, cached_rating, cached_rating_count, status, slug_ka, slug_en')
+            .eq('id', companyId)
+            .eq('status', 'verified')
+            .single();
+
+          if (companyData) {
+            // Get all pilots' location_ids for this company
+            const { data: companyPilots } = await supabase
+              .from('pilots')
+              .select('location_ids')
+              .eq('company_id', companyId)
+              .eq('status', 'verified');
+
+            if (companyPilots && companyPilots.length > 0) {
+              // Deduplicate location IDs from all pilots
+              const allLocationIds: string[] = [...new Set(
+                companyPilots.flatMap((p: { location_ids?: string[] }) => p.location_ids || [])
+              )] as string[];
+              
+              setSelectedCompany(companyData);
+              setCompanyPilotsCount(companyPilots.length);
+              setAllowedLocationIds(allLocationIds);
+            }
+          }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PRE-FILL FROM LOCATION/FLIGHT TYPE PARAMS
+        // ═══════════════════════════════════════════════════════════════
         if (locationId && flightTypeId) {
           // Pre-fill from URL parameters
           const { data: locationData } = await supabase
             .from('locations')
-            .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, country_id, og_image_url')
+            .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url')
             .eq('id', locationId)
             .single();
 
@@ -125,7 +230,7 @@ export default function BookingsPage() {
             // Fetch locations for this country
             const { data: locationsData } = await supabase
               .from('locations')
-              .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, country_id, og_image_url')
+              .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url')
               .eq('country_id', locationData.country_id)
               .order('name_ka');
             
@@ -152,7 +257,7 @@ export default function BookingsPage() {
               
               const { data: countryData } = await supabase
                 .from('countries')
-                .select('name_ka, name_en, name_ru, name_ar, name_de, name_tr')
+                .select('name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr')
                 .eq('id', locationData.country_id)
                 .single();
 
@@ -165,8 +270,10 @@ export default function BookingsPage() {
               setBookingDetails({
                 locationId: locationData.id,
                 locationName: getLocalizedName(locationData),
+                locationSlug: (locationData as any)[`slug_${locale}`] || locationData.slug_en || locationData.slug_ka,
                 countryId: locationData.country_id,
                 countryName: getLocalizedName(countryData),
+                countrySlug: (countryData as any)?.[`slug_${locale}`] || countryData?.slug_en || countryData?.slug_ka,
                 flightTypeName: localizedFlight?.name || selectedFlight?.name || 'Flight',
                 flightTypeId: flightTypeId,
                 priceGel: sharedFlight?.price_gel || selectedFlight?.price_gel,
@@ -189,30 +296,47 @@ export default function BookingsPage() {
     fetchInitialData();
   }, [searchParams]);
 
-  // Fetch locations when country changes
+  // Fetch locations when country changes (filtered by allowedLocationIds if pilot/company mode)
   useEffect(() => {
     if (!selectedCountryId) return;
 
     const fetchLocations = async () => {
       const supabase = createClient();
-      const { data } = await supabase
+      let query = supabase
         .from('locations')
-        .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, country_id, og_image_url')
+        .select('id, name_ka, name_en, name_ru, name_ar, name_de, name_tr, slug_ka, slug_en, slug_ru, slug_ar, slug_de, slug_tr, country_id, og_image_url')
         .eq('country_id', selectedCountryId)
         .order('name_ka');
       
-      setLocations(data || []);
+      const { data } = await query;
       
-      // Reset location and flight type if country changed
-      if (selectedLocationId && data?.find((loc: any) => loc.id === selectedLocationId)?.country_id !== selectedCountryId) {
-        setSelectedLocationId('');
-        setSelectedFlightTypeId('');
-        setFlightTypes([]);
+      // Filter by allowed locations if in pilot/company mode
+      let filteredLocations = data || [];
+      if (allowedLocationIds !== null && allowedLocationIds.length > 0) {
+        filteredLocations = filteredLocations.filter((loc: { id: string }) => allowedLocationIds.includes(loc.id));
+      }
+      
+      setLocations(filteredLocations);
+      
+      // Reset location and flight type if country changed or location not in filtered list
+      if (selectedLocationId) {
+        const locationStillValid = filteredLocations.find((loc: any) => loc.id === selectedLocationId);
+        if (!locationStillValid) {
+          setSelectedLocationId('');
+          setSelectedFlightTypeId('');
+          setFlightTypes([]);
+          setSelectedAdditionalServices([]); // Reset services when location changes
+        }
       }
     };
 
     fetchLocations();
-  }, [selectedCountryId]);
+  }, [selectedCountryId, allowedLocationIds]);
+
+  // Reset additional services when location changes
+  useEffect(() => {
+    setSelectedAdditionalServices([]);
+  }, [selectedLocationId]);
 
   // Fetch flight types when location changes
   useEffect(() => {
@@ -316,11 +440,17 @@ export default function BookingsPage() {
 
         const heroImage = locationPageData?.content?.shared_images?.hero_image?.url || selectedLocation?.og_image_url;
 
+        // Get localized slugs
+        const locationSlug = (selectedLocation as any)?.[`slug_${locale}`] || selectedLocation?.slug_en || selectedLocation?.slug_ka;
+        const countrySlug = (selectedCountry as any)?.[`slug_${locale}`] || selectedCountry?.slug_en || selectedCountry?.slug_ka;
+
         const newBookingDetails = {
           locationId: selectedLocationId,
           locationName: getLocalizedName(selectedLocation),
+          locationSlug: locationSlug,
           countryId: selectedCountryId,
           countryName: getLocalizedName(selectedCountry),
+          countrySlug: countrySlug,
           flightTypeName: selectedFlight.name || 'Flight',
           flightTypeId: selectedFlightTypeId,
           priceGel: sharedFlight.price_gel || 0,
@@ -368,7 +498,19 @@ export default function BookingsPage() {
       // Prepare booking data
       const pricePerPerson = getPrice() || 0;
       const basePrice = pricePerPerson * numberOfPeople;
+      const servicesTotal = getAdditionalServicesTotal();
       const totalPrice = parseFloat(getTotalPrice());
+      
+      // Prepare additional services for booking
+      const additionalServicesData = selectedAdditionalServices.map(s => ({
+        service_id: s.serviceId,
+        name: s.name,
+        price_gel: s.price,
+        price_usd: s.priceUsd,
+        price_eur: s.priceEur,
+        quantity: s.quantity,
+        pricing_option_id: s.pricingOptionId,
+      }));
       
       const bookingData = {
         user_id: user?.id || null, // null if guest
@@ -387,9 +529,16 @@ export default function BookingsPage() {
         promo_discount: promoDiscount,
         special_requests: specialRequests || null,
         base_price: basePrice,
+        services_total: servicesTotal,
         total_price: totalPrice,
         currency: selectedCurrency,
-        status: 'pending'
+        status: 'pending',
+        // Booking source and assignment
+        booking_source: bookingSource,
+        pilot_id: selectedPilot?.id || null,
+        company_id: selectedPilot?.company_id || selectedCompany?.id || null,
+        // Additional services
+        additional_services: additionalServicesData.length > 0 ? additionalServicesData : null,
       };
 
       // Call Edge Function to create booking (bypasses RLS for guests)
@@ -409,21 +558,24 @@ export default function BookingsPage() {
 
       console.log('Edge Function response:', { data, error });
       
-      if (data && !data.success) {
-        console.log('Full error response:', JSON.stringify(data, null, 2));
-      }
-
+      // Try to get error details from response
       if (error) {
         console.error('Edge Function error:', error);
-        console.error('Error details:', JSON.stringify(error, null, 2));
-        alert(`${t('errors.bookingFailed')}: ${error?.message || t('errors.bookingFailed')}`);
+        // Try to get the actual error message from the response
+        let errorMessage = error?.message || t('errors.bookingFailed');
+        if (data?.error) {
+          errorMessage = data.error;
+        }
+        console.error('Error message:', errorMessage);
+        alert(`${t('errors.bookingFailed')}: ${errorMessage}`);
         throw error;
       }
 
-      if (!data?.success) {
-        console.error('Booking failed:', data);
-        alert(`${t('errors.bookingFailed')}: ${data?.error || t('errors.bookingFailed')}`);
-        throw new Error(data?.error);
+      if (data && !data.success) {
+        console.error('Booking failed:', JSON.stringify(data, null, 2));
+        const errorMessage = data?.error || data?.details?.message || t('errors.bookingFailed');
+        alert(`${t('errors.bookingFailed')}: ${errorMessage}`);
+        throw new Error(errorMessage);
       }
 
       alert(t('success.bookingCreated'));
@@ -440,6 +592,7 @@ export default function BookingsPage() {
       setSelectedCountryId('');
       setSelectedLocationId('');
       setSelectedFlightTypeId('');
+      setSelectedAdditionalServices([]);
       
     } catch (error) {
       console.error('Error submitting booking:', error);
@@ -461,14 +614,35 @@ export default function BookingsPage() {
     return '€';
   };
 
+  // Calculate additional services total based on selected currency
+  const getAdditionalServicesTotal = () => {
+    return selectedAdditionalServices.reduce((sum, s) => {
+      switch (selectedCurrency) {
+        case 'USD':
+          return sum + s.priceUsd * s.quantity;
+        case 'EUR':
+          return sum + s.priceEur * s.quantity;
+        default:
+          return sum + s.price * s.quantity;
+      }
+    }, 0);
+  };
+
   const getTotalPrice = () => {
     const basePrice = getPrice() || 0;
     const subtotal = basePrice * numberOfPeople;
-    const discount = (subtotal * promoDiscount) / 100;
-    return (subtotal - discount).toFixed(2);
+    const servicesTotal = getAdditionalServicesTotal();
+    const discount = ((subtotal + servicesTotal) * promoDiscount) / 100;
+    return (subtotal + servicesTotal - discount).toFixed(2);
   };
 
   const getSubtotal = () => {
+    const basePrice = getPrice() || 0;
+    const servicesTotal = getAdditionalServicesTotal();
+    return (basePrice * numberOfPeople + servicesTotal).toFixed(2);
+  };
+
+  const getFlightSubtotal = () => {
     const basePrice = getPrice() || 0;
     return (basePrice * numberOfPeople).toFixed(2);
   };
@@ -476,7 +650,8 @@ export default function BookingsPage() {
   const getDiscount = () => {
     const basePrice = getPrice() || 0;
     const subtotal = basePrice * numberOfPeople;
-    return ((subtotal * promoDiscount) / 100).toFixed(2);
+    const servicesTotal = getAdditionalServicesTotal();
+    return (((subtotal + servicesTotal) * promoDiscount) / 100).toFixed(2);
   };
 
   const handlePromoCodeApply = async () => {
@@ -572,8 +747,13 @@ export default function BookingsPage() {
         </div>
       ) : (
         <>
+          {/* Breadcrumbs */}
+          <div className="max-w-[1280px] mx-auto px-4 pt-6">
+            <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['bookings'])} />
+          </div>
+
           {/* Hero Section - Compact */}
-          <div className="relative z-10 pt-12 pb-4 text-center px-4">
+          <div className="relative z-10 pt-6 pb-4 text-center px-4">
             <h1 className="text-xl md:text-2xl font-bold text-[#1a1a1a] dark:text-white mb-1 tracking-tight">
               {t('page.title')}
             </h1>
@@ -598,6 +778,40 @@ export default function BookingsPage() {
               ? 'max-w-[1280px]' 
               : 'max-w-2xl'
           }`}>
+            
+            {/* Pilot/Company Banner */}
+            {selectedPilot && (
+              <PilotBookingBanner
+                pilot={selectedPilot}
+                locale={locale}
+                onRemove={() => {
+                  setSelectedPilot(null);
+                  setAllowedLocationIds(null);
+                  setSelectedLocationId('');
+                  setSelectedFlightTypeId('');
+                  // Update URL without pilot param
+                  router.push(`/${locale}/bookings`);
+                }}
+              />
+            )}
+            
+            {selectedCompany && !selectedPilot && (
+              <CompanyBookingBanner
+                company={selectedCompany}
+                pilotsCount={companyPilotsCount}
+                locale={locale}
+                onRemove={() => {
+                  setSelectedCompany(null);
+                  setCompanyPilotsCount(0);
+                  setAllowedLocationIds(null);
+                  setSelectedLocationId('');
+                  setSelectedFlightTypeId('');
+                  // Update URL without company param
+                  router.push(`/${locale}/bookings`);
+                }}
+              />
+            )}
+
         <div className={`grid grid-cols-1 gap-4 transition-all duration-300 ${
           selectedCountryId && selectedLocationId && selectedFlightTypeId 
             ? 'lg:grid-cols-3' 
@@ -895,6 +1109,18 @@ export default function BookingsPage() {
                 </div>
                 )}
 
+                {/* Additional Services */}
+                {selectedFlightTypeId && selectedLocationId && (
+                  <QuickBookingServices
+                    locationId={selectedLocationId}
+                    companyId={selectedPilot?.company_id || selectedCompany?.id || null}
+                    locale={locale}
+                    selectedCurrency={selectedCurrency}
+                    selectedServices={selectedAdditionalServices}
+                    onServicesChange={setSelectedAdditionalServices}
+                  />
+                )}
+
                 {/* Special Requests */}
                 {selectedFlightTypeId && (
                 <div>
@@ -925,17 +1151,41 @@ export default function BookingsPage() {
                 
                 <div className="p-4 space-y-3">
                   
-                  {/* Location Info */}
+                  {/* Location Info - With Links */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <MapPin className="w-3.5 h-3.5 text-[#1a1a1a]/60 dark:text-gray-400 flex-shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-[#1a1a1a] dark:text-white truncate">
-                          {bookingDetails.locationName}
-                        </p>
-                        <p className="text-[10px] text-[#1a1a1a]/60 dark:text-gray-500 truncate">
-                          {bookingDetails.countryName}
-                        </p>
+                        {/* Location Link */}
+                        {bookingDetails.locationSlug && bookingDetails.countrySlug ? (
+                          <Link 
+                            href={`/${locale}/locations/${bookingDetails.countrySlug}/${bookingDetails.locationSlug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-semibold text-[#1a1a1a] dark:text-white truncate block hover:text-[#4697D2] dark:hover:text-[#CAFA00] transition-colors"
+                          >
+                            {bookingDetails.locationName} ↗
+                          </Link>
+                        ) : (
+                          <p className="text-xs font-semibold text-[#1a1a1a] dark:text-white truncate">
+                            {bookingDetails.locationName}
+                          </p>
+                        )}
+                        {/* Country Link */}
+                        {bookingDetails.countrySlug ? (
+                          <Link 
+                            href={`/${locale}/locations/${bookingDetails.countrySlug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] text-[#1a1a1a]/60 dark:text-gray-500 truncate block hover:text-[#4697D2] dark:hover:text-[#CAFA00] transition-colors"
+                          >
+                            {bookingDetails.countryName}
+                          </Link>
+                        ) : (
+                          <p className="text-[10px] text-[#1a1a1a]/60 dark:text-gray-500 truncate">
+                            {bookingDetails.countryName}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -993,9 +1243,21 @@ export default function BookingsPage() {
                     <div className="flex justify-between text-xs">
                       <span className="text-[#1a1a1a]/70 dark:text-gray-400">{t('pricing.basePrice')} × {numberOfPeople}</span>
                       <span className="font-medium text-[#1a1a1a] dark:text-white">
-                        {getCurrencySymbol()}{getSubtotal()}
+                        {getCurrencySymbol()}{getFlightSubtotal()}
                       </span>
                     </div>
+                    
+                    {/* Additional Services in breakdown */}
+                    {selectedAdditionalServices.length > 0 && (
+                      <div className="flex justify-between text-xs">
+                        <span className="text-[#4697D2] dark:text-[#CAFA00]">
+                          {locale === 'ka' ? 'დამატებითი სერვისები' : 'Additional Services'} ({selectedAdditionalServices.length})
+                        </span>
+                        <span className="font-medium text-[#4697D2] dark:text-[#CAFA00]">
+                          +{getCurrencySymbol()}{getAdditionalServicesTotal().toFixed(2)}
+                        </span>
+                      </div>
+                    )}
                     
                     {promoDiscount > 0 && (
                       <div className="flex justify-between text-xs">

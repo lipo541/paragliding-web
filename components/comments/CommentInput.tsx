@@ -6,7 +6,7 @@ import { Send, Smile } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface CommentInputProps {
-  commentableType: 'country' | 'location' | 'flight_type';
+  commentableType: 'country' | 'location' | 'flight_type' | 'company';
   commentableId: string;
   parentCommentId?: string | null;
   onCommentAdded: () => void;

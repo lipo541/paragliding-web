@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ArrowRight, Lock, Mail, User, Eye, EyeOff } from 'lucide-react'
 import { SiGoogle } from 'react-icons/si'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 import type { Locale } from '@/lib/i18n/config'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation'
@@ -27,6 +29,7 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [fullName, setFullName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -105,8 +108,16 @@ export default function RegisterForm() {
     setError(null)
 
     // Validation
-    if (!fullName || !email || !password || !confirmPassword) {
+    if (!fullName || !phone || !email || !password || !confirmPassword) {
       setError(t('errors.allFields'))
+      setLoading(false)
+      return
+    }
+
+    // Phone validation - basic format check
+    const phoneRegex = /^\+?[0-9\s()-]{9,20}$/
+    if (!phoneRegex.test(phone)) {
+      setError(t('errors.invalidPhone'))
       setLoading(false)
       return
     }
@@ -132,6 +143,7 @@ export default function RegisterForm() {
         options: {
           data: {
             full_name: fullName,
+            phone: phone,
           },
         },
       })
@@ -257,6 +269,21 @@ export default function RegisterForm() {
                   className="w-full rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white placeholder:text-[#1a1a1a]/40 dark:placeholder:text-white/40 px-12 py-3 text-sm font-medium transition-all duration-300 focus:outline-none focus:border-[#4697D2] focus:ring-2 focus:ring-[#4697D2]/30 dark:focus:border-white/50 dark:focus:ring-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
+            </div>
+
+            {/* Phone Number */}
+            <div className="space-y-2">
+              <label htmlFor="phone" className="block text-sm font-medium text-[#1a1a1a] dark:text-white">
+                {t('phone.label')}
+              </label>
+              <PhoneInput
+                international
+                defaultCountry="GE"
+                value={phone}
+                onChange={(value) => setPhone(value || '')}
+                disabled={loading}
+                className="phone-input-register w-full rounded-lg border border-[#4697D2]/30 dark:border-white/20 bg-white/80 dark:bg-black/40 backdrop-blur-sm text-[#1a1a1a] dark:text-white px-4 py-3 text-sm font-medium transition-all duration-300 focus-within:border-[#4697D2] focus-within:ring-2 focus-within:ring-[#4697D2]/30 dark:focus-within:border-white/50 dark:focus-within:ring-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
             </div>
 
             {/* Email Address */}

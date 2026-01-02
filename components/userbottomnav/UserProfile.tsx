@@ -15,6 +15,7 @@ import Spinner from '@/components/ui/Spinner';
 import PasswordStrength from '@/components/ui/PasswordStrength';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 import MyApplications from './MyApplications';
+import Breadcrumbs, { buildBreadcrumbs, type Locale } from '@/components/shared/Breadcrumbs';
 
 interface ProfileData {
   full_name: string | null;
@@ -23,7 +24,7 @@ interface ProfileData {
 }
 
 export default function UserProfile() {
-  const { t } = useTranslation('userprofile');
+  const { t, locale } = useTranslation('userprofile');
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<ProfileData>({ full_name: '', phone: '', avatar_url: '' });
   const [loading, setLoading] = useState(true);
@@ -261,6 +262,11 @@ export default function UserProfile() {
   return (
     <div className="min-h-screen pb-24 pt-6 px-4 md:pr-20 selection:bg-blue-500/30">
       <div className="max-w-2xl mx-auto space-y-4">
+        
+        {/* Breadcrumbs */}
+        <div className="animate-fadeIn">
+          <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['profile'])} />
+        </div>
         
         {/* Compact Header */}
         <div className="animate-fadeIn">

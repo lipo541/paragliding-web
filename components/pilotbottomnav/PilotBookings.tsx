@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { usePathname } from 'next/navigation';
 import Spinner from '@/components/ui/Spinner';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import BookingCard, { BookingData, BookingStatus, PaymentStatus, BookingSource } from '@/components/bookings/BookingCard';
 import toast from 'react-hot-toast';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import { Search, Calendar, TrendingUp, Clock, CheckCircle2, Banknote, RefreshCw } from 'lucide-react';
 
 type Locale = 'ka' | 'en' | 'ru' | 'ar' | 'de' | 'tr';
 
@@ -14,35 +16,59 @@ interface Booking {
   id: string;
   full_name: string;
   phone: string;
-  country_name_ka: string;
-  country_name_en: string;
-  country_name_ru: string;
-  country_name_ar: string | null;
-  country_name_de: string | null;
-  country_name_tr: string | null;
-  location_name_ka: string;
-  location_name_en: string;
-  location_name_ru: string;
-  location_name_ar: string | null;
-  location_name_de: string | null;
-  location_name_tr: string | null;
-  flight_type_name_ka: string;
-  flight_type_name_en: string;
-  flight_type_name_ru: string;
-  flight_type_name_ar: string | null;
-  flight_type_name_de: string | null;
-  flight_type_name_tr: string | null;
+  country_id: string;
+  location_id: string;
+  flight_type_id: string;
+  flight_type_name: string;
   selected_date: string;
   number_of_people: number;
-  contact_method: string | null;
+  contact_method: 'whatsapp' | 'telegram' | 'viber' | null;
   special_requests: string | null;
+  promo_code: string | null;
+  promo_discount: number;
   base_price: number;
   total_price: number;
   currency: string;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  status: BookingStatus;
   created_at: string;
   updated_at: string;
   user_id: string | null;
+  
+  // New fields
+  pilot_id: string | null;
+  company_id: string | null;
+  booking_source: BookingSource;
+  deposit_amount: number;
+  amount_due: number;
+  payment_status: PaymentStatus;
+  
+  // Reschedule fields
+  reschedule_count?: number;
+  original_date?: string;
+  reschedule_reason?: string;
+  
+  // Seen tracking
+  seen_by_pilot?: boolean;
+  seen_by_company?: boolean;
+  seen_by_admin?: boolean;
+  
+  // Joined
+  countries?: {
+    name_ka: string;
+    name_en: string;
+    name_ru: string;
+    name_ar: string | null;
+    name_de: string | null;
+    name_tr: string | null;
+  };
+  locations?: {
+    name_ka: string;
+    name_en: string;
+    name_ru: string;
+    name_ar: string | null;
+    name_de: string | null;
+    name_tr: string | null;
+  };
 }
 
 export default function PilotBookings() {
@@ -59,19 +85,16 @@ export default function PilotBookings() {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const supabase = createClient();
 
-  const getLocalizedName = (booking: Booking, field: 'country_name' | 'location_name' | 'flight_type_name') => {
-    const localeField = `${field}_${locale}` as keyof Booking;
-    return (booking[localeField] as string) || (booking[`${field}_ka` as keyof Booking] as string) || '';
-  };
-
-  useEffect(() => {
-    fetchPilotAndBookings();
+  const getLocalizedName = useCallback((item: any, field: string, loc: Locale) => {
+    const localeField = `${field}_${loc}`;
+    return item?.[localeField] || item?.[`${field}_ka`] || item?.[`${field}_en`] || '';
   }, []);
 
-  const fetchPilotAndBookings = async () => {
+  const fetchPilotAndBookings = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -121,30 +144,52 @@ export default function PilotBookings() {
 
       if (error) throw error;
 
-      const formattedBookings = (data || []).map((booking: any) => ({
-        ...booking,
-        country_name_ka: booking.countries?.name_ka || '',
-        country_name_en: booking.countries?.name_en || '',
-        country_name_ru: booking.countries?.name_ru || '',
-        country_name_ar: booking.countries?.name_ar || null,
-        country_name_de: booking.countries?.name_de || null,
-        country_name_tr: booking.countries?.name_tr || null,
-        location_name_ka: booking.locations?.name_ka || '',
-        location_name_en: booking.locations?.name_en || '',
-        location_name_ru: booking.locations?.name_ru || '',
-        location_name_ar: booking.locations?.name_ar || null,
-        location_name_de: booking.locations?.name_de || null,
-        location_name_tr: booking.locations?.name_tr || null,
-      }));
-
-      setBookings(formattedBookings);
+      setBookings(data || []);
     } catch (error) {
       console.error('Error fetching bookings:', error);
       toast.error(t('fetchError') || 'ჯავშნების ჩატვირთვა ვერ მოხერხდა');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase, t]);
+
+  useEffect(() => {
+    fetchPilotAndBookings();
+  }, [fetchPilotAndBookings]);
+
+  // Real-time subscription
+  useEffect(() => {
+    if (!pilotId) return;
+
+    const channel = supabase
+      .channel('pilot-bookings')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings',
+          filter: `pilot_id=eq.${pilotId}`,
+        },
+        (payload: any) => {
+          if (payload.eventType === 'INSERT') {
+            toast.success(t('newBooking') || '🎉 ახალი ჯავშანი მიღებულია!');
+            fetchPilotAndBookings();
+          } else if (payload.eventType === 'UPDATE') {
+            setBookings((prev) =>
+              prev.map((b) => (b.id === payload.new.id ? { ...b, ...payload.new } : b))
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setBookings((prev) => prev.filter((b) => b.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [pilotId, supabase, fetchPilotAndBookings, t]);
 
   const handleConfirmBooking = async () => {
     if (!selectedBookingId) return;
@@ -179,7 +224,11 @@ export default function PilotBookings() {
     try {
       const { error } = await supabase
         .from('bookings')
-        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+        .update({ 
+          status: 'cancelled', 
+          updated_at: new Date().toISOString(),
+          cancelled_at: new Date().toISOString()
+        })
         .eq('id', selectedBookingId);
 
       if (error) throw error;
@@ -224,38 +273,92 @@ export default function PilotBookings() {
     }
   };
 
+  // Mark booking as seen by pilot
+  const markAsSeenByPilot = useCallback(async (bookingId: string) => {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ 
+          seen_by_pilot: true, 
+          seen_by_pilot_at: new Date().toISOString() 
+        })
+        .eq('id', bookingId);
+
+      if (!error) {
+        setBookings(prev => prev.map(b => 
+          b.id === bookingId ? { ...b, seen_by_pilot: true } : b
+        ));
+        // Dispatch event to update navigation badge immediately
+        window.dispatchEvent(new CustomEvent('booking-seen-updated', { detail: { type: 'pilot' } }));
+      }
+    } catch (error) {
+      console.error('Error marking booking as seen:', error);
+    }
+  }, [supabase]);
+
+  // Filter and search
   const filteredBookings = useMemo(() => {
-    if (activeTab === 'all') return bookings;
-    return bookings.filter(b => b.status === activeTab);
-  }, [bookings, activeTab]);
+    let result = bookings;
+    
+    // Filter by status
+    if (activeTab !== 'all') {
+      result = result.filter(b => b.status === activeTab);
+    }
+    
+    // Search
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(b => 
+        b.full_name.toLowerCase().includes(term) ||
+        b.phone.includes(term) ||
+        getLocalizedName(b.locations, 'name', locale).toLowerCase().includes(term)
+      );
+    }
+    
+    return result;
+  }, [bookings, activeTab, searchTerm, getLocalizedName, locale]);
 
-  const getStatusBadge = (status: string) => {
-    const styles = {
-      pending: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
-      confirmed: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-      completed: 'bg-green-500/10 text-green-600 dark:text-green-400',
-      cancelled: 'bg-red-500/10 text-red-600 dark:text-red-400',
+  // Stats
+  const stats = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return {
+      total: bookings.length,
+      pending: bookings.filter(b => b.status === 'pending').length,
+      confirmed: bookings.filter(b => b.status === 'confirmed').length,
+      completed: bookings.filter(b => b.status === 'completed').length,
+      today: bookings.filter(b => b.selected_date === today).length,
+      totalRevenue: bookings
+        .filter(b => b.status === 'completed')
+        .reduce((sum, b) => sum + (b.amount_due || 0), 0),
     };
-    const labels = {
-      pending: t('statusPending') || 'მომლოდინე',
-      confirmed: t('statusConfirmed') || 'დადასტურებული',
-      completed: t('statusCompleted') || 'დასრულებული',
-      cancelled: t('statusCancelled') || 'გაუქმებული',
-    };
-    return (
-      <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${styles[status as keyof typeof styles]}`}>
-        {labels[status as keyof typeof labels]}
-      </span>
-    );
-  };
+  }, [bookings]);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(locale === 'ka' ? 'ka-GE' : locale, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+  // Convert booking to BookingCard format
+  const toBookingCardData = useCallback((booking: Booking): BookingData => ({
+    id: booking.id,
+    full_name: booking.full_name,
+    phone: booking.phone,
+    location_name: getLocalizedName(booking.locations, 'name', locale),
+    country_name: getLocalizedName(booking.countries, 'name', locale),
+    flight_type_name: booking.flight_type_name,
+    selected_date: booking.selected_date,
+    number_of_people: booking.number_of_people,
+    contact_method: booking.contact_method,
+    special_requests: booking.special_requests,
+    promo_code: booking.promo_code,
+    promo_discount: booking.promo_discount,
+    base_price: booking.base_price,
+    total_price: booking.total_price,
+    currency: booking.currency,
+    status: booking.status,
+    created_at: booking.created_at,
+    deposit_amount: booking.deposit_amount,
+    amount_due: booking.amount_due,
+    payment_status: booking.payment_status,
+    booking_source: booking.booking_source,
+    pilot_id: booking.pilot_id,
+    company_id: booking.company_id,
+  }), [getLocalizedName, locale]);
 
   if (isLoading) {
     return (
@@ -276,13 +379,105 @@ export default function PilotBookings() {
     );
   }
 
+  const translations = {
+    ka: {
+      title: 'ჯავშნები',
+      search: 'ძებნა სახელით, ტელეფონით...',
+      all: 'ყველა',
+      pending: 'მომლოდინე',
+      confirmed: 'დადასტურებული',
+      completed: 'დასრულებული',
+      cancelled: 'გაუქმებული',
+      total: 'სულ',
+      todayFlights: 'დღეს',
+      revenue: 'შემოსავალი',
+      noBookings: 'ჯავშნები არ მოიძებნა',
+    },
+    en: {
+      title: 'Bookings',
+      search: 'Search by name, phone...',
+      all: 'All',
+      pending: 'Pending',
+      confirmed: 'Confirmed',
+      completed: 'Completed',
+      cancelled: 'Cancelled',
+      total: 'Total',
+      todayFlights: 'Today',
+      revenue: 'Revenue',
+      noBookings: 'No bookings found',
+    },
+  };
+  
+  const trans = translations[locale as keyof typeof translations] || translations.ka;
+
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">{t('title') || 'ჯავშნები'}</h1>
-        <div className="text-sm text-foreground/60">
-          {t('total') || 'სულ'}: {bookings.length}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl font-bold text-foreground">{trans.title}</h1>
+        
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
+          <input
+            type="text"
+            placeholder={trans.search}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full sm:w-64 pl-10 pr-4 py-2 rounded-lg border border-foreground/10 bg-background text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 mb-1">
+            <TrendingUp className="w-4 h-4" />
+            <span className="text-xs">{trans.total}</span>
+          </div>
+          <p className="text-2xl font-bold text-zinc-900 dark:text-white">{stats.total}</p>
+        </div>
+        
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400 mb-1">
+            <Clock className="w-4 h-4" />
+            <span className="text-xs">{trans.pending}</span>
+          </div>
+          <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+        </div>
+        
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 mb-1">
+            <CheckCircle2 className="w-4 h-4" />
+            <span className="text-xs">{trans.confirmed}</span>
+          </div>
+          <p className="text-2xl font-bold text-blue-600">{stats.confirmed}</p>
+        </div>
+        
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 text-green-600 dark:text-green-400 mb-1">
+            <CheckCircle2 className="w-4 h-4" />
+            <span className="text-xs">{trans.completed}</span>
+          </div>
+          <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+        </div>
+        
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 mb-1">
+            <Calendar className="w-4 h-4" />
+            <span className="text-xs">{trans.todayFlights}</span>
+          </div>
+          <p className="text-2xl font-bold text-purple-600">{stats.today}</p>
+        </div>
+        
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-1">
+            <Banknote className="w-4 h-4" />
+            <span className="text-xs">{trans.revenue}</span>
+          </div>
+          <p className="text-2xl font-bold text-emerald-600">{stats.totalRevenue}₾</p>
         </div>
       </div>
 
@@ -290,21 +485,24 @@ export default function PilotBookings() {
       <div className="flex gap-2 overflow-x-auto pb-2">
         {(['all', 'pending', 'confirmed', 'completed', 'cancelled'] as const).map((tab) => {
           const count = tab === 'all' ? bookings.length : bookings.filter(b => b.status === tab).length;
+          const colors = {
+            all: 'bg-zinc-500',
+            pending: 'bg-yellow-500',
+            confirmed: 'bg-blue-500',
+            completed: 'bg-green-500',
+            cancelled: 'bg-red-500',
+          };
           return (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === tab
-                  ? 'bg-foreground text-background'
-                  : 'bg-foreground/5 text-foreground/60 hover:text-foreground'
+                  ? `${colors[tab]} text-white`
+                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
               }`}
             >
-              {tab === 'all' && (t('filterAll') || 'ყველა')}
-              {tab === 'pending' && (t('filterPending') || 'მომლოდინე')}
-              {tab === 'confirmed' && (t('filterConfirmed') || 'დადასტურებული')}
-              {tab === 'completed' && (t('filterCompleted') || 'დასრულებული')}
-              {tab === 'cancelled' && (t('filterCancelled') || 'გაუქმებული')}
+              {trans[tab]}
               {count > 0 && ` (${count})`}
             </button>
           );
@@ -313,111 +511,84 @@ export default function PilotBookings() {
 
       {/* Bookings List */}
       {filteredBookings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-foreground/10 bg-background py-12">
-          <svg className="mb-4 h-12 w-12 text-foreground/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <p className="text-foreground/60">{t('noBookings') || 'ჯავშნები არ მოიძებნა'}</p>
+        <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-12">
+          <Calendar className="mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-600" />
+          <p className="text-zinc-500 dark:text-zinc-400">{trans.noBookings}</p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {filteredBookings.map((booking) => (
-            <div
-              key={booking.id}
-              className="rounded-xl border border-foreground/10 bg-background p-4 shadow-sm transition-all hover:shadow-md"
-            >
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                {/* Booking Info */}
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    {getStatusBadge(booking.status)}
-                    <span className="text-sm text-foreground/60">
-                      {formatDate(booking.selected_date)}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-semibold text-foreground">{booking.full_name}</h3>
-                  
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-foreground/70">
-                    <span className="flex items-center gap-1">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {getLocalizedName(booking, 'location_name')}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      {booking.phone}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                      {booking.number_of_people} {t('people') || 'ადამიანი'}
-                    </span>
-                  </div>
-
-                  {booking.special_requests && (
-                    <p className="text-sm italic text-foreground/60">
-                      &quot;{booking.special_requests}&quot;
-                    </p>
-                  )}
-                </div>
-
-                {/* Price & Actions */}
-                <div className="flex flex-col items-end gap-3">
-                  <div className="text-right">
-                    <p className="text-xl font-bold text-foreground">
-                      {booking.total_price} {booking.currency}
-                    </p>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
-                    {booking.status === 'pending' && (
-                      <>
-                        <button
-                          onClick={() => {
-                            setSelectedBookingId(booking.id);
-                            setShowConfirmDialog(true);
-                          }}
-                          disabled={processingId === booking.id}
-                          className="rounded-lg bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
-                        >
-                          {t('confirm') || 'დადასტურება'}
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedBookingId(booking.id);
-                            setShowCancelDialog(true);
-                          }}
-                          disabled={processingId === booking.id}
-                          className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50 transition-colors"
-                        >
-                          {t('cancel') || 'გაუქმება'}
-                        </button>
-                      </>
-                    )}
-                    {booking.status === 'confirmed' && (
+        <div className="space-y-3">
+          {filteredBookings.map((booking) => {
+            const isRescheduled = (booking.reschedule_count || 0) > 0;
+            const isNewForPilot = booking.seen_by_pilot === false;
+            
+            return (
+              <div key={booking.id} className="space-y-0">
+                {/* New Booking Indicator */}
+                {isNewForPilot && (
+                  <div className="mx-1 mb-0">
+                    <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-t-xl text-xs bg-[#FF0000] dark:bg-[#CC0000] border border-b-0 border-red-600">
+                      <div className="flex items-center gap-2">
+                        <span className="relative flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                        </span>
+                        <span className="text-white font-bold">
+                          ✨ {t('newBooking') || 'ახალი ჯავშანი'}!
+                        </span>
+                      </div>
                       <button
-                        onClick={() => {
-                          setSelectedBookingId(booking.id);
-                          setShowCompleteDialog(true);
-                        }}
-                        disabled={processingId === booking.id}
-                        className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                        onClick={() => markAsSeenByPilot(booking.id)}
+                        className="px-2 py-1 text-xs font-medium bg-white hover:bg-gray-100 text-[#FF0000] rounded transition-colors animate-pulse"
                       >
-                        {t('complete') || 'დასრულება'}
+                        {t('markAsSeen') || 'ნანახად მონიშვნა'}
                       </button>
-                    )}
+                    </div>
                   </div>
+                )}
+                
+                {/* Rescheduled Banner */}
+                {isRescheduled && !isNewForPilot && (
+                  <div className="mx-1 mb-0">
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-t-xl text-xs bg-purple-50 dark:bg-purple-900/30 border border-b-0 border-purple-200 dark:border-purple-800">
+                      <RefreshCw className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+                      <span className="text-purple-800 dark:text-purple-200 font-medium">
+                        {t('rescheduled') || 'გადატანილია'} {booking.reschedule_count}x
+                      </span>
+                      {booking.original_date && (
+                        <span className="text-purple-600 dark:text-purple-400">
+                          • {t('originalDate') || 'თავდაპირველი'}: {new Date(booking.original_date).toLocaleDateString(locale === 'ka' ? 'ka-GE' : 'en-US')}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Main Booking Card with red border if new */}
+                <div className={isNewForPilot ? 'ring-2 ring-[#FF0000] ring-offset-2 rounded-xl' : ''}>
+                  <BookingCard
+                    booking={toBookingCardData(booking)}
+                    locale={locale}
+                    isProcessing={processingId === booking.id}
+                    onConfirm={(id) => {
+                      markAsSeenByPilot(id);
+                      setSelectedBookingId(id);
+                      setShowConfirmDialog(true);
+                    }}
+                    onCancel={(id) => {
+                      markAsSeenByPilot(id);
+                      setSelectedBookingId(id);
+                      setShowCancelDialog(true);
+                    }}
+                    onComplete={(id) => {
+                      markAsSeenByPilot(id);
+                      setSelectedBookingId(id);
+                      setShowCompleteDialog(true);
+                    }}
+                  />
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -465,6 +636,7 @@ export default function PilotBookings() {
         cancelText={t('cancelButton') || 'გაუქმება'}
         variant="primary"
       />
+      </div>
     </div>
   );
 }

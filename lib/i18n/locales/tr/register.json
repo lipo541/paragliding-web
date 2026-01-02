@@ -4,6 +4,10 @@
     "label": "Tam Ad",
     "placeholder": "Tam adınızı girin"
   },
+  "phone": {
+    "label": "Telefon Numarası",
+    "placeholder": "+995 5XX XXX XXX"
+  },
   "email": {
     "label": "E-posta",
     "placeholder": "name@example.com"
@@ -32,6 +36,7 @@
     "allFields": "Lütfen tüm alanları doldurun",
     "passwordMismatch": "Şifreler eşleşmiyor",
     "passwordLength": "Şifre en az 6 karakter olmalıdır",
+    "invalidPhone": "Lütfen geçerli bir telefon numarası girin",
     "registerFailed": "Kayıt başarısız",
     "authFailed": "Yetkilendirme başarısız",
     "userAlreadyRegistered": "Bu e-posta zaten kayıtlı"

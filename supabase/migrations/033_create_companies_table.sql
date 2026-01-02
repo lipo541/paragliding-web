@@ -16,6 +16,7 @@ CREATE TYPE company_status AS ENUM ('pending', 'verified', 'blocked', 'hidden');
 CREATE TABLE companies (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    country_id UUID REFERENCES countries(id) ON DELETE SET NULL,
     
     -- Basic Information
     name TEXT NOT NULL,
@@ -49,6 +50,7 @@ CREATE TABLE companies (
 
 -- 3. Create indexes for better performance
 CREATE INDEX idx_companies_user_id ON companies(user_id);
+CREATE INDEX idx_companies_country_id ON companies(country_id);
 CREATE INDEX idx_companies_status ON companies(status);
 CREATE INDEX idx_companies_created_at ON companies(created_at DESC);
 
@@ -164,6 +166,7 @@ GRANT EXECUTE ON FUNCTION approve_company(UUID) TO authenticated;
 
 -- 8. Comments for documentation
 COMMENT ON TABLE companies IS 'Stores company registration information with multi-language support';
+COMMENT ON COLUMN companies.country_id IS 'Country where the company operates - used for grouping on public companies page';
 COMMENT ON COLUMN companies.status IS 'pending: awaiting admin approval, verified: approved, blocked: suspended, hidden: not visible publicly';
 COMMENT ON COLUMN companies.identification_code IS 'Company tax/registration identification code';
 COMMENT ON FUNCTION approve_company IS 'Approves a company and updates user role to COMPANY. Should only be called by SUPER_ADMIN';

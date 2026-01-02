@@ -4,6 +4,10 @@
     "label": "Полное имя",
     "placeholder": "Введите ваше полное имя"
   },
+  "phone": {
+    "label": "Номер телефона",
+    "placeholder": "+995 5XX XXX XXX"
+  },
   "email": {
     "label": "Эл. почта",
     "placeholder": "name@example.com"
@@ -32,6 +36,7 @@
     "allFields": "Пожалуйста, заполните все поля",
     "passwordMismatch": "Пароли не совпадают",
     "passwordLength": "Пароль должен содержать минимум 6 символов",
+    "invalidPhone": "Пожалуйста, введите корректный номер телефона",
     "registerFailed": "Не удалось зарегистрироваться",
     "authFailed": "Не удалось авторизоваться",
     "userAlreadyRegistered": "Этот email уже зарегистрирован"

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Search, Grid, List, MapPin, Filter, ChevronDown, ChevronUp, TrendingUp, Globe, Star, X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import Breadcrumbs, { buildBreadcrumbs, type Locale } from '@/components/shared/Breadcrumbs';
 
 // --- Interfaces ---
 
@@ -679,9 +680,14 @@ export default function GlobalLocations({ locale, initialCountries = [], initial
         </div>
       </div>
 
-      {/* Sticky Filters Bar - With backdrop blur contained in max-width */}
-      <div className="sticky top-[49px] lg:top-[65px] z-40 border-b border-[#4697D2]/20 dark:border-white/10 -mt-4">
-        <div className="max-w-[1280px] mx-auto px-3 lg:px-4 py-2 lg:py-3 backdrop-blur-xl bg-[rgba(70,151,210,0.1)] dark:bg-black/80 rounded-b-xl">
+      {/* Breadcrumbs */}
+      <div className="max-w-[1280px] mx-auto px-4 pt-4">
+        <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['locations'])} />
+      </div>
+
+      {/* Filters Bar */}
+      <div className="relative z-30 border-b border-[#4697D2]/20 dark:border-white/10 mt-2">
+        <div className="max-w-[1280px] mx-auto px-3 lg:px-4 py-2 lg:py-3 backdrop-blur-xl bg-[rgba(70,151,210,0.15)] dark:bg-black/40 rounded-b-xl border-x border-[#4697D2]/20 dark:border-white/10">
           <div className="flex flex-col lg:flex-row gap-2 lg:gap-4 items-start lg:items-center justify-between">
             
             {/* Left: Filters */}
@@ -706,7 +712,7 @@ export default function GlobalLocations({ locale, initialCountries = [], initial
                 </button>
 
                 {isFilterOpen && (
-                  <div className="absolute top-full left-0 right-0 lg:right-auto mt-2 lg:w-64 bg-[rgba(70,151,210,0.95)] dark:bg-[#1a1a1a] border border-[#4697D2]/30 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 max-h-[60vh] overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 lg:right-auto mt-2 lg:w-64 backdrop-blur-xl bg-[rgba(70,151,210,0.25)] dark:bg-black/80 border border-[#4697D2]/30 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden z-[100] max-h-[60vh] overflow-y-auto">
                     <button
                       onClick={() => {
                         setSelectedCountry('all');
@@ -773,7 +779,7 @@ export default function GlobalLocations({ locale, initialCountries = [], initial
                 </button>
 
                 {isSortOpen && (
-                  <div className="absolute top-full left-0 right-0 lg:right-auto mt-2 lg:w-48 bg-[rgba(70,151,210,0.95)] dark:bg-[#1a1a1a] border border-[#4697D2]/30 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden z-50">
+                  <div className="absolute top-full left-0 right-0 lg:right-auto mt-2 lg:w-48 backdrop-blur-xl bg-[rgba(70,151,210,0.25)] dark:bg-black/80 border border-[#4697D2]/30 dark:border-white/10 rounded-xl shadow-2xl overflow-hidden z-[100]">
                     <button
                       onClick={() => {
                         setSortBy('rating');

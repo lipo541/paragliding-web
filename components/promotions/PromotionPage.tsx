@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import PromoCard from '@/components/promotions/PromoCard';
 import { Search, Tag, TrendingUp, Filter, ChevronDown, X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import Breadcrumbs, { buildBreadcrumbs, type Locale } from '@/components/shared/Breadcrumbs';
 import type { PromoCode, PromoLocation } from '@/lib/data/promotions';
 
 interface PromotionPageProps {
@@ -157,6 +158,11 @@ export default function PromotionPage({
 
   return (
     <div className="min-h-screen">
+      {/* Breadcrumbs */}
+      <div className="max-w-[1280px] mx-auto px-4 pt-4">
+        <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['promotions'])} />
+      </div>
+
       {/* Header */}
       <div className="py-2 lg:py-3 border-b border-[#4697D2]/20 dark:border-white/10 backdrop-blur-md bg-[rgba(70,151,210,0.1)] dark:bg-black/20">
         <div className="max-w-[1280px] mx-auto px-2 lg:px-3">

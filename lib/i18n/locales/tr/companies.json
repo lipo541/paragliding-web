@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "Yamaç Paraşütü Şirketleri",
+    "subtitle": "En iyi doğrulanmış yamaç paraşütü şirketlerini keşfedin. Güvenli uçuş deneyiminiz için güvenilir bir ortak seçin.",
+    "badge": "Doğrulanmış Şirketler"
+  },
+  "search": {
+    "placeholder": "Şirketi ada göre ara...",
+    "resultText": "sonuç"
+  },
+  "filters": {
+    "allCountries": "Tüm Ülkeler",    "allLocations": "Tüm Lokasyonlar",    "sortByName": "Ada Göre",
+    "sortByDate": "Tarihe Göre",
+    "sortByRating": "Puana Göre",
+    "sortByPilots": "Pilotlara Göre",
+    "filterBy": "Filtre",
+    "sortBy": "Sırala"
+  },
+  "card": {
+    "verified": "Doğrulandı",
+    "pilots": "pilot",
+    "reviews": "değerlendirme",
+    "viewDetails": "Detayları Gör"
+  },
+  "empty": {
+    "noResults": "Sonuç Bulunamadı",
+    "noResultsDescription": "Farklı anahtar kelimeler deneyin veya filtreleri temizleyin",
+    "noCompanies": "Şirket Bulunamadı",
+    "noCompaniesDescription": "Şu anda doğrulanmış şirket bulunmamaktadır",
+    "clearSearch": "Aramayı Temizle"
+  }
+}

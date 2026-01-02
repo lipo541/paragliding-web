@@ -2,12 +2,14 @@
 
 import { IoLocationOutline, IoMailOutline, IoCallOutline, IoTimeOutline } from 'react-icons/io5';
 import { FaFacebook, FaInstagram, FaYoutube, FaTwitter } from 'react-icons/fa';
+import Breadcrumbs, { buildBreadcrumbs, type Locale } from '@/components/shared/Breadcrumbs';
 
 interface ContactPageProps {
   locale: string;
 }
 
 export default function ContactPage({ locale }: ContactPageProps) {
+  const safeLocale = (locale as Locale) || 'ka';
   const t = {
     title: locale === 'ka' ? 'დაგვიკავშირდით' : locale === 'en' ? 'Contact Us' : locale === 'ru' ? 'Свяжитесь с нами' : locale === 'ar' ? 'اتصل بنا' : locale === 'de' ? 'Kontakt' : 'İletişim',
     subtitle: locale === 'ka' ? 'გაქვთ კითხვები? ჩვენ აქ ვართ დასახმარებლად' : locale === 'en' ? 'Have questions? We are here to help' : locale === 'ru' ? 'Есть вопросы? Мы здесь, чтобы помочь' : locale === 'ar' ? 'هل لديك أسئلة؟ نحن هنا للمساعدة' : locale === 'de' ? 'Haben Sie Fragen? Wir sind hier um zu helfen' : 'Sorularınız mı var? Yardım için buradayız',
@@ -37,7 +39,12 @@ export default function ContactPage({ locale }: ContactPageProps) {
 
   return (
     <main className="min-h-screen pt-20 pb-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <Breadcrumbs items={buildBreadcrumbs(safeLocale, ['contact'])} />
+        </div>
+
         {/* Header */}
         <div className="mb-10 text-center">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] dark:text-white mb-2">

@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 
 interface RatingInputProps {
-  ratableType: 'country' | 'location' | 'flight_type';
+  ratableType: 'country' | 'location' | 'flight_type' | 'pilot' | 'company';
   ratableId: string;
   existingRating?: number;
   onRatingChange?: (newRating: number | null) => void;

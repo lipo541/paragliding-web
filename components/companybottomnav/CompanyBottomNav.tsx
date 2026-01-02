@@ -23,8 +23,10 @@ export default function CompanyBottomNav() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [bookingCount, setBookingCount] = useState(0);
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
   const [userEmail, setUserEmail] = useState<string>('');
+  const [companyId, setCompanyId] = useState<string | null>(null);
   const supabase = createClient();
 
   // Extract locale from pathname
@@ -38,6 +40,7 @@ export default function CompanyBottomNav() {
     if (pathname.includes('/user/notifications')) return 'notifications';
     if (pathname.includes('/company/bookings')) return 'bookings';
     if (pathname.includes('/company/pilots')) return 'pilots';
+    if (pathname.includes('/company/services')) return 'services';
     return '';
   }, [pathname]);
 
@@ -60,7 +63,7 @@ export default function CompanyBottomNav() {
           // Fetch company profile
           const { data: company } = await supabase
             .from('companies')
-            .select('name_ka, name_en, logo_url')
+            .select('id, name_ka, name_en, logo_url')
             .eq('user_id', user.id)
             .single();
 
@@ -69,6 +72,10 @@ export default function CompanyBottomNav() {
               name: company.name_ka || company.name_en || '',
               logo_url: company.logo_url,
             });
+            setCompanyId(company.id);
+            
+            // Fetch pending booking count for this company
+            fetchPendingBookings(company.id);
           }
 
           // Fetch unread message count
@@ -78,14 +85,27 @@ export default function CompanyBottomNav() {
     };
 
     const fetchUnreadCount = async (userId: string) => {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from('message_recipients')
         .select('id', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('is_read', false);
 
-      if (!error && data !== null) {
-        setNotificationCount(data.length || 0);
+      if (!error && count !== null) {
+        setNotificationCount(count);
+      }
+    };
+
+    const fetchPendingBookings = async (companyId: string) => {
+      // Count unseen bookings for this company
+      const { count, error } = await supabase
+        .from('bookings')
+        .select('id', { count: 'exact', head: true })
+        .eq('company_id', companyId)
+        .eq('seen_by_company', false);
+
+      if (!error && count !== null) {
+        setBookingCount(count);
       }
     };
 
@@ -132,6 +152,15 @@ export default function CompanyBottomNav() {
       )
       .subscribe();
 
+    // Listen for custom event when message is marked as read
+    const handleMessageReadUpdated = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        fetchUnreadCount(user.id);
+      }
+    };
+    window.addEventListener('message-read-updated', handleMessageReadUpdated);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       if (session?.user) {
         checkUser();
@@ -142,8 +171,58 @@ export default function CompanyBottomNav() {
       subscription.unsubscribe();
       supabase.removeChannel(companyChannel);
       supabase.removeChannel(messagesChannel);
+      window.removeEventListener('message-read-updated', handleMessageReadUpdated);
     };
   }, [supabase]);
+
+  // Separate effect for bookings subscription that depends on companyId
+  useEffect(() => {
+    if (!companyId) return;
+
+    const fetchUnseenBookings = async () => {
+      const { count } = await supabase
+        .from('bookings')
+        .select('id', { count: 'exact', head: true })
+        .eq('company_id', companyId)
+        .eq('seen_by_company', false);
+      
+      setBookingCount(count || 0);
+    };
+
+    // Initial fetch
+    fetchUnseenBookings();
+
+    // Listen for custom event from CompanyBookings when marking as seen
+    const handleBookingSeenUpdated = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.type === 'company') {
+        fetchUnseenBookings();
+      }
+    };
+    window.addEventListener('booking-seen-updated', handleBookingSeenUpdated);
+
+    // Subscribe to booking changes for this company
+    const channel = supabase
+      .channel('company-unseen-bookings-' + companyId)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings',
+          filter: `company_id=eq.${companyId}`
+        },
+        () => {
+          fetchUnseenBookings();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener('booking-seen-updated', handleBookingSeenUpdated);
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, companyId]);
 
   const navItems: NavItem[] = useMemo(() => [
     {
@@ -160,6 +239,7 @@ export default function CompanyBottomNav() {
       id: 'bookings',
       label: t('bookings'),
       path: `/${locale}/company/bookings`,
+      badge: bookingCount,
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -173,6 +253,16 @@ export default function CompanyBottomNav() {
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+    },
+    {
+      id: 'services',
+      label: t('services'),
+      path: `/${locale}/company/services`,
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
         </svg>
       ),
     },
@@ -197,7 +287,7 @@ export default function CompanyBottomNav() {
         </svg>
       ),
     },
-  ], [locale, notificationCount, t]);
+  ], [locale, notificationCount, bookingCount, t]);
 
   if (!isVisible) return null;
 
@@ -232,7 +322,16 @@ export default function CompanyBottomNav() {
                     {item.icon}
                   </div>
                   
-                  {item.badge !== undefined && item.badge > 0 && (
+                  {/* Pulsing dot for notifications */}
+                  {item.id === 'notifications' && item.badge !== undefined && item.badge > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                  )}
+                  
+                  {/* Badge with count for bookings */}
+                  {item.id !== 'notifications' && item.badge !== undefined && item.badge > 0 && (
                     <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-gradient-to-br from-red-500 to-pink-600 rounded-full shadow-lg animate-bounce">
                       {item.badge > 99 ? '99+' : item.badge}
                     </span>
@@ -337,8 +436,16 @@ export default function CompanyBottomNav() {
                       {item.icon}
                     </div>
                     
-                    {/* Enhanced badge with animation */}
-                    {item.badge !== undefined && item.badge > 0 && (
+                    {/* Pulsing dot for notifications */}
+                    {item.id === 'notifications' && item.badge !== undefined && item.badge > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 ring-2 ring-background"></span>
+                      </span>
+                    )}
+                    
+                    {/* Enhanced badge with animation for bookings */}
+                    {item.id !== 'notifications' && item.badge !== undefined && item.badge > 0 && (
                       <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[20px] h-[20px] px-1.5 text-[10px] font-bold text-white bg-gradient-to-br from-red-500 via-red-600 to-pink-600 rounded-full shadow-lg shadow-red-500/50 ring-2 ring-background animate-bounce">
                         {item.badge > 99 ? '99+' : item.badge}
                       </span>

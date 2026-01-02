@@ -25,7 +25,7 @@ interface Comment {
 }
 
 interface CommentsListProps {
-  commentableType: 'country' | 'location' | 'flight_type';
+  commentableType: 'country' | 'location' | 'flight_type' | 'company';
   commentableId: string;
 }
 
@@ -62,7 +62,7 @@ export default function CommentsList({
       console.log('Fetched comments:', { commentsData, fetchError });
 
       if (fetchError) {
-        console.error('Fetch error:', fetchError);
+        console.error('Fetch error:', JSON.stringify(fetchError, null, 2));
         throw fetchError;
       }
 
@@ -101,8 +101,8 @@ export default function CommentsList({
       const commentsWithReplies = buildCommentTree(null);
 
       setComments(commentsWithReplies);
-    } catch (err) {
-      console.error('Error fetching comments:', err);
+    } catch (err: any) {
+      console.error('Error fetching comments:', err?.message || JSON.stringify(err, null, 2));
       setError(t('list.loadError'));
     } finally {
       setIsLoading(false);

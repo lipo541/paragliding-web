@@ -5,13 +5,21 @@ import { createClient } from '@/lib/supabase/client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Camera, Save, User, Phone, Mail, Calendar, Plane, Shield, Lock, Eye, EyeOff, Trash2, Plus, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Camera, Save, User, Phone, Mail, Calendar, Plane, Shield, Lock, Eye, EyeOff, Trash2, Plus, FileText, ChevronDown, ChevronUp, Image as ImageIcon, Languages, MapPin, Video } from 'lucide-react';
 import Spinner from '@/components/ui/Spinner';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import PasswordStrength from '@/components/ui/PasswordStrength';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
+
+// New enhanced pilot profile components
+import PilotGalleryUpload from '@/components/pilot/PilotGalleryUpload';
+import PilotCoverImageUpload from '@/components/pilot/PilotCoverImageUpload';
+import PilotLanguagesSelect from '@/components/pilot/PilotLanguagesSelect';
+import PilotLocationsSelect from '@/components/pilot/PilotLocationsSelect';
+import PilotVideoUrls from '@/components/pilot/PilotVideoUrls';
+import type { GalleryImage, SupportedLanguage } from '@/lib/types/pilot';
 
 // Password change schema
 const passwordChangeSchema = z.object({
@@ -32,11 +40,21 @@ interface PilotData {
   // Personal info (Georgian only for pilot editing)
   first_name_ka: string | null;
   last_name_ka: string | null;
+  // English names for international visitors
+  first_name_en: string | null;
+  last_name_en: string | null;
   phone: string | null;
   email: string | null;
   birth_date: string | null;
   gender: 'male' | 'female' | 'other' | null;
   avatar_url: string | null;
+  // NEW: Cover image and gallery
+  cover_image_url: string | null;
+  gallery_images: GalleryImage[] | null;
+  video_urls: string[] | null;
+  // Languages and Locations
+  languages: SupportedLanguage[] | null;
+  location_ids: string[] | null;
   // Verification documents
   verification_documents: string[];
   // Experience
@@ -74,6 +92,8 @@ export default function PilotProfile() {
   const [expandedSections, setExpandedSections] = useState({
     personal: true,
     experience: true,
+    media: false, // NEW: Gallery, Cover, Videos
+    locationsLanguages: false, // NEW: Locations & Languages
     equipment: false,
     documents: false,
     password: false,
@@ -300,6 +320,9 @@ export default function PilotProfile() {
         .update({
           first_name_ka: formData.first_name_ka,
           last_name_ka: formData.last_name_ka,
+          // NEW: English names
+          first_name_en: formData.first_name_en,
+          last_name_en: formData.last_name_en,
           phone: formData.phone,
           email: formData.email,
           birth_date: formData.birth_date,
@@ -562,6 +585,117 @@ export default function PilotProfile() {
                   onChange={(e) => setFormData(prev => ({ ...prev, tandem_flights: e.target.value ? parseInt(e.target.value) : null }))}
                 />
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* NEW: Media Section (Gallery, Cover, Videos) */}
+        <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl overflow-hidden animate-fadeIn">
+          <button
+            onClick={() => toggleSection('media')}
+            className="w-full flex items-center justify-between p-5 text-left"
+          >
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded bg-[#4697D2]/20 dark:bg-white/10">
+                <ImageIcon className="w-4 h-4 text-[#4697D2] dark:text-white/70" />
+              </div>
+              <h2 className="text-sm font-bold text-[#1a1a1a] dark:text-white">მედია (ფოტო, ვიდეო)</h2>
+            </div>
+            {expandedSections.media ? <ChevronUp className="w-5 h-5 text-[#1a1a1a]/50 dark:text-white/50" /> : <ChevronDown className="w-5 h-5 text-[#1a1a1a]/50 dark:text-white/50" />}
+          </button>
+          
+          {expandedSections.media && (
+            <div className="px-5 pb-5 space-y-6 border-t border-[#4697D2]/20 dark:border-white/10 pt-4">
+              {/* Cover Image */}
+              <PilotCoverImageUpload
+                pilotId={pilot.id}
+                userId={pilot.user_id}
+                coverImageUrl={pilot.cover_image_url}
+                onUpdate={(url) => {
+                  setPilot(prev => prev ? { ...prev, cover_image_url: url } : null);
+                }}
+              />
+              
+              {/* Gallery */}
+              <PilotGalleryUpload
+                pilotId={pilot.id}
+                userId={pilot.user_id}
+                images={pilot.gallery_images || []}
+                onUpdate={(images) => {
+                  setPilot(prev => prev ? { ...prev, gallery_images: images } : null);
+                }}
+              />
+              
+              {/* Videos */}
+              <PilotVideoUrls
+                pilotId={pilot.id}
+                videoUrls={pilot.video_urls || []}
+                onUpdate={(urls) => {
+                  setPilot(prev => prev ? { ...prev, video_urls: urls } : null);
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* NEW: Locations & Languages Section */}
+        <div className="rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.15)] dark:bg-black/40 border border-[#4697D2]/30 dark:border-white/10 shadow-xl overflow-hidden animate-fadeIn">
+          <button
+            onClick={() => toggleSection('locationsLanguages')}
+            className="w-full flex items-center justify-between p-5 text-left"
+          >
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded bg-[#4697D2]/20 dark:bg-white/10">
+                <MapPin className="w-4 h-4 text-[#4697D2] dark:text-white/70" />
+              </div>
+              <h2 className="text-sm font-bold text-[#1a1a1a] dark:text-white">ლოკაციები და ენები</h2>
+            </div>
+            {expandedSections.locationsLanguages ? <ChevronUp className="w-5 h-5 text-[#1a1a1a]/50 dark:text-white/50" /> : <ChevronDown className="w-5 h-5 text-[#1a1a1a]/50 dark:text-white/50" />}
+          </button>
+          
+          {expandedSections.locationsLanguages && (
+            <div className="px-5 pb-5 space-y-6 border-t border-[#4697D2]/20 dark:border-white/10 pt-4">
+              {/* English Names */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Languages className="w-4 h-4 text-[#4697D2]" />
+                  <h4 className="text-sm font-medium text-[#1a1a1a] dark:text-white">
+                    სახელი ინგლისურად (საერთაშორისო ვიზიტორებისთვის)
+                  </h4>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    label="სახელი (EN)"
+                    placeholder="First Name"
+                    value={formData.first_name_en || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, first_name_en: e.target.value }))}
+                  />
+                  <Input
+                    label="გვარი (EN)"
+                    placeholder="Last Name"
+                    value={formData.last_name_en || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, last_name_en: e.target.value }))}
+                  />
+                </div>
+              </div>
+              
+              {/* Locations */}
+              <PilotLocationsSelect
+                pilotId={pilot.id}
+                selectedLocationIds={pilot.location_ids || []}
+                onUpdate={(ids) => {
+                  setPilot(prev => prev ? { ...prev, location_ids: ids } : null);
+                }}
+              />
+              
+              {/* Languages */}
+              <PilotLanguagesSelect
+                pilotId={pilot.id}
+                selectedLanguages={pilot.languages || []}
+                onUpdate={(langs) => {
+                  setPilot(prev => prev ? { ...prev, languages: langs } : null);
+                }}
+              />
             </div>
           )}
         </div>

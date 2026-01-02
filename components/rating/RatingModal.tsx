@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
 interface RatingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  ratableType: 'country' | 'location' | 'flight_type';
+  ratableType: 'country' | 'location' | 'flight_type' | 'pilot' | 'company';
   ratableId: string;
   existingRating?: number;
   onRatingChange?: (newRating: number | null) => void;

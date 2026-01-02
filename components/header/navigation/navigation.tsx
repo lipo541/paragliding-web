@@ -18,6 +18,7 @@ export default function Navigation({ activeMenu, setActiveMenu }: NavigationProp
     {
       href: '/locations',
       label: t('menu.locations'),
+      hasDropdown: true,
       submenu: [
         { 
           href: '/locations/all', 
@@ -42,23 +43,27 @@ export default function Navigation({ activeMenu, setActiveMenu }: NavigationProp
       ],
     },
     {
-      href: '/bookings',
-      label: t('menu.bookings'),
+      href: '/companies',
+      label: t('menu.club'),
+      hasDropdown: true,
       submenu: undefined,
     },
     {
       href: '/promotions',
       label: t('menu.promotions'),
+      hasDropdown: false,
       submenu: undefined,
     },
     {
       href: '/about',
       label: t('menu.about'),
+      hasDropdown: false,
       submenu: undefined,
     },
     {
       href: '/contact',
       label: t('menu.contact'),
+      hasDropdown: false,
       submenu: undefined,
     },
   ];
@@ -69,14 +74,14 @@ export default function Navigation({ activeMenu, setActiveMenu }: NavigationProp
         <div
           key={item.href}
           className="relative"
-          onMouseEnter={() => item.submenu?.length ? setActiveMenu(item.label) : null}
+          onMouseEnter={() => item.hasDropdown ? setActiveMenu(item.label) : null}
         >
           <Link
             href={`/${locale}${item.href}`}
             className="group flex items-center gap-1 text-sm font-medium text-[#1a1a1a] dark:text-white hover:text-[#1a1a1a]/70 dark:hover:text-white/80 transition-colors"
           >
             <span>{item.label}</span>
-            {item.submenu?.length && item.submenu.length > 0 && (
+            {item.hasDropdown && (
               <svg
                 className={`w-3 h-3 transition-transform duration-200 ${
                   activeMenu === item.label ? 'rotate-180' : ''

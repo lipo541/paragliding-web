@@ -9,6 +9,7 @@ export default function Footer() {
   const quickLinks = [
     { href: '/locations', label: t('locations') },
     { href: '/promotions', label: t('promotions') },
+    { href: '/bookings', label: t('bookings') },
     { href: '/about', label: t('about') },
     { href: '/contact', label: t('contact') },
   ];

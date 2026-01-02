@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import toast from 'react-hot-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import Breadcrumbs, { breadcrumbLabels, type Locale } from '@/components/shared/Breadcrumbs';
 
 interface Message {
   id: string;
@@ -155,6 +156,9 @@ export default function UserNotification() {
           ? { ...msg, is_read: true, read_at: new Date().toISOString() }
           : msg
       ));
+      
+      // Dispatch event to update navigation badge immediately
+      window.dispatchEvent(new CustomEvent('message-read-updated'));
     } catch (error: any) {
       console.error('Mark as read error:', error);
       toast.error(t('markAsReadFailed'));
@@ -207,6 +211,16 @@ export default function UserNotification() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 md:pr-20 py-6 space-y-4">
+      {/* Breadcrumbs */}
+      <div>
+        <Breadcrumbs 
+          items={[
+            { label: breadcrumbLabels[userLocale as Locale]?.home || 'Home', href: `/${userLocale}` },
+            { label: breadcrumbLabels[userLocale as Locale]?.notifications || 'Notifications' }
+          ]} 
+        />
+      </div>
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Messages List */}
         <div className="space-y-3">

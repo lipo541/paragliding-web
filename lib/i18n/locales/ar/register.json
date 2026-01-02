@@ -4,6 +4,10 @@
     "label": "الاسم الكامل",
     "placeholder": "أدخل اسمك الكامل"
   },
+  "phone": {
+    "label": "رقم الهاتف",
+    "placeholder": "+995 5XX XXX XXX"
+  },
   "email": {
     "label": "البريد الإلكتروني",
     "placeholder": "name@example.com"
@@ -32,6 +36,7 @@
     "allFields": "يرجى ملء جميع الحقول",
     "passwordMismatch": "كلمات المرور غير متطابقة",
     "passwordLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
     "registerFailed": "فشل التسجيل",
     "authFailed": "فشل التفويض",
     "userAlreadyRegistered": "هذا البريد الإلكتروني مسجل بالفعل"

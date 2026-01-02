@@ -119,6 +119,15 @@ export default function UserBottomNav() {
       )
       .subscribe();
 
+    // Listen for custom event when message is marked as read
+    const handleMessageReadUpdated = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        fetchUnreadCount(user.id);
+      }
+    };
+    window.addEventListener('message-read-updated', handleMessageReadUpdated);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: any, session: any) => {
       if (session?.user) {
         checkUser();
@@ -129,6 +138,7 @@ export default function UserBottomNav() {
       subscription.unsubscribe();
       supabase.removeChannel(profileChannel);
       supabase.removeChannel(messagesChannel);
+      window.removeEventListener('message-read-updated', handleMessageReadUpdated);
     };
   }, [supabase]);
 

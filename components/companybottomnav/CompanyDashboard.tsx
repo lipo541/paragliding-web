@@ -7,7 +7,8 @@ import Spinner from '@/components/ui/Spinner';
 
 interface CompanyData {
   id: string;
-  name: string;
+  name_ka: string;
+  name_en?: string | null;
   logo_url: string | null;
   status: string;
 }
@@ -81,7 +82,7 @@ export default function CompanyDashboard() {
           {company.logo_url ? (
             <img
               src={company.logo_url}
-              alt={company.name}
+              alt={company.name_ka}
               className="w-16 h-16 rounded-xl object-cover border-2 border-[#4697D2]/30 dark:border-white/20"
             />
           ) : (
@@ -90,7 +91,7 @@ export default function CompanyDashboard() {
             </div>
           )}
           <div>
-            <h1 className="text-xl lg:text-2xl font-bold text-[#1a1a1a] dark:text-white">{company.name}</h1>
+            <h1 className="text-xl lg:text-2xl font-bold text-[#1a1a1a] dark:text-white">{company.name_ka}</h1>
             <p className="text-sm text-[#1a1a1a]/50 dark:text-white/50">კომპანიის დეშბორდი</p>
           </div>
         </div>

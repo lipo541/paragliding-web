@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "شركات الطيران الشراعي",
+    "subtitle": "اكتشف أفضل شركات الطيران الشراعي المعتمدة. اختر شريكًا موثوقًا لتجربة طيران آمنة.",
+    "badge": "شركات معتمدة"
+  },
+  "search": {
+    "placeholder": "ابحث عن شركة بالاسم...",
+    "resultText": "نتائج"
+  },
+  "filters": {
+    "allCountries": "جميع الدول",    "allLocations": "جميع المواقع",    "sortByName": "بالاسم",
+    "sortByDate": "بالتاريخ",
+    "sortByRating": "بالتقييم",
+    "sortByPilots": "بالطيارين",
+    "filterBy": "تصفية",
+    "sortBy": "ترتيب"
+  },
+  "card": {
+    "verified": "موثق",
+    "pilots": "طيارين",
+    "reviews": "تقييمات",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "empty": {
+    "noResults": "لم يتم العثور على نتائج",
+    "noResultsDescription": "جرب كلمات بحث مختلفة أو امسح الفلاتر",
+    "noCompanies": "لم يتم العثور على شركات",
+    "noCompaniesDescription": "لا توجد شركات معتمدة متاحة حاليًا",
+    "clearSearch": "مسح البحث"
+  }
+}

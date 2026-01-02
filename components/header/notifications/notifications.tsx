@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useSupabase } from '@/lib/supabase/SupabaseProvider';
-import { useTranslation } from '@/lib/i18n/hooks/useTranslation';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { useCart } from '@/lib/context/CartContext';
 
 export default function Notifications() {
-  const [notificationCount] = useState(3);
-  const [isOpen, setIsOpen] = useState(false);
+  const { itemCount } = useCart();
   const [userRole, setUserRole] = useState<string | null>(null);
   const { client, session } = useSupabase();
-  const { t } = useTranslation('navigation');
+  const params = useParams();
+  const locale = (params?.locale as string) || 'ka';
 
   useEffect(() => {
     const user = session?.user;
@@ -28,42 +30,34 @@ export default function Notifications() {
     loadRole();
   }, [client, session]);
 
-  // Don't show notifications bell for regular users (they have it in bottom nav)
-  if (userRole === 'USER') return null;
+  // Show cart for all logged-in users (USER, PILOT, COMPANY, SUPER_ADMIN)
+  // Don't show if not logged in (userRole is null)
+  if (userRole === null) return null;
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-1.5 md:p-2 hover:bg-[#4697D2]/10 dark:hover:bg-white/10 rounded-md transition-colors"
-        aria-label="Notifications"
+    <Link
+      href={`/${locale}/cart`}
+      className="relative p-1.5 md:p-2 hover:bg-[#4697D2]/10 dark:hover:bg-white/10 rounded-md transition-colors"
+      aria-label="Shopping Cart"
+    >
+      <svg
+        className="w-5 h-5 md:w-6 md:h-6 text-[#1a1a1a] dark:text-white"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
       >
-        <svg
-          className="w-5 h-5 md:w-6 md:h-6 text-[#1a1a1a] dark:text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        {notificationCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] md:min-w-[16px] md:h-[16px] flex items-center justify-center bg-red-500 text-white text-[9px] md:text-[10px] font-bold rounded-full px-0.5 md:px-1">
-            {notificationCount}
-          </span>
-        )}
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 backdrop-blur-xl bg-gradient-to-b from-[rgba(70,151,210,0.4)] to-[rgba(70,151,210,0.3)] dark:bg-black/25 dark:from-transparent dark:to-transparent border border-[#4697D2]/40 dark:border-white/20 rounded-lg shadow-lg shadow-[#4697D2]/10 p-4 z-50">
-          <h3 className="font-semibold mb-2 text-[#1a1a1a] dark:text-white">{t('notifications.title')}</h3>
-          <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60">{t('notifications.noNew')}</p>
-        </div>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+        />
+      </svg>
+      {itemCount > 0 && (
+        <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] md:min-w-[16px] md:h-[16px] flex items-center justify-center bg-red-500 text-white text-[9px] md:text-[10px] font-bold rounded-full px-0.5 md:px-1">
+          {itemCount}
+        </span>
       )}
-    </div>
+    </Link>
   );
 }

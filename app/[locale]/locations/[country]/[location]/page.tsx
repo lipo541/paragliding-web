@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createServerClient } from '@/lib/supabase/server';
 import LocationPage from '@/components/locationpage/LocationPage';
+import { getServicesByLocation } from '@/lib/data/services';
 import { 
   getLocationAlternateUrls, 
   BASE_URL,
@@ -168,6 +169,21 @@ export default async function Page({ params }: PageProps) {
     }
   } : null;
 
+  // ✅ Fetch companies operating at this location
+  const { data: locationCompanies } = locationData ? await supabase
+    .from('companies')
+    .select('id, name_ka, name_en, logo_url, slug_ka, slug_en, cached_rating')
+    .contains('location_ids', [locationData.id])
+    .eq('status', 'verified')
+    .not('logo_url', 'is', null)
+    .order('cached_rating', { ascending: false })
+  : { data: null };
+
+  // ✅ Fetch additional services for this location
+  const locationServices = locationData 
+    ? await getServicesByLocation(locationData.id) 
+    : [];
+
   // ✅ Extract flight types for JSON-LD (current locale with prices)
   const localeFlightTypes = contentData.flight_types || [];
   const sharedFlightTypes = locationPageData?.content?.shared_flight_types || [];
@@ -213,7 +229,9 @@ export default async function Page({ params }: PageProps) {
         locale={locale}
         initialData={{
           location: locationData,
-          locationPage: filteredLocationPageData
+          locationPage: filteredLocationPageData,
+          companies: locationCompanies || [],
+          services: locationServices
         }}
       />
     </>

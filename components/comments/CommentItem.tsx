@@ -28,7 +28,7 @@ interface Comment {
 
 interface CommentItemProps {
   comment: Comment;
-  commentableType: 'country' | 'location' | 'flight_type';
+  commentableType: 'country' | 'location' | 'flight_type' | 'company';
   commentableId: string;
   onCommentAdded: () => void;
   isReply?: boolean;
