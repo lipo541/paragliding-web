@@ -68,7 +68,7 @@ export const HREFLANG_CODES: Record<Locale, string> = {
 /**
  * საიტის სახელი
  */
-export const SITE_NAME = 'Paragliding Georgia';
+export const SITE_NAME = 'xparagliding.com';
 
 /**
  * Default Meta Descriptions (თუ გვერდს არ აქვს საკუთარი)
@@ -87,7 +87,7 @@ export const DEFAULT_DESCRIPTIONS: Record<Locale, string> = {
  */
 export const TITLE_TEMPLATES: Record<Locale, string> = {
   ka: '%s | პარაგლაიდინგი საქართველოში',
-  en: '%s | Paragliding Georgia',
+  en: '%s | xparagliding.com',
   ru: '%s | Параглайдинг в Грузии',
   de: '%s | Gleitschirmfliegen Georgien',
   tr: '%s | Gürcistan Yamaç Paraşütü',

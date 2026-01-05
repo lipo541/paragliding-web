@@ -84,7 +84,7 @@ export default function ServiceSeoTab({
             onChange={(e) => onChange({
               [`seo_title_${activeLang}`]: e.target.value,
             })}
-            placeholder={`${serviceName} | Paragliding Georgia`}
+            placeholder={`${serviceName} | xparagliding.com`}
             className="w-full px-4 py-3 bg-foreground/5 border border-border rounded-lg text-sm"
             dir={activeLang === 'ar' ? 'rtl' : 'ltr'}
           />
@@ -185,7 +185,7 @@ export default function ServiceSeoTab({
             paragliding.ge › services › {serviceName.toLowerCase().replace(/\s+/g, '-') || 'service'}
           </div>
           <div className="text-blue-600 dark:text-blue-400 text-lg font-medium mb-1 hover:underline cursor-pointer">
-            {seoTitle || `${serviceName} | Paragliding Georgia`}
+            {seoTitle || `${serviceName} | xparagliding.com`}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
             {seoDescription || 'აღწერა ჯერ არ არის დამატებული...'}

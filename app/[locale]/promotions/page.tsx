@@ -67,7 +67,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PromotionsPage({ params }: PageProps) {
   const { locale } = await params;
   const safeLocale = (locale as Locale) || 'ka';
-  const { title } = getPageSEO('promotions', safeLocale);
   
   // ✅ Fetch data server-side for SEO
   const { promoCodes, locations } = await getPromotionsData();
@@ -81,8 +80,6 @@ export default async function PromotionsPage({ params }: PageProps) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbItems} />
-      {/* SEO: Server-rendered h1 for crawlers */}
-      <h1 className="sr-only">{title}</h1>
       <PromotionPage 
         locale={locale || 'ka'} 
         initialPromoCodes={promoCodes}

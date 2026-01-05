@@ -304,7 +304,7 @@ export default function HeroSection({ locale, initialSlides = [] }: HeroSectionP
       {/* კონტენტი - მარცხნივ განლაგებული */}
       <div className="relative z-20 h-full flex items-center pb-24 pt-[72px]">
         <div className="w-full max-w-[1280px] mx-auto px-4">
-          <div className="max-w-2xl text-white">
+          <div className="max-w-2xl text-black dark:text-white">
             {/* სათაური */}
             {currentIndex === 0 ? (
               <h1 
@@ -326,7 +326,7 @@ export default function HeroSection({ locale, initialSlides = [] }: HeroSectionP
             {getSlideDescription(currentSlide, locale) && (
               <p 
                 key={`desc-${currentIndex}`}
-                className="text-base md:text-lg text-white/80 mb-6 md:mb-8 max-w-lg font-light animate-fade-in-up animation-delay-100"
+                className="text-base md:text-lg text-black/80 dark:text-white/80 mb-6 md:mb-8 max-w-lg font-light animate-fade-in-up animation-delay-100"
               >
                 {getSlideDescription(currentSlide, locale)}
               </p>

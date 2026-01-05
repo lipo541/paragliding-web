@@ -11,7 +11,8 @@ export default function AboutUs({ locale }: AboutUsProps) {
   const safeLocale = (locale as Locale) || 'ka';
   const t = {
     title: locale === 'ka' ? 'ჩვენს შესახებ' : locale === 'en' ? 'About Us' : locale === 'ru' ? 'О нас' : locale === 'ar' ? 'معلومات عنا' : locale === 'de' ? 'Über uns' : 'Hakkımızda',
-    subtitle: locale === 'ka' ? 'პარაგლაიდინგის ციფრული პლატფორმა საქართველოში' : locale === 'en' ? 'Digital Paragliding Platform in Georgia' : locale === 'ru' ? 'Цифровая платформа парапланеризма в Грузии' : locale === 'ar' ? 'منصة رقمية للطيران الشراعي في جورجيا' : locale === 'de' ? 'Digitale Gleitschirm-Plattform in Georgien' : 'Gürcistan\'da Dijital Paraşüt Platformu',
+    subtitle: locale === 'ka' ? 'პარაპლანით ფრენის ციფრული პლატფორმა საქართველოში' : locale === 'en' ? 'Digital Paragliding Platform in Georgia' : locale === 'ru' ? 'Цифровая платформа параглайдинга в Грузии' : locale === 'ar' ? 'منصة رقمية للطيران المظلي في جورجيا' : locale === 'de' ? 'Digitale Gleitschirm-Plattform in Georgien' : 'Gürcistan\'da Dijital Yamaç Paraşütü Platformu',
+    badge: locale === 'ka' ? 'პლატფორმა' : locale === 'en' ? 'Platform' : locale === 'ru' ? 'Платформа' : locale === 'ar' ? 'منصة' : locale === 'de' ? 'Plattform' : 'Platform',
     
     description: {
       title: locale === 'ka' ? 'რას ვაკეთებთ' : locale === 'en' ? 'What We Do' : locale === 'ru' ? 'Что мы делаем' : locale === 'ar' ? 'ماذا نفعل' : locale === 'de' ? 'Was wir tun' : 'Ne Yapıyoruz',
@@ -94,18 +95,45 @@ export default function AboutUs({ locale }: AboutUsProps) {
           <Breadcrumbs items={buildBreadcrumbs(safeLocale, ['about'])} />
         </div>
 
-        {/* Hero */}
-        <div className="mb-10 text-center">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl backdrop-blur-md bg-[rgba(70,151,210,0.2)] dark:bg-[#4697D2]/30 mb-4">
-            <IoRocketOutline className="w-7 h-7 text-[#4697D2]" />
+        {/* Hero Section */}
+        <section className="relative overflow-hidden rounded-xl mb-4">
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#4697D2]/15 via-[#4697D2]/5 to-transparent dark:from-[#4697D2]/25 dark:via-[#4697D2]/10 dark:to-transparent" />
+          
+          {/* Glass effect */}
+          <div className="absolute inset-0 backdrop-blur-md" />
+          
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#4697D2]/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+          
+          {/* Content */}
+          <div className="relative z-10 px-4 py-5 md:px-6 md:py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div className="flex-1">
+                {/* Title - H1 for SEO */}
+                <h1 className="text-xl md:text-2xl font-bold text-[#1a1a1a] dark:text-white mb-1">
+                  {t.title}
+                </h1>
+                
+                {/* Subtitle - P for SEO */}
+                <p className="text-sm text-[#2d2d2d]/70 dark:text-white/60 max-w-xl">
+                  {t.subtitle}
+                </p>
+              </div>
+              
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#4697D2]/15 dark:bg-[#4697D2]/25 border border-[#4697D2]/20 dark:border-[#4697D2]/30 self-start md:self-center">
+                <IoRocketOutline className="w-3.5 h-3.5 text-[#4697D2] dark:text-white" />
+                <span className="text-xs font-medium text-[#1a1a1a] dark:text-white">
+                  {t.badge}
+                </span>
+              </div>
+            </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] dark:text-white mb-2">
-            {t.title}
-          </h1>
-          <p className="text-sm text-[#1a1a1a]/60 dark:text-white/60 max-w-xl mx-auto">
-            {t.subtitle}
-          </p>
-        </div>
+          
+          {/* Bottom border glow */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#4697D2]/30 to-transparent" />
+        </section>
 
         {/* Description */}
         <div className="mb-8">

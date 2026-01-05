@@ -36,7 +36,7 @@ export default function CompaniesHero({
             </h1>
             
             {/* Subtitle */}
-            <p className="text-sm text-[#2d2d2d]/70 dark:text-white/60 line-clamp-2 max-w-xl">
+            <p className="text-sm text-[#2d2d2d]/70 dark:text-white/60 max-w-xl">
               {subtitle}
             </p>
           </div>

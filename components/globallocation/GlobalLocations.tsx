@@ -423,9 +423,9 @@ export default function GlobalLocations({ locale, initialCountries = [], initial
           <div className="text-center space-y-4 lg:space-y-6">
             {/* Main Heading */}
             <div className="space-y-1.5 lg:space-y-3">
-              <h2 className="text-2xl lg:text-5xl xl:text-6xl font-bold text-[#1a1a1a] dark:text-white">
+              <h1 className="text-2xl lg:text-5xl xl:text-6xl font-bold text-[#1a1a1a] dark:text-white">
                 {t('hero.title')}
-              </h2>
+              </h1>
               <p className="text-sm lg:text-lg text-[#1a1a1a]/80 dark:text-white/80 max-w-2xl mx-auto px-4">
                 {t('hero.subtitle')}
               </p>

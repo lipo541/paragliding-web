@@ -158,29 +158,57 @@ export default function PromotionPage({
 
   return (
     <div className="min-h-screen">
-      {/* Breadcrumbs */}
-      <div className="max-w-[1280px] mx-auto px-4 pt-4">
-        <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['promotions'])} />
-      </div>
+      <div className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+        {/* Breadcrumbs */}
+        <div className="mb-6">
+          <Breadcrumbs items={buildBreadcrumbs(locale as Locale, ['promotions'])} />
+        </div>
 
-      {/* Header */}
-      <div className="py-2 lg:py-3 border-b border-[#4697D2]/20 dark:border-white/10 backdrop-blur-md bg-[rgba(70,151,210,0.1)] dark:bg-black/20">
-        <div className="max-w-[1280px] mx-auto px-2 lg:px-3">
-          <div className="flex items-center gap-1.5">
-            <div className="p-1 rounded bg-[#4697D2]/20 dark:bg-[#4697D2]/30">
-              <Tag className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#4697D2]" />
+        {/* Hero Section with H1 and P for SEO */}
+        <section className="relative overflow-hidden rounded-xl mb-4">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#4697D2]/15 via-[#4697D2]/5 to-transparent dark:from-[#4697D2]/25 dark:via-[#4697D2]/10 dark:to-transparent" />
+        
+        {/* Glass effect */}
+        <div className="absolute inset-0 backdrop-blur-md" />
+        
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-[#4697D2]/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+        
+        {/* Content */}
+        <div className="relative z-10 px-4 py-5 md:px-6 md:py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div className="flex-1">
+              {/* Title - H1 for SEO */}
+              <h1 className="text-xl md:text-2xl font-bold text-[#1a1a1a] dark:text-white mb-1">
+                {t('hero.title')}
+              </h1>
+              
+              {/* Subtitle - P for SEO */}
+              <p className="text-sm text-[#2d2d2d]/70 dark:text-white/60 max-w-xl">
+                {t('hero.subtitle')}
+              </p>
             </div>
-            <div>
-              <h2 className="text-sm lg:text-base font-bold text-[#1a1a1a] dark:text-white">{t('page.title')}</h2>
-              <p className="text-[10px] text-[#1a1a1a]/60 dark:text-white/60">{sortedPromos.length} {t('page.active')}</p>
+            
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#4697D2]/15 dark:bg-[#4697D2]/25 border border-[#4697D2]/20 dark:border-[#4697D2]/30 self-start md:self-center">
+              <Tag className="w-3.5 h-3.5 text-[#4697D2] dark:text-white" />
+              <span className="text-xs font-medium text-[#1a1a1a] dark:text-white">
+                {t('page.active')}
+              </span>
+              <span className="px-1.5 py-0.5 text-xs font-bold rounded-full bg-[#4697D2] text-white min-w-[20px] text-center">
+                {sortedPromos.length}
+              </span>
             </div>
           </div>
         </div>
-      </div>
+        
+        {/* Bottom border glow */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#4697D2]/30 to-transparent" />
+      </section>
 
       {/* Main Content - 20/80 Split Layout */}
-      <div className="max-w-[1280px] mx-auto px-2 lg:px-4 py-3 lg:py-4">
-        <div className="flex flex-col lg:flex-row gap-3 lg:gap-4">
+      <div className="flex flex-col lg:flex-row gap-3 lg:gap-4 mt-4">
           
           {/* Left Side - Filters Panel (25%) */}
           <div className="w-full lg:w-1/4 space-y-3">

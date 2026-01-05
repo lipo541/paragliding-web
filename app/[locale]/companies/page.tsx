@@ -2,6 +2,7 @@ import CompaniesPage from '@/components/companiespage/CompaniesPage';
 import { createServerClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 import { SupportedLocale } from '@/components/companiespage/utils/companyHelpers';
+import { getPageSEO, type Locale } from '@/lib/seo';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -9,28 +10,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  
-  const titles: Record<string, string> = {
-    ka: 'პარაგლაიდინგის კომპანიები | Paragliding',
-    en: 'Paragliding Companies | Paragliding',
-    ru: 'Компании парапланеризма | Paragliding',
-    de: 'Paragliding-Unternehmen | Paragliding',
-    tr: 'Yamaç Paraşütü Şirketleri | Paragliding',
-    ar: 'شركات الطيران الشراعي | Paragliding',
-  };
-
-  const descriptions: Record<string, string> = {
-    ka: 'აღმოაჩინეთ საუკეთესო პარაგლაიდინგის კომპანიები და დაჯავშნეთ თქვენი ფრენა',
-    en: 'Discover the best paragliding companies and book your flight',
-    ru: 'Откройте для себя лучшие компании парапланеризма и забронируйте полет',
-    de: 'Entdecken Sie die besten Paragliding-Unternehmen und buchen Sie Ihren Flug',
-    tr: 'En iyi yamaç paraşütü şirketlerini keşfedin ve uçuşunuzu rezerve edin',
-    ar: 'اكتشف أفضل شركات الطيران الشراعي واحجز رحلتك',
-  };
+  const safeLocale = (locale as Locale) || 'ka';
+  const seo = getPageSEO('companies', safeLocale);
 
   return {
-    title: titles[locale] || titles.ka,
-    description: descriptions[locale] || descriptions.ka,
+    title: seo.title,
+    description: seo.description,
   };
 }
 

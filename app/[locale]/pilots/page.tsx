@@ -2,6 +2,7 @@ import PilotsPage from '@/components/pilotspage/PilotsPage';
 import { createServerClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 import { SupportedLocale } from '@/components/pilotspage/utils/pilotHelpers';
+import { getPageSEO, type Locale } from '@/lib/seo';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -9,28 +10,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  
-  const titles: Record<string, string> = {
-    ka: 'პარაგლაიდინგის პილოტები | Paragliding',
-    en: 'Paragliding Pilots | Paragliding',
-    ru: 'Пилоты парапланеризма | Paragliding',
-    de: 'Paragliding-Piloten | Paragliding',
-    tr: 'Yamaç Paraşütü Pilotları | Paragliding',
-    ar: 'طيارو الطيران الشراعي | Paragliding',
-  };
-
-  const descriptions: Record<string, string> = {
-    ka: 'აღმოაჩინეთ გამოცდილი ტანდემ პილოტები და დაჯავშნეთ თქვენი ფრენა',
-    en: 'Discover experienced tandem pilots and book your flight',
-    ru: 'Откройте для себя опытных тандем-пилотов и забронируйте полет',
-    de: 'Entdecken Sie erfahrene Tandempiloten und buchen Sie Ihren Flug',
-    tr: 'Deneyimli tandem pilotları keşfedin ve uçuşunuzu rezerve edin',
-    ar: 'اكتشف طيارين تاندم ذوي خبرة واحجز رحلتك',
-  };
+  const safeLocale = (locale as Locale) || 'ka';
+  const seo = getPageSEO('pilots', safeLocale);
 
   return {
-    title: titles[locale] || titles.ka,
-    description: descriptions[locale] || descriptions.ka,
+    title: seo.title,
+    description: seo.description,
   };
 }
 
