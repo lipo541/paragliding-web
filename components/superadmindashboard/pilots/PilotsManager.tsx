@@ -72,6 +72,7 @@ interface Pilot {
   birth_date: string | null;
   gender: 'male' | 'female' | 'other' | null;
   avatar_url: string | null;
+  cover_image_url: string | null;
   // Verification Documents
   verification_documents: string[];
   commercial_start_date: string | null;

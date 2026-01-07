@@ -13,6 +13,8 @@ export default function GeorgianForm() {
     setPendingImages,
     imagePreviews,
     setImagePreviews,
+    sharedImages,
+    setSharedImages,
     sharedVideos,
     setSharedVideos,
     deleteHeroImage,
@@ -65,11 +67,21 @@ export default function GeorgianForm() {
             </div>
             <input
               type="text"
-              value={pendingImages.heroImage?.alt_ka || ""}
-              onChange={(e) => setPendingImages({
-                ...pendingImages,
-                heroImage: pendingImages.heroImage ? { ...pendingImages.heroImage, alt_ka: e.target.value } : null
-              })}
+              value={pendingImages.heroImage?.alt_ka || sharedImages.hero_image?.alt_ka || ""}
+              onChange={(e) => {
+                if (pendingImages.heroImage) {
+                  setPendingImages({
+                    ...pendingImages,
+                    heroImage: { ...pendingImages.heroImage, alt_ka: e.target.value }
+                  });
+                }
+                if (sharedImages.hero_image) {
+                  setSharedImages({
+                    ...sharedImages,
+                    hero_image: { ...sharedImages.hero_image, alt_ka: e.target.value }
+                  });
+                }
+              }}
               className="w-full px-3 py-2 text-sm border border-foreground/20 rounded-lg focus:ring-2 focus:ring-foreground/20 focus:border-foreground/40 outline-none transition-all bg-background text-foreground"
               placeholder="ALT ტექსტი (სურათის აღწერა ქართულად)"
             />
@@ -130,11 +142,18 @@ export default function GeorgianForm() {
               </div>
               <input
                 type="text"
-                value={pendingImages.galleryImages[index]?.alt_ka || ""}
+                value={pendingImages.galleryImages[index]?.alt_ka || sharedImages.gallery[index]?.alt_ka || ""}
                 onChange={(e) => {
-                  const updated = [...pendingImages.galleryImages];
-                  updated[index] = { ...updated[index], alt_ka: e.target.value };
-                  setPendingImages({ ...pendingImages, galleryImages: updated });
+                  if (pendingImages.galleryImages[index]) {
+                    const updated = [...pendingImages.galleryImages];
+                    updated[index] = { ...updated[index], alt_ka: e.target.value };
+                    setPendingImages({ ...pendingImages, galleryImages: updated });
+                  }
+                  if (sharedImages.gallery[index]) {
+                    const updatedGallery = [...sharedImages.gallery];
+                    updatedGallery[index] = { ...updatedGallery[index], alt_ka: e.target.value };
+                    setSharedImages({ ...sharedImages, gallery: updatedGallery });
+                  }
                 }}
                 className="flex-1 px-3 py-2 text-sm border border-foreground/20 rounded-lg focus:ring-2 focus:ring-foreground/20 focus:border-foreground/40 outline-none transition-all bg-background text-foreground"
                 placeholder="ALT ტექსტი ქართულად"

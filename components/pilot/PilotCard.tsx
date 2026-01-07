@@ -195,9 +195,9 @@ function PilotCard({ pilot, locale, locationId, locationName, onAddToCart }: Pil
               {name}
             </h3>
             
-            {/* Bio */}
+            {/* Bio - single line only */}
             {bio && (
-              <p className="text-xs text-gray-600 dark:text-zinc-400 line-clamp-1 mb-2">
+              <p className="text-xs text-gray-600 dark:text-zinc-400 mb-2 overflow-hidden text-ellipsis whitespace-nowrap">
                 {bio}
               </p>
             )}

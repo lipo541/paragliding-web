@@ -24,10 +24,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale, slug } = await params;
   const supabase = createServerClient();
   
+  // Build OR query - only include id check if slug looks like UUID
+  const slugConditions = [
+    `slug_ka.eq.${slug}`,
+    `slug_en.eq.${slug}`,
+    `slug_ru.eq.${slug}`,
+    `slug_de.eq.${slug}`,
+    `slug_ar.eq.${slug}`,
+    `slug_tr.eq.${slug}`,
+    `slug.eq.${slug}`,
+  ];
+  if (isUUID(slug)) {
+    slugConditions.push(`id.eq.${slug}`);
+  }
+  
   const { data: pilot } = await supabase
     .from('pilots')
     .select('*')
-    .or(`slug_ka.eq.${slug},slug_en.eq.${slug},slug.eq.${slug},id.eq.${slug}`)
+    .or(slugConditions.join(','))
     .single();
 
   if (!pilot) {
@@ -77,6 +91,20 @@ export default async function PilotPage({ params }: PageProps) {
   const { locale, slug } = await params;
   const supabase = createServerClient();
 
+  // Build OR query - only include id check if slug looks like UUID
+  const slugConditions = [
+    `slug_ka.eq.${slug}`,
+    `slug_en.eq.${slug}`,
+    `slug_ru.eq.${slug}`,
+    `slug_de.eq.${slug}`,
+    `slug_ar.eq.${slug}`,
+    `slug_tr.eq.${slug}`,
+    `slug.eq.${slug}`,
+  ];
+  if (isUUID(slug)) {
+    slugConditions.push(`id.eq.${slug}`);
+  }
+
   // Fetch pilot with company relation
   const { data: pilot, error } = await supabase
     .from('pilots')
@@ -84,7 +112,7 @@ export default async function PilotPage({ params }: PageProps) {
       *,
       company:companies(id, name_ka, name_en, logo_url, slug_ka, slug_en)
     `)
-    .or(`slug_ka.eq.${slug},slug_en.eq.${slug},slug.eq.${slug},id.eq.${slug}`)
+    .or(slugConditions.join(','))
     .single();
 
   if (error || !pilot) {

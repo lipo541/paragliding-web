@@ -229,9 +229,9 @@ function PilotCard({
                 {name}
               </h3>
               
-              {/* Bio - hidden on mobile */}
+              {/* Bio - single line, hidden on mobile */}
               {pilot.bio && (
-                <p className="hidden sm:block text-xs text-gray-600 dark:text-zinc-400 line-clamp-1 mb-2">
+                <p className="hidden sm:block text-xs text-gray-600 dark:text-zinc-400 mb-2 overflow-hidden text-ellipsis whitespace-nowrap">
                   {pilot.bio}
                 </p>
               )}

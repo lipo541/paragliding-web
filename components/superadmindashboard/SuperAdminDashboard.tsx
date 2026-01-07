@@ -17,6 +17,7 @@ import CompaniesManager from './companies/CompaniesManager';
 import PilotsManager from './pilots/PilotsManager';
 import { ServicesManager, ServiceCategoriesManager } from './services';
 import { HeroManager } from './hero';
+import { PilotCompanyRequestsManager } from './requests';
 
 export default function SuperAdminDashboard() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function SuperAdminDashboard() {
   const [editLocationId, setEditLocationId] = useState<string | null>(null);
   const [showMessageForm, setShowMessageForm] = useState(false);
   const [newBookingsCount, setNewBookingsCount] = useState(0);
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
 
   // Fetch unseen bookings count
   useEffect(() => {
@@ -62,6 +64,34 @@ export default function SuperAdminDashboard() {
     return () => {
       window.removeEventListener('booking-seen-updated', handleBookingSeenUpdated);
       supabase.removeChannel(channel);
+    };
+  }, [supabase]);
+
+  // Fetch pending pilot-company requests count
+  useEffect(() => {
+    const fetchPendingRequestsCount = async () => {
+      const { count } = await supabase
+        .from('pilot_company_requests')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'pending');
+      
+      setPendingRequestsCount(count || 0);
+    };
+
+    fetchPendingRequestsCount();
+
+    // Subscribe to changes
+    const requestsChannel = supabase
+      .channel('admin-requests-badge')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'pilot_company_requests' },
+        () => fetchPendingRequestsCount()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(requestsChannel);
     };
   }, [supabase]);
 
@@ -188,6 +218,33 @@ export default function SuperAdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
               კომპანიები
+            </button>
+
+            <button
+              onClick={() => setActiveTab('requests')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors relative ${
+                activeTab === 'requests'
+                  ? 'bg-foreground text-background'
+                  : 'text-foreground/70 hover:bg-foreground/5 hover:text-foreground'
+              }`}
+            >
+              <div className="relative">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                {pendingRequestsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                  </span>
+                )}
+              </div>
+              რექუესთები
+              {pendingRequestsCount > 0 && (
+                <span className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-orange-500 rounded-full animate-pulse">
+                  {pendingRequestsCount > 99 ? '99+' : pendingRequestsCount}
+                </span>
+              )}
             </button>
 
             <button
@@ -336,6 +393,7 @@ export default function SuperAdminDashboard() {
                   {activeTab === 'users' && 'მომხმარებლები'}
                   {activeTab === 'pilots' && 'პილოტები'}
                   {activeTab === 'companies' && 'კომპანიები'}
+                  {activeTab === 'requests' && 'პილოტ-კომპანია რექუესთები'}
                   {activeTab === 'services' && 'დამატებითი სერვისები'}
                   {activeTab === 'service-categories' && 'სერვისის კატეგორიები'}
                   {activeTab === 'bookings' && 'ჯავშნები'}
@@ -474,6 +532,8 @@ export default function SuperAdminDashboard() {
             {activeTab === 'pilots' && <PilotsManager />}
 
             {activeTab === 'companies' && <CompaniesManager />}
+
+            {activeTab === 'requests' && <PilotCompanyRequestsManager />}
 
             {activeTab === 'services' && <ServicesManager />}
 

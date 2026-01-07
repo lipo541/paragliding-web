@@ -249,12 +249,13 @@ export default function PilotRegisterForm() {
 
         if (uploadError) {
           console.error('Avatar upload error:', uploadError);
-        } else {
-          const {
-            data: { publicUrl },
-          } = supabase.storage.from('pilot-avatars').getPublicUrl(fileName);
-          avatarUrl = publicUrl;
+          throw new Error('პროფილის ფოტოს ატვირთვა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.');
         }
+        
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('pilot-avatars').getPublicUrl(fileName);
+        avatarUrl = publicUrl;
       }
 
       // Upload verification documents (multiple images)
@@ -270,12 +271,13 @@ export default function PilotRegisterForm() {
 
           if (uploadError) {
             console.error('Verification doc upload error:', uploadError);
-          } else {
-            const {
-              data: { publicUrl },
-            } = supabase.storage.from('pilot-certificates').getPublicUrl(fileName);
-            verificationDocUrls.push(publicUrl);
+            throw new Error('გადამოწმების დოკუმენტების ატვირთვა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.');
           }
+          
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from('pilot-certificates').getPublicUrl(fileName);
+          verificationDocUrls.push(publicUrl);
         }
       }
 
@@ -298,12 +300,19 @@ export default function PilotRegisterForm() {
 
           if (uploadError) {
             console.error(`Equipment ${type} doc upload error:`, uploadError);
-          } else {
-            const {
-              data: { publicUrl },
-            } = supabase.storage.from('pilot-certificates').getPublicUrl(fileName);
-            equipmentDocUrls[type] = publicUrl;
+            const typeNames: Record<string, string> = {
+              wing: 'ფრთის',
+              harness: 'პილოტის ჰარნესის',
+              passenger_harness: 'მგზავრის ჰარნესის',
+              reserve: 'რეზერვის'
+            };
+            throw new Error(`${typeNames[type] || 'აღჭურვილობის'} სერტიფიკატის ატვირთვა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.`);
           }
+          
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from('pilot-certificates').getPublicUrl(fileName);
+          equipmentDocUrls[type] = publicUrl;
         }
       }
 

@@ -71,6 +71,10 @@ interface Company {
   og_description_tr: string | null;
   // OG image
   og_image: string | null;
+  // Cover image
+  cover_image_url: string | null;
+  // Location IDs
+  location_ids: string[];
   // Descriptions
   description_ka: string | null;
   description_en: string | null;

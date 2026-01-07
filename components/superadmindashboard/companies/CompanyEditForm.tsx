@@ -68,6 +68,8 @@ interface CompanyData {
   og_description_tr: string | null;
   // Shared OG image
   og_image: string | null;
+  // Cover/Hero image
+  cover_image_url: string | null;
   // Descriptions
   description_ka: string | null;
   description_en: string | null;
@@ -98,7 +100,9 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
   const [activeTab, setActiveTab] = useState<Language>('ka');
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
   const [formData, setFormData] = useState<CompanyData>({ ...company });
+  const coverInputRef = useRef<HTMLInputElement>(null);
   const [countries, setCountries] = useState<Country[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
@@ -246,6 +250,57 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
     }
   };
 
+  // Handle cover image upload
+  const handleCoverUpload = async (file: File) => {
+    setUploadingCover(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${company.id}/cover-${Date.now()}.${fileExt}`;
+
+      // Upload to storage (using company-logos bucket for covers too)
+      const { error: uploadError } = await supabase.storage
+        .from('company-logos')
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('company-logos')
+        .getPublicUrl(fileName);
+
+      // Update form data
+      setFormData(prev => ({ ...prev, cover_image_url: publicUrl }));
+      toast.success('ქავერ სურათი წარმატებით აიტვირთა');
+    } catch (error) {
+      console.error('Error uploading cover:', error);
+      toast.error('ქავერ სურათის ატვირთვისას მოხდა შეცდომა');
+    } finally {
+      setUploadingCover(false);
+    }
+  };
+
+  // Delete cover image
+  const handleDeleteCover = async () => {
+    if (!formData.cover_image_url) return;
+    
+    try {
+      // Extract path from URL
+      const urlParts = formData.cover_image_url.split('/company-logos/');
+      if (urlParts[1]) {
+        await supabase.storage
+          .from('company-logos')
+          .remove([urlParts[1]]);
+      }
+      
+      setFormData(prev => ({ ...prev, cover_image_url: null }));
+      toast.success('ქავერ სურათი წაიშალა');
+    } catch (error) {
+      console.error('Error deleting cover:', error);
+      setFormData(prev => ({ ...prev, cover_image_url: null }));
+    }
+  };
+
   // Save changes
   const handleSave = async () => {
     setSaving(true);
@@ -306,6 +361,8 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
           og_description_tr: formData.og_description_tr,
           // OG image
           og_image: formData.og_image,
+          // Cover image
+          cover_image_url: formData.cover_image_url,
           // Descriptions
           description_ka: formData.description_ka,
           description_en: formData.description_en,
@@ -415,6 +472,62 @@ export default function CompanyEditForm({ company, onCancel, onSave }: CompanyEd
                 <button
                   type="button"
                   onClick={handleDeleteLogo}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg text-xs font-medium transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  წაშლა
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Cover Image */}
+        <div className="p-4 bg-foreground/5 rounded-xl border border-foreground/10">
+          <p className="text-xs font-medium text-foreground/60 mb-3 flex items-center gap-1.5">
+            <Image className="w-3.5 h-3.5" />
+            ქავერ სურათი (პროფილის გვერდის Hero)
+          </p>
+          <div className="space-y-3">
+            <div className="relative group">
+              {formData.cover_image_url ? (
+                <img
+                  src={formData.cover_image_url}
+                  alt="Cover Image"
+                  className="w-full h-32 rounded-xl object-cover border-2 border-foreground/20"
+                />
+              ) : (
+                <div className="w-full h-32 rounded-xl bg-foreground/10 flex items-center justify-center border-2 border-dashed border-foreground/20">
+                  <Image className="w-8 h-8 text-foreground/30" />
+                </div>
+              )}
+              {uploadingCover && (
+                <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
+                  <Spinner size="sm" className="border-white" />
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <input
+                ref={coverInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && handleCoverUpload(e.target.files[0])}
+              />
+              <button
+                type="button"
+                onClick={() => coverInputRef.current?.click()}
+                disabled={uploadingCover}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition-colors disabled:opacity-50"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                ატვირთვა
+              </button>
+              {formData.cover_image_url && (
+                <button
+                  type="button"
+                  onClick={handleDeleteCover}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg text-xs font-medium transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
