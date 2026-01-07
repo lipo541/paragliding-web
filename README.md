@@ -34,3 +34,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Development Tools & Documentation
+
+### VS Code Agents
+Learn how to use AI-powered agents to enhance your development workflow:
+- [VS Code Agents Guide (Georgian)](docs/VSCODE_AGENTS_GUIDE.md) - სრული გზამკვლევი VS Code აგენტებზე
+- [VS Code Agents Guide (English)](docs/VSCODE_AGENTS_GUIDE_EN.md) - Complete guide to VS Code agents
+
+### Project Documentation
+For detailed information about the project structure, design system, and implementation plans, check the [docs](docs/) folder.
